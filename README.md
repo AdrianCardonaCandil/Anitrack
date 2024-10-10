@@ -28,9 +28,25 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 ### <a name="contenido"></a> Contenido
 
 ### <a name="sign-up"></a> Sign Up
+
+Para registrarse se debe introducir:
+- **Nombre de usuario**: el nombre de usuario debe ser único
+- **Correo**: el correo no debe existir ya en la base de datos
+- **Contraseña**:la contraseña debe tener una minúscula, una mayúscula, un número y mínimo 8 carácteres.
+- **Repetir contraseña**: para asegurar que el usuario ha introducido la contraseña que el usuario quiere utilizar se dee repetir la contraseña y comprobar que coinciden.
+
+En la página de registro también ofrece al usuario redirigirlo a la página de inicio de sesión en caso de que ya tenga una cuenta.
+
 ![image](https://github.com/user-attachments/assets/63efe264-35e3-40d1-86a6-9616d2a0ee95)
 
 ### <a name="log-in"></a> Log In
+
+Para iniciar sesión se debe introducir:
+- **Nombre de usuario**: el nombre de usuario debe existir en la base de datos
+- **Contraseña**: la contraseña debe coincidir con la contraseña del usuario con ese nombre.
+
+En la página de inicio de sesión también ofrece al usuario redirigirlo a la página de registro en caso de que no tenga una cuenta.
+
 ![image](https://github.com/user-attachments/assets/51f97bba-e5b6-4cbd-a42c-1bb25c42d2f3)
 
 ### <a name="listas-de-seguimiento"></a> Listas de seguimiento
