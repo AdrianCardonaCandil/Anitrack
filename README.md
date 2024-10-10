@@ -86,7 +86,8 @@ En esta lista podrá ver información básica de sus animes favoritos como su no
 ![image](https://github.com/user-attachments/assets/db3c0f99-dbb3-4504-ac47-13d223a30525)
 
 ### <a name="perfil"></a> Perfil
-![image](https://github.com/user-attachments/assets/596d68ba-0702-46d5-b46c-1b660f1dd220)
+![image](https://github.com/user-attachments/assets/9ccbff10-d6bd-4f8b-bce7-a9da0a5f06a6)
+
 
 #### <a name="editar-perfil"></a> Editar Perfil
 ![image](https://github.com/user-attachments/assets/20802548-c65c-45be-a49f-e6200043487c)
