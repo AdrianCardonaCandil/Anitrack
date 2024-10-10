@@ -86,11 +86,30 @@ En esta lista podrá ver información básica de sus animes favoritos como su no
 ![image](https://github.com/user-attachments/assets/db3c0f99-dbb3-4504-ac47-13d223a30525)
 
 ### <a name="perfil"></a> Perfil
+
+En la página de perfil se encuentra la siguiente información:
+- **Información del usuario**
+  - Nombre de usuario
+  - Descripción usuario
+  - Fecha de creación de cuenta
+- **Botón de compartir perfil**: se muestra un qr que el usuario podrá utilizar para compartir su perfil con otros.
+- **Botón de editar perfil**: redirige al usuario al editor de perfil
+- **Lista de favoritos(Loved)**: otros usuarios y el propio usuario pueden ver los animes favoritos del usuario del perfil.
+  
 ![image](https://github.com/user-attachments/assets/9ccbff10-d6bd-4f8b-bce7-a9da0a5f06a6)
 
-
 #### <a name="editar-perfil"></a> Editar Perfil
+El editor de perfil permite al usuario editar su información:
+-   El usuario puede cambiar el username a otro que sea único.
+-   El usuario puede añadir una descripción, esto es un campo opcional.
+-   El usuario puede cambiar el correo si este no existe en la base de datos y es diferente al que ya tenía.
+-   El usuario puede cambiar su contraseña siempre y cuando tenga 1 mayúscula, 1 minúscula, 1 número y 8 carácteres.
+-   El usuario puede añadir una foto de perfil, en el caso de que no haya elegido una foto previamente el usuario tendra la foto por defecto.
+
+El usuario también tiene la opción de eliminar su cuenta, aparecerá una ventana de emergente para asegurar que el usuario efectivamente quiere borrar su cuenta.
+
 ![image](https://github.com/user-attachments/assets/20802548-c65c-45be-a49f-e6200043487c)
+![image](https://github.com/user-attachments/assets/6cc74a51-add9-4e71-8645-a9b0a54465b2)
 
 
 
