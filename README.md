@@ -24,7 +24,7 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 
 [![GitHub](https://img.shields.io/badge/GitHub-Elena%20Morales%20Gil-brightgreen?style=flat-square&logo=github)](https://github.com/ElenaMoralesGil)
 
-[![GitHub](https://img.shields.io/badge/GitHub-Adrian%20Cardona%20Candil-yellow?style=flat-square&logo=github)]([https://github.com/DevGiovanniLC](https://github.com/AdrianCardonaCandil))
+[![GitHub](https://img.shields.io/badge/GitHub-Adrian%20Cardona%20Candil-yellow?style=flat-square&logo=github)](https://github.com/AdrianCardonaCandil)
 ## <a name="diseño"></a>  Diseño
 
 ### <a name="página-de-inicio"></a> Página de inicio
