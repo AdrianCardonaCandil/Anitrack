@@ -6,25 +6,29 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 ## Índice
 
 1. [Colaboradores](#colaboradores)
-2. [Diseño](#diseño)
-   - 2.1 [Página de inicio](#página-de-inicio)
-   - 2.2 [Búsqueda](#busqueda)
-   - 2.3 [Contenido](#contenido)
-   - 2.4 [Sign Up](#sign-up)
-   - 2.5 [Log In](#log-in)
-   - 2.6 [Listas de seguimiento](#listas-de-seguimiento)
-     - 2.6.1 [Watching](#watching)
-     - 2.6.2 [Completed](#completed)
-     - 2.6.3 [Plan to Watch](#plan-to-watch)
-     - 2.6.4 [Loved](#loved)
-   - 2.7 [Perfil](#perfil)
-     - 2.7.1 [Editar Perfil](#editar-perfil)
+2. [Introducción](#introduccion)
+3. [Diseño](#diseño)
+   - [Página de inicio](#página-de-inicio)
+   - [Búsqueda](#busqueda)
+   - [Contenido](#contenido)
+   - [Sign Up](#sign-up)
+   - [Log In](#log-in)
+   - [Listas de seguimiento](#listas-de-seguimiento)
+     - [Watching](#watching)
+     - [Completed](#completed)
+     - [Plan to Watch](#plan-to-watch)
+     - [Loved](#loved)
+   - [Perfil](#perfil)
+     - [Editar Perfil](#editar-perfil)
 
 ## <a name="colaboradores"></a> Colaboradores
 
 [![GitHub](https://img.shields.io/badge/GitHub-Elena%20Morales%20Gil-brightgreen?style=flat-square&logo=github)](https://github.com/ElenaMoralesGil)
 
 [![GitHub](https://img.shields.io/badge/GitHub-Adrian%20Cardona%20Candil-yellow?style=flat-square&logo=github)](https://github.com/AdrianCardonaCandil)
+
+## <a name="introduccion"></a> Introducción
+
 ## <a name="diseño"></a>  Diseño
 
 ### <a name="página-de-inicio"></a> Página de inicio
