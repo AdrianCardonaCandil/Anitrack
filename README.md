@@ -42,13 +42,14 @@ que el usuario introduzca en el cuadro de texto el nombre del contenido (anime) 
 por él. Como resultado, la página de inicio adaptará su composición para mostrar las diferentes cartas resultantes de cada uno de
 los contenidos encontrados en la búsqueda. 
 
-Se ha destacar que, en el fondo, **la página de inicio y la página de búsqueda son la misma página con una diferente composición
-dependiente del uso de la funcionalidad de búsqueda por parte del usuario**.
+Se ha destacar que, en el fondo, **[la página de inicio](#página-de-inicio) y [la página de búsqueda](#busqueda) son la misma página
+con una diferente composición dependiente del uso de la funcionalidad de búsqueda por parte del usuario**.
 
-<img width="478" alt="image" src="https://github.com/user-attachments/assets/195800aa-5862-47ec-90a0-80b84c646788">
+![image](https://github.com/user-attachments/assets/e282209c-d1db-45a7-85ba-e77c00e5e433)
 
 En la parte infierior de la página de inicio se visualizarán diferentes secciones que brindarán al usuario una serie de recomendaciones
-según el cometido de cada una:
+según el cometido de cada una. Para cada uno de los contenidos que aparezcan en las secciones, se visualizarán su nombre y su imagen de
+portada. Ademán, si el usuario pulsa sobre uno de ellos, observará la página principal de dicho [contenido](#contenido).
 
 - New Season: Se mostrarán algunos contenidos cuya fecha de estreno corresponda a la temporada actual de emisión. Se destaca que, para
   cada año (2020, 2021, 2022, etc), existen cuatro temporadas de emisión de contenido (Primavera, Verano, Otoño e Invierno). Por lo
@@ -66,7 +67,90 @@ según el cometido de cada una:
 
 ### <a name="busqueda"></a> Búsqueda
 
+La interfaz de usuario de la sección de búsqueda esta formada principalmente por parte de los mismos componentes que [la página de inicio](#página-de-inicio).
+Así, tanto el banner superior que fomenta el registro de usuarios como la barra de búsqueda se visualizarán también en esta sección.
+
+Como se ha indicado con anterioridad, cuando el usuario utilice el cuadro de texto que conforma la herramienta de búsqueda, introduciendo
+contenido textual y, por lo tanto, se realice una búsqueda, aparecerán diferentes cartas de contenido por cada uno de los resultados que
+concuerden con la búsqueda que el usuario ha realizado. Cada una de estas cartas de contenido contiene la sigueinte imformación:
+
+- Imágen De Portada (Cover)
+- Nombre Del Contenido
+- Año De Emisión
+- Número De Episodios
+- Géneros
+
+Anteriormente a la visualización de cada una de estas cartas de contenido se podrá observar un pequeño icono acompañado de un texto que
+simbolizará el número total de resultados encontrados.
+
+![image](https://github.com/user-attachments/assets/97fd6c27-ac56-49c2-8406-93dfcda48126)
+
 ### <a name="contenido"></a> Contenido
+
+La página de contenido muestra información relevante sobre un contenido concreto. Idealmente, existe una página de contenido para cada uno de los contenidos que
+puedan ser observados en la aplicación. En ella, el usuario podrá operar, una vez registrado o iniciado sesión, sobre el contenido que esté visualizando en cada
+momento. Dichas operaciones consistirán, principalmente, en añadir el contenido a una lista determinada de seguimiento. Si se implementan funciones para la
+asignación de notas a los contenidos por parte de los usuarios, existirá una opción adicional para realizar una tarea en esta sección.
+
+La parte superior de la secciòn comienza con la visualización de una imagen de fondo perteneciente al contenido (background_image). Esta imagen puede, y generalmente
+no será la misma que la imagen de portada que se mostrará en la sección posterior.
+
+Dicha sección principal se constituirá con la información más relevante del contenido que se esté mostrando en la página. Se trata de la información más primordial y
+que, por lo tanto, el usuario esperará encontrar con anterioridad. Entre esta información se encuentra:
+
+- Nombre Del Contenido
+- Tipo Del Contenido (Serie de Televisión, Películo, OVA, ONA, etc)
+- Número De Episodios
+- Estado De Emisión (En Emisión, Finalizado, Por Emitir, etc)
+- Nota Del Contenido (Principalmente emitida por los usuarios de My AnimeList, posteriormente susceptible a cambios internos por parte de los usuarios de nuestra
+  plataforma)
+
+  ![image](https://github.com/user-attachments/assets/5d9417e1-521f-4567-b5bc-e392b8dba71b)
+
+En la misma sección, ubicado en la parte derecha se encuentra un pequeño icono a modo de botón que posibilita las operaciones sobre el contenido que se han mencinado
+anteriormente. Dichas operaciones (añadir el contenido a una lista de seguimiento) se realizarán en una ventana flotante con el siguiente aspecto:
+
+![image](https://github.com/user-attachments/assets/204a90aa-b71d-43ca-9e7a-4c04b9554db0)
+
+Como se puede observar, la ventana emergente tiene dos secciones. En la primera (Add To List), se podrá añadir el contenido a una de las listas de seguimiento
+correspondientes a: 
+
+- Watching
+- Completed
+- Plan To Watch
+
+En la segunda de las secciones (Add To Loved), se podrá añadir el contenido a la lista de animes favoritos (loved) por el usuario. Para ello, se ha habilitado un
+icono pulsable con forma de corazón que tornará en color rojo una vez que el contenido ha sido añadido a la lista de favoritos.
+
+Seguidamente a la sección descrita, tenemos un componente donde se mostrará información secundaria del contenido visualizado en la página. Con ello nos referimos
+a información aparentemente no tan importante como la brindada en la sección de información principal y que complementa a esta. Dicha información se compone como
+un par de parejas clave - (valor / lista de valores) con las siguientes categorias:
+
+- Título Original (Nombre en Alfabeto Japones)
+- Título En Romaji
+- Título En Ingles
+- Fuente Del Contenido (Manga, Novela Ligera, etc)
+- Fecha De Inicio De Emisión
+- Fecha De Finalización De Emisión
+- Duración Media Por Episodio
+- Rating (Clasificación De Edad)
+- Temporada
+- Año
+- Estudios De Animación Encargados
+- Géneros (Visualizados Como Una Lista De Etiquetas)
+
+  ![image](https://github.com/user-attachments/assets/31a1a85f-39fd-42de-8e33-cddcfabe5d91)
+
+Para finalizar, podemos observar una sección donde se visualizan los personajes que aparecen en el contenido que se esta mostando en la página. La sección consiste
+en una lista de los mismos en la que cada uno de los personajes constituirá la interfaz de usuario con una imagen y el nombre del mismo. La imagen se representará
+en formato circular. La apariencia de la sección se muestra a continuación:
+
+![image](https://github.com/user-attachments/assets/35ce2c2b-690e-422d-9d52-cf0915d5c033)
+
+Cabe destacar que la flecha en sentido descendiente que se observa en la parte derecha inferior de las secciones de información complementaria y la sección de personajes
+tiene la función de, tras ejecutar un click en ella, mostrar géneros o personajes que no se vean a simple vista en una representación simplificada de la interfaz. Existe
+un límite de número de géneros y personajes máximo a determinar que se mostrarán en la interfaz hasta que estas secciones se expandan mostrando los restantes a través de
+estas flechas.
 
 ### <a name="sign-up"></a> Sign Up
 
