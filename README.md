@@ -29,6 +29,10 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 
 ## <a name="introduccion"></a> Introducción
 
+La aplicación es una plataforma diseñada para los entusiastas del anime, que permite a los usuarios gestionar y explorar su contenido favorito de manera intuitiva. A través de esta herramienta, los usuarios pueden buscar títulos específicos, acceder a información detallada sobre cada anime y organizar sus preferencias en listas personalizadas. Estas listas incluyen opciones como "Watching", "Completed", "Plan to Watch" y "Loved", permitiendo a los usuarios llevar un seguimiento eficiente de su actividad.
+
+Además de la funcionalidad de búsqueda y gestión de listas, la aplicación presenta una interfaz atractiva y fácil de usar, que incluye secciones dedicadas a recomendaciones de contenido, así como datos relevantes como el tipo de anime, número de episodios, géneros y clasificaciones. Con estas características, la aplicación busca mejorar la experiencia del usuario, fomentando la interacción entre aficionados y facilitando el descubrimiento de nuevas series en el vasto universo del anime. 
+
 ## <a name="diseño"></a>  Diseño
 
 ### <a name="página-de-inicio"></a> Página de inicio
@@ -194,7 +198,7 @@ Una vez que se hayan visto todos los episodios se le pregunta al usuario mediant
 
 #### <a name="completed"></a> Completed
 
-En esta lista podrá ver información básica de sus animes completados como su nombre, tipo, géneros y score.
+En esta lista el usuario podrá ver información básica de sus animes completados como su nombre, tipo, géneros y score.
 
 ![image](https://github.com/user-attachments/assets/b12c0d31-3775-4445-862e-f61e1c42d8db)
 
