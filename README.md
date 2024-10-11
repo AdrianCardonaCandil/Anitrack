@@ -33,6 +33,39 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 
 ### <a name="página-de-inicio"></a> Página de inicio
 
+En la pantalla principal observamos un pequeño banner que comunica la razón de ser de la propia aplicación justificando e incitando
+el registro por parte de nuevos usuario. Cuando el usuario haya formalizado el proceso de registro o de inicio de sesión en la
+aplicación, dicho banner debería desaparecer de la pantalla.
+
+<img width="478" alt="image" src="https://github.com/user-attachments/assets/dba27c76-ede8-4e02-842d-43176817f35e">
+
+Se ofrece un campo de texto que permitirá al usuario realizar búsquedas de contenido principalmente por nombre del mismo. Basta con
+que el usuario introduzca en el cuadro de texto el nombre del contenido (anime) que desea encontrar y el sistema realizará la búsqueda
+por él. Como resultado, la página de inicio adaptará su composición para mostrar las diferentes cartas resultantes de cada uno de
+los contenidos encontrados en la búsqueda. 
+
+Se ha destacar que, en el fondo, **la página de inicio y la página de búsqueda son la misma página con una diferente composición
+dependiente del uso de la funcionalidad de búsqueda por parte del usuario**.
+
+<img width="478" alt="image" src="https://github.com/user-attachments/assets/290ba836-8044-4295-9f01-8275b3995700">
+
+En la parte infierior de la página de inicio se visualizarán diferentes secciones que brindarán al usuario una serie de recomendaciones
+según el cometido de cada una:
+
+- New Season: Se mostrarán algunos contenidos cuya fecha de estreno corresponda a la temporada actual de emisión. Se destaca que, para
+  cada año (2020, 2021, 2022, etc), existen cuatro temporadas de emisión de contenido (Primavera, Verano, Otoño e Invierno). Por lo
+  tanto, y como ilustración, los contenidos que serían mostrados actualmente pertenecerían a la temporada de Otoño de 2024.
+
+- Top Anime: Se mostrarán al usuario contenidos que ocupen las primeras posiciones en el ranking de notas (score) según, en principio,
+  el criterio obtenido con los datos de la api utilizada (Jikan) cuya base utiliza los datos de la comunidad My AnimeList. Si se
+  implementan funcionalidades para que el usuario pueda establecer notas en los contenidos, estas notas tendrán su peso en el ranking
+  de posiciones y por ende, en los contenidos mostrados en esta sección.
+
+- Upcoming: Se mostrarán algunos contenidos cuya fecha de estreno corresponda a la siguiente temporada de emisión de contenido. Por
+  ejemplo, actualmente, se trataría de la temporada de invierno de 2025.
+
+  <img width="478" alt="image" src="https://github.com/user-attachments/assets/695e406a-303e-414c-a009-f75aba4b5620">
+
 ### <a name="busqueda"></a> Búsqueda
 
 ### <a name="contenido"></a> Contenido
