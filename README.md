@@ -37,8 +37,6 @@ En la pantalla principal observamos un pequeño banner que comunica la razón de
 el registro por parte de nuevos usuario. Cuando el usuario haya formalizado el proceso de registro o de inicio de sesión en la
 aplicación, dicho banner debería desaparecer de la pantalla.
 
-<img width="478" alt="image" src="https://github.com/user-attachments/assets/dba27c76-ede8-4e02-842d-43176817f35e">
-
 Se ofrece un campo de texto que permitirá al usuario realizar búsquedas de contenido principalmente por nombre del mismo. Basta con
 que el usuario introduzca en el cuadro de texto el nombre del contenido (anime) que desea encontrar y el sistema realizará la búsqueda
 por él. Como resultado, la página de inicio adaptará su composición para mostrar las diferentes cartas resultantes de cada uno de
@@ -47,7 +45,7 @@ los contenidos encontrados en la búsqueda.
 Se ha destacar que, en el fondo, **la página de inicio y la página de búsqueda son la misma página con una diferente composición
 dependiente del uso de la funcionalidad de búsqueda por parte del usuario**.
 
-<img width="478" alt="image" src="https://github.com/user-attachments/assets/290ba836-8044-4295-9f01-8275b3995700">
+<img width="478" alt="image" src="https://github.com/user-attachments/assets/195800aa-5862-47ec-90a0-80b84c646788">
 
 En la parte infierior de la página de inicio se visualizarán diferentes secciones que brindarán al usuario una serie de recomendaciones
 según el cometido de cada una:
@@ -64,7 +62,7 @@ según el cometido de cada una:
 - Upcoming: Se mostrarán algunos contenidos cuya fecha de estreno corresponda a la siguiente temporada de emisión de contenido. Por
   ejemplo, actualmente, se trataría de la temporada de invierno de 2025.
 
-  <img width="478" alt="image" src="https://github.com/user-attachments/assets/695e406a-303e-414c-a009-f75aba4b5620">
+  ![image](https://github.com/user-attachments/assets/31e2c396-ceab-4d83-a633-dbd8be26315e)
 
 ### <a name="busqueda"></a> Búsqueda
 
