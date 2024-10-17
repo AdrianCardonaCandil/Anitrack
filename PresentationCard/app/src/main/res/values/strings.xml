@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PresentationCard</string>
+    <string name="subtitle">Android Developer Extraordinaire</string>
+    <string name="phone_icon_desc">Phone Icon</string>
+    <string name="social_icon_desc">Social Icon</string>
+    <string name="email_icon_desc">Email Icon</string>
+</resources>
