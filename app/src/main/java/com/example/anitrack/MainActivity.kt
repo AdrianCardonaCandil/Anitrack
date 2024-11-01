@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.anitrack.ui.AnitrackApp
 import com.example.anitrack.ui.global.BottomNavigationBar
+import com.example.anitrack.ui.global.TopAppBar
 import com.example.anitrack.ui.theme.AnitrackTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +23,9 @@ class MainActivity : ComponentActivity() {
             AnitrackTheme {
                 val navController: NavHostController = rememberNavController()
                 Scaffold(
+                    topBar = { TopAppBar(
+                        modifier = Modifier
+                    ) },
                     bottomBar = { BottomNavigationBar(
                         navController = navController,
                         modifier = Modifier

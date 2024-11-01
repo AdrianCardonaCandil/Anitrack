@@ -5,6 +5,7 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -46,7 +47,11 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ){
-    NavigationBar(modifier = modifier) {
+    NavigationBar(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+    ) {
         var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
         BottomNavigationItem.values.forEachIndexed { index, item ->
             NavigationBarItem(
