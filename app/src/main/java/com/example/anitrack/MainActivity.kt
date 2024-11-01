@@ -23,9 +23,7 @@ class MainActivity : ComponentActivity() {
                 val navController: NavHostController = rememberNavController()
                 Scaffold(
                     bottomBar = { BottomNavigationBar(
-                        onHomeSearchItemClicked = {navController.navigate(AnitrackAppScreens.HomeSearch.name)},
-                        onListsItemClicked = {navController.navigate(AnitrackAppScreens.Lists.name)},
-                        onProfileItemClicked = {navController.navigate(AnitrackAppScreens.Profile.name)},
+                        navController = navController,
                         modifier = Modifier
                     ) },
                     modifier = Modifier.fillMaxSize()
@@ -39,5 +37,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-enum class AnitrackAppScreens() {HomeSearch, Lists, Profile}

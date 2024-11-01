@@ -15,19 +15,25 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.anitrack.navigation.AnitrackRoutes
 
-sealed class BottomNavigationItem(val icon: ImageVector, val label: String) {
+sealed class BottomNavigationItem(val icon: ImageVector, val label: String, val route: String) {
     data object HomeSearch : BottomNavigationItem(
         icon = Icons.Default.Search,
-        label = "Discover"
+        label = "Discover",
+        route = AnitrackRoutes.HomeSearch.name
     )
     data object Lists : BottomNavigationItem(
         icon = Icons.AutoMirrored.Default.List,
-        label = "My Lists"
+        label = "My Lists",
+        route = AnitrackRoutes.Lists.name
     )
     data object Profile : BottomNavigationItem(
         icon = Icons.Default.Person,
-        label = "Profile"
+        label = "Profile",
+        route = AnitrackRoutes.Profile.name
     )
 
     companion object {
@@ -37,10 +43,8 @@ sealed class BottomNavigationItem(val icon: ImageVector, val label: String) {
 
 @Composable
 fun BottomNavigationBar(
-    onHomeSearchItemClicked: () -> Unit,
-    onListsItemClicked: () -> Unit,
-    onProfileItemClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
 ){
     NavigationBar(modifier = modifier) {
         var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -58,14 +62,9 @@ fun BottomNavigationBar(
                 selected = index == selectedItemIndex,
                 onClick = {
                     selectedItemIndex = index
-                    when (item) {
-                        is BottomNavigationItem.HomeSearch -> onHomeSearchItemClicked()
-                        is BottomNavigationItem.Lists -> onListsItemClicked()
-                        is BottomNavigationItem.Profile -> onProfileItemClicked()
-                    }
+                    navController.navigate(item.route)
                 }
             )
         }
     }
 }
-
