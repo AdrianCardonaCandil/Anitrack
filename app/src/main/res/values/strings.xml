@@ -1,3 +1,27 @@
 <resources>
+    <!-- Application Name -->
     <string name="app_name">Anitrack</string>
+
+    <!-- Top Bottom Nav Labels -->
+    <string name="bottomNavHomeLabel">Home</string>
+    <string name="bottomNavSearchLabel">Discover</string>
+    <string name="bottomNavListsLabel">My Lists</string>
+    <string name="bottomNavProfileLabel">Profile</string>
+
+    <!-- Home Screen Strings Resources  -->
+    <!-- Banner -->
+    <string name="slogan">We Keep It Simple For You. Don\'t forget</string>
+    <string name="subSlogan">Use Anitrack</string>
+    <string name="appDescription">
+        Track, share and discover your favorite
+        anime and manga with Anitrack. Follow your
+        watching habits over time and discover your
+        obsessions.
+    </string>
+    <!-- Search Bar -->
+    <string name="searchBarLabel">Browse:</string>
+    <!-- Content Grids  -->
+    <string name="newSeasonContentGridLabel">New Season</string>
+    <string name="topAnimeContentGridLabel">Top Anime</string>
+    <string name="upcomingContentGridLabel">Upcoming</string>
 </resources>

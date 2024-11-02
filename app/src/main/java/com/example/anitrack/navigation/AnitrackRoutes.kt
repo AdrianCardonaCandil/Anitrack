@@ -1,7 +1,8 @@
 package com.example.anitrack.navigation
 
 enum class AnitrackRoutes {
-    HomeSearch,
+    Home,
+    Search,
     Lists,
     Content,
     Profile
