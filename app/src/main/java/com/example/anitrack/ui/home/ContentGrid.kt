@@ -36,7 +36,6 @@ fun ContentGrid(
         ) {
             (1..defaultItemCount).forEach { _ ->
                 ContentGridCard(
-                    content = "Sousou No Frieren",
                     modifier = Modifier.padding(10.dp)
                 )
             }

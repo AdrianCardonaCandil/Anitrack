@@ -35,7 +35,10 @@ fun AnitrackApp(
             )
         }
         composable(route = AnitrackRoutes.Search.name){
-            SearchScreen(modifier = Modifier.fillMaxSize())
+            SearchScreen(modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+            )
         }
         composable(route = AnitrackRoutes.Content.name){
             ContentScreen(modifier = Modifier.fillMaxSize())
