@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,67 +53,77 @@ fun ContentCard(
     contentType: String = "DefaultContentType",
     contentImageUrl: String = "DefaultContentImageUrl",
     contentGenres: List<String> = listOf("Genre1", "Genre2", "Genre3"),
-    showEpisodes: Boolean = false
+    showEpisodes: Boolean = true
 ){
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        shape = MaterialTheme.shapes.extraSmall
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+    Column (modifier = modifier
+        .fillMaxWidth()
+        .padding(horizontal = 15.dp)
+    ){
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.background
+            ),
+            shape = MaterialTheme.shapes.extraSmall
         ) {
-            Image(
-                painter = painterResource(R.drawable.coverimage),
-                contentDescription = null,
-                modifier = Modifier.clip(MaterialTheme.shapes.extraSmall)
-            )
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = 10.dp, bottom = 10.dp,
-                        start = 20.dp, end = 5.dp
-                    ),
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = contentTitle,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleSmall
+                Image(
+                    painter = painterResource(R.drawable.coverimage),
+                    contentDescription = null,
+                    modifier = Modifier.clip(MaterialTheme.shapes.extraSmall)
                 )
-                if (showEpisodes){
-                    EpisodesHandler(
-                        totalContentEpisodes = totalContentEpisodes,
-                        userContentEpisodes = userContentEpisodes,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 5.dp)
-                    )
-                } else {
-                    Spacer(modifier = Modifier.padding(vertical = 40.dp))
-                }
-                GenresList(
-                    contentGenres = contentGenres,
+                Column(
                     modifier = Modifier
-                        .padding(top = 5.dp)
-                        .clip(MaterialTheme.shapes.extraSmall)
-                        .background(MaterialTheme.colorScheme.tertiaryContainer)
-                        .horizontalScroll(rememberScrollState())
-                )
-                Spacer(modifier = Modifier.padding(top = 5.dp))
-                Text(
-                    text = contentType,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer).padding(5.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    maxLines = 1
-                )
+                        .padding(
+                            top = 10.dp, bottom = 10.dp,
+                            start = 20.dp, end = 5.dp
+                        ),
+                ) {
+                    Text(
+                        text = contentTitle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    if (showEpisodes){
+                        EpisodesHandler(
+                            totalContentEpisodes = totalContentEpisodes,
+                            userContentEpisodes = userContentEpisodes,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 5.dp)
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.padding(vertical = 40.dp))
+                    }
+                    GenresList(
+                        contentGenres = contentGenres,
+                        modifier = Modifier
+                            .padding(top = 5.dp)
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .horizontalScroll(rememberScrollState())
+                    )
+                    Spacer(modifier = Modifier.padding(top = 5.dp))
+                    Text(
+                        text = contentType,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer).padding(5.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        maxLines = 1
+                    )
+                }
             }
         }
+        HorizontalDivider(
+            thickness = 0.25.dp,
+            modifier = Modifier.padding(vertical = 15.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
