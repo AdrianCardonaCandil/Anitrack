@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +43,19 @@ import com.example.anitrack.R
 * showEpisodes: Boolean
 * */
 
+/* IMPORTANTE: Cuando uses el contentCard tienes que pasarle el siguiente modificador
+*  modifier = Modifier
+*         .fillMaxWidth()
+*         .padding(
+*             top = 15.dp,
+*             start = 15.dp,
+*             end = 15.dp
+*         )
+*  Los padding horizontales (start y end) realmente dependen de cuanto padding estés
+*  dejando para los componentes de tus páginas en los bordes izquierdo y derecho. Los
+*  mios tienen 15.dp en cada borde.
+* */
+
 @Composable
 fun ContentCard(
     modifier: Modifier = Modifier,
@@ -55,10 +67,7 @@ fun ContentCard(
     contentGenres: List<String> = listOf("Genre1", "Genre2", "Genre3"),
     showEpisodes: Boolean = true
 ){
-    Column (modifier = modifier
-        .fillMaxWidth()
-        .padding(horizontal = 15.dp)
-    ){
+    Column (modifier = modifier){
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
@@ -121,7 +130,7 @@ fun ContentCard(
         }
         HorizontalDivider(
             thickness = 0.25.dp,
-            modifier = Modifier.padding(vertical = 15.dp),
+            modifier = Modifier.padding(top = 15.dp),
             color = MaterialTheme.colorScheme.primary
         )
     }
@@ -223,7 +232,13 @@ fun GenresList(
 )
 @Composable
 fun ContentCardPreview(){
-    ContentCard(modifier = Modifier
-        .fillMaxWidth().padding(15.dp)
+    ContentCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                top = 15.dp,
+                start = 15.dp,
+                end = 15.dp
+            )
     )
 }
