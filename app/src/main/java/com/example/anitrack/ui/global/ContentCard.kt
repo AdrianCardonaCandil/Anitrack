@@ -34,12 +34,12 @@ import androidx.compose.ui.unit.dp
 import com.example.anitrack.R
 
 /* This card needs the following attributes to draw the information needed on the screen
-contentTitle:String,
-contentEpisodes: Int,
-contentType: String,
-contentImageUrl: String,
-contentGenres: List<String>,
-showEpisodes: Boolean
+* contentTitle:String,
+* contentEpisodes: Int,
+* contentType: String,
+* contentImageUrl: String,
+* contentGenres: List<String>,
+* showEpisodes: Boolean
 * */
 
 @Composable

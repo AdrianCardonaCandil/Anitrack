@@ -2,6 +2,7 @@ package com.example.anitrack.ui.content
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,20 +17,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.anitrack.R
 
 /* This section needs the following information to display:
-contentName: String,
-contentDescription: String,
-contentType: String,
-contentEpisodes: Int,
-contentStatus: String,
-contentScore: Float
-contentCoverImageUrl: String
+* contentName: String,
+* contentDescription: String,
+* contentType: String,
+* contentEpisodes: Int,
+* contentStatus: String,
+* contentScore: Float
+* contentCoverImageUrl: String
 * */
 
 @Composable
@@ -50,11 +53,13 @@ fun MainInfoContainer(
             Image(
                 painter = painterResource(R.drawable.coverimage),
                 contentDescription = null,
-                modifier = Modifier.padding(15.dp).align(Alignment.CenterVertically)
+                modifier = Modifier
+                    .padding()
+                    .align(Alignment.CenterVertically)
             )
             Column(
                 modifier = Modifier
-                    .padding(15.dp)
+                    .padding(start = 15.dp)
                     .fillMaxWidth()
             ) {
                 Text(
@@ -76,11 +81,10 @@ fun MainInfoContainer(
             text = contentDescription,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                horizontal = 15.dp,
-                vertical = 5.dp
-                ),
-            style = MaterialTheme.typography.bodyMedium
+                .padding(top = 25.dp),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium,
+            lineHeight = 25.sp
         )
     }
 }
@@ -99,18 +103,10 @@ fun InfoTagsLayout(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        listOf(
-            contentType,
-            contentStatus,
-            contentEpisodes,
-            contentScore
-        ).forEach { tag ->
-            when(tag){
-                contentScore -> InfoTag("Score: $contentScore")
-                contentEpisodes -> InfoTag("$contentEpisodes episodes")
-                else -> InfoTag(tag.toString())
-            }
-        }
+        InfoTag(contentType)
+        InfoTag(contentStatus)
+        InfoTag("$contentEpisodes episodes")
+        InfoTag("Score: $contentScore")
     }
 }
 
@@ -119,9 +115,10 @@ fun InfoTag(content: String){
     Text(
         text = content,
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(5.dp).horizontalScroll(rememberScrollState()),
         maxLines = 1,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
         style = MaterialTheme.typography.labelSmall
     )
 }
@@ -129,5 +126,9 @@ fun InfoTag(content: String){
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MainInfoContainerPreview(){
-    MainInfoContainer(modifier = Modifier.fillMaxWidth())
+    MainInfoContainer(
+        modifier = Modifier
+        .fillMaxWidth()
+        .padding(15.dp)
+    )
 }
