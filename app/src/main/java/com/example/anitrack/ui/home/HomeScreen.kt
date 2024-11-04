@@ -13,7 +13,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier){
+fun HomeScreen(
+    onGridContentClicked: () -> Unit,
+    modifier: Modifier = Modifier
+){
     Column(modifier) {
         Banner(modifier = Modifier
             .fillMaxWidth()
@@ -27,6 +30,7 @@ fun HomeScreen(modifier: Modifier = Modifier){
         Spacer(modifier = Modifier.padding(vertical = 15.dp))
         contentGridNameResources.forEach {
             ContentGrid(
+                onCardClicked = { onGridContentClicked() },
                 gridName = stringResource(it),
                 modifier = Modifier
                     .fillMaxWidth()

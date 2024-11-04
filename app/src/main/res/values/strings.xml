@@ -4,8 +4,8 @@
 
     <!-- Top Bottom Nav Labels -->
     <string name="bottomNavHomeLabel">Home</string>
-    <string name="bottomNavSearchLabel">Discover</string>
-    <string name="bottomNavListsLabel">My Lists</string>
+    <string name="bottomNavSearchLabel">Search</string>
+    <string name="bottomNavListsLabel">Lists</string>
     <string name="bottomNavProfileLabel">Profile</string>
 
     <!-- Home Screen Strings Resources  -->

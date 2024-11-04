@@ -18,6 +18,7 @@ import com.example.anitrack.R
 @Composable
 fun ContentGrid(
     modifier: Modifier = Modifier,
+    onCardClicked: () -> Unit,
     gridName:String = "Grid Name:",
     defaultItemCount: Int = 4
 ) {
@@ -36,6 +37,7 @@ fun ContentGrid(
         ) {
             (1..defaultItemCount).forEach { _ ->
                 ContentGridCard(
+                    onClick = { onCardClicked() },
                     modifier = Modifier.padding(10.dp)
                 )
             }
@@ -47,6 +49,7 @@ fun ContentGrid(
 @Composable
 fun SearchGridPreview(){
     ContentGrid(
+        onCardClicked = {},
         modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp)

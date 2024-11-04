@@ -31,17 +31,20 @@ fun AnitrackApp(
         composable(route = AnitrackRoutes.Home.name){
             HomeScreen(modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+                onGridContentClicked = {navController.navigate(AnitrackRoutes.Content.name)}
             )
         }
         composable(route = AnitrackRoutes.Search.name){
             SearchScreen(modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
             )
         }
         composable(route = AnitrackRoutes.Content.name){
-            ContentScreen(modifier = Modifier.fillMaxSize())
+            ContentScreen(modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+            )
         }
         composable(route = AnitrackRoutes.Lists.name){
             ListsScreen(modifier = Modifier.fillMaxSize())

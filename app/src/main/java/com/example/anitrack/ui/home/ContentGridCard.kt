@@ -2,6 +2,7 @@ package com.example.anitrack.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -34,13 +35,14 @@ fun ContentGridCard(
     modifier: Modifier = Modifier,
     contentTitle: String = "defaultContentName",
     contentImageUrl: String = "defaultContentImageUrl",
+    onClick: () -> Unit,
     contentId: Int = 0
 ){
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
-        modifier = modifier
+        modifier = modifier.clickable { onClick() }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally

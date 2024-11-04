@@ -39,7 +39,6 @@ contentEpisodes: Int,
 contentType: String,
 contentImageUrl: String,
 contentGenres: List<String>,
-contentScore: Int,
 showEpisodes: Boolean
 * */
 
@@ -47,11 +46,11 @@ showEpisodes: Boolean
 fun ContentCard(
     modifier: Modifier = Modifier,
     contentTitle: String = "DefaultContentTitle",
-    contentEpisodes: Int = 0,
+    userContentEpisodes: Int = 0,
+    totalContentEpisodes: Int = 0,
     contentType: String = "DefaultContentType",
     contentImageUrl: String = "DefaultContentImageUrl",
     contentGenres: List<String> = listOf("Genre1", "Genre2", "Genre3"),
-    contentScore: Int = 0,
     showEpisodes: Boolean = false
 ){
     Card(
@@ -72,8 +71,8 @@ fun ContentCard(
             Column(
                 modifier = Modifier
                     .padding(
-                        horizontal = 20.dp,
-                        vertical = 10.dp
+                        top = 10.dp, bottom = 10.dp,
+                        start = 20.dp, end = 5.dp
                     ),
             ) {
                 Text(
@@ -85,14 +84,17 @@ fun ContentCard(
                 )
                 if (showEpisodes){
                     EpisodesHandler(
+                        totalContentEpisodes = totalContentEpisodes,
+                        userContentEpisodes = userContentEpisodes,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 5.dp)
                     )
                 } else {
-                    Spacer(modifier = Modifier.padding(vertical = 50.dp))
+                    Spacer(modifier = Modifier.padding(vertical = 40.dp))
                 }
                 GenresList(
+                    contentGenres = contentGenres,
                     modifier = Modifier
                         .padding(top = 5.dp)
                         .clip(MaterialTheme.shapes.extraSmall)
@@ -114,14 +116,20 @@ fun ContentCard(
 }
 
 @Composable // DONE
-fun EpisodesHandler(modifier: Modifier = Modifier){
+fun EpisodesHandler(
+    totalContentEpisodes: Int,
+    userContentEpisodes: Int,
+    modifier: Modifier = Modifier
+){
     EpisodesIndicator(
+        totalContentEpisodes = totalContentEpisodes,
+        userContentEpisodes = userContentEpisodes,
         modifier = modifier
     )
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 5.dp),
+            .padding(bottom = 15.dp),
         horizontalArrangement = Arrangement.End
     ) {
         Icon(
@@ -142,9 +150,9 @@ fun EpisodesHandler(modifier: Modifier = Modifier){
 fun EpisodesIndicator(
     modifier: Modifier = Modifier,
     label: String = "Episodes:",
-    currentNumber: Int = 0,
-    contentEpisodes: Int = 0,
-    progressFactor: Float = 0.5f
+    totalContentEpisodes: Int,
+    userContentEpisodes: Int,
+    progressFactor: Float = userContentEpisodes / totalContentEpisodes.toFloat()
 ){
     Column(modifier = modifier) {
         Row(
@@ -159,7 +167,7 @@ fun EpisodesIndicator(
                 color = MaterialTheme.colorScheme.secondary
             )
             Text(
-                text = "${currentNumber}/${contentEpisodes}",
+                text = "${userContentEpisodes}/${totalContentEpisodes}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -179,7 +187,7 @@ fun EpisodesIndicator(
 @Composable // DONE
 fun GenresList(
     modifier: Modifier = Modifier,
-    contentGenres: List<String> = listOf("Genre1", "Genre2", "Genre3"),
+    contentGenres: List<String>,
 ) {
     FlowRow(
         modifier = modifier,
