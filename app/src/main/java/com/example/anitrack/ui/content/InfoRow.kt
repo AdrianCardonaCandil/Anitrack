@@ -29,7 +29,7 @@ fun InfoRow(
     Column(modifier = modifier) {
         Text(
             text = label,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.ExtraBold
         )

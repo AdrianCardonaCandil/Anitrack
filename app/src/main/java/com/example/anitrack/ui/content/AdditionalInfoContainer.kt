@@ -78,7 +78,7 @@ fun AdditionalInfoLabel(
                 .weight(1f),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
+
         )
         Text(
             text = value,
@@ -91,8 +91,8 @@ fun AdditionalInfoLabel(
         )
     }
     HorizontalDivider(
-        thickness = 0.5.dp,
-        color = MaterialTheme.colorScheme.secondary
+        thickness = 0.25.dp,
+        color = MaterialTheme.colorScheme.tertiary
     )
 }
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +26,7 @@ fun ContentScreen(modifier: Modifier = Modifier){
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = 20.dp,
+                    top = 30.dp,
                     start = 15.dp,
                     end = 15.dp
                 )
@@ -36,10 +37,10 @@ fun ContentScreen(modifier: Modifier = Modifier){
                 .padding(
                     start = 15.dp,
                     end = 15.dp,
-                    top = 30.dp,
+                    top = 40.dp,
                     bottom = 10.dp
                 ),
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.ExtraBold
         )
@@ -52,14 +53,44 @@ fun ContentScreen(modifier: Modifier = Modifier){
                 )
         )
         listOf(1, 2).forEach {
-            Spacer(modifier = Modifier.padding(top = 35.dp))
+            Spacer(modifier = Modifier.padding(top = 45.dp))
             InfoRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp),
-                contentColor = MaterialTheme.colorScheme.onSecondary,
-                containerColor = MaterialTheme.colorScheme.secondary
+                contentColor = MaterialTheme.colorScheme.onTertiary,
+                containerColor = MaterialTheme.colorScheme.tertiary
             )
         }
+        Spacer(modifier = Modifier.padding(top = 15.dp))
+        Text(
+            text = "Characters",
+            modifier = Modifier
+                .padding(
+                    start = 15.dp,
+                    end = 15.dp,
+                    top = 30.dp,
+                    bottom = 10.dp
+                ),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.ExtraBold
+        )
+        CharactersContainer(
+            characters = listOf(
+                "character1",
+                "character2",
+                "character3",
+                "character4",
+                "character5",
+                "character6",
+                "character7",
+                "character8",
+                "character9",
+                "character10"
+            ),
+            modifier = Modifier.padding(15.dp).heightIn(max = 250.dp)
+        )
+        Spacer(modifier = Modifier.padding(top = 15.dp))
     }
 }
