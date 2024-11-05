@@ -2,7 +2,7 @@ package com.example.anitrack.ui.content
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -51,5 +51,15 @@ fun ContentScreen(modifier: Modifier = Modifier){
                     end = 15.dp
                 )
         )
+        listOf(1, 2).forEach {
+            Spacer(modifier = Modifier.padding(top = 35.dp))
+            InfoRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp),
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+                containerColor = MaterialTheme.colorScheme.secondary
+            )
+        }
     }
 }

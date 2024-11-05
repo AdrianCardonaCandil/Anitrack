@@ -120,7 +120,10 @@ fun ContentCard(
                     Text(
                         text = contentType,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer).padding(5.dp),
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .padding(5.dp),
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                         maxLines = 1

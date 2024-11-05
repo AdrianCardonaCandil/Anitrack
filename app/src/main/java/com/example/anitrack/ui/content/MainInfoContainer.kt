@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -115,10 +116,11 @@ fun InfoTag(content: String){
     Text(
         text = content,
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.primaryContainer)
+            .clip(MaterialTheme.shapes.extraSmall)
+            .background(MaterialTheme.colorScheme.secondary)
             .padding(5.dp).horizontalScroll(rememberScrollState()),
         maxLines = 1,
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        color = MaterialTheme.colorScheme.onSecondary,
         style = MaterialTheme.typography.labelSmall
     )
 }

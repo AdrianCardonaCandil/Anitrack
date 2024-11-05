@@ -92,7 +92,7 @@ fun AdditionalInfoLabel(
     }
     HorizontalDivider(
         thickness = 0.5.dp,
-        color = MaterialTheme.colorScheme.tertiary
+        color = MaterialTheme.colorScheme.secondary
     )
 }
 
