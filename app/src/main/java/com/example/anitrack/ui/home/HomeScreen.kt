@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun HomeScreen(
+    homeViewModel: HomeViewModel,
     onGridContentClicked: () -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -37,5 +39,11 @@ fun HomeScreen(
                     .padding(15.dp)
             )
         }
+        Text(
+            text = homeViewModel.totalContentsReceived,
+            modifier = Modifier.padding(30.dp),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }

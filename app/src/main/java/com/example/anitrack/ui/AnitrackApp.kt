@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.anitrack.navigation.AnitrackRoutes
 import com.example.anitrack.ui.content.ContentScreen
 import com.example.anitrack.ui.home.HomeScreen
+import com.example.anitrack.ui.home.HomeViewModel
 import com.example.anitrack.ui.lists.ListsScreen
 import com.example.anitrack.ui.profile.ProfileScreen
 import com.example.anitrack.ui.search.SearchScreen
@@ -21,6 +23,7 @@ import com.example.anitrack.ui.theme.AnitrackTheme
 @Composable
 fun AnitrackApp(
     modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
@@ -32,7 +35,8 @@ fun AnitrackApp(
             HomeScreen(modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-                onGridContentClicked = {navController.navigate(AnitrackRoutes.Content.name)}
+                onGridContentClicked = {navController.navigate(AnitrackRoutes.Content.name)},
+                homeViewModel = homeViewModel
             )
         }
         composable(route = AnitrackRoutes.Search.name){
