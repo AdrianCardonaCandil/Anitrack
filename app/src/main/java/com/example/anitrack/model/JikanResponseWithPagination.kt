@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class JikanCompoundResponse<T> (
+data class JikanResponseWithPagination<T> (
     val data: List<T>?,
     val pagination: Pagination?
 ) {

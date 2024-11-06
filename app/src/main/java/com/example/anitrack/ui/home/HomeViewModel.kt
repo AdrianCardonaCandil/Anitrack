@@ -16,23 +16,7 @@ import java.io.IOException
 
 class HomeViewModel(private val jikanRepository: JikanRepository) : ViewModel() {
 
-    var totalContentsReceived: String by mutableStateOf("Trying to get contents")
-        private set
 
-    init {
-        testCurrentSeasonRequest()
-    }
-
-    private fun testCurrentSeasonRequest() {
-        viewModelScope.launch {
-            try {
-                var listResult = jikanRepository.getCurrentSeason().data
-                totalContentsReceived = "The amount of contents received are: ${listResult?.size}"
-            } catch (e: IOException) {
-                totalContentsReceived = "There has been an error loading the contents"
-            }
-        }
-    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

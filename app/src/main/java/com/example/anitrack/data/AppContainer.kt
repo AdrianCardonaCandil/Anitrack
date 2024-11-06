@@ -12,11 +12,16 @@ interface AppContainer {
 
 class DefaultAppContainer : AppContainer {
     // BaseUrl for Retrofit service
-    private val jikanBaseUrl: String = "https://api.jikan.moe/v4"
+    private val jikanBaseUrl: String = "https://api.jikan.moe/v4/"
+
+    /* Json instance for the retrofit converter factory. Assigning the possibility to
+     * ignore unknown keys in the JSON responses
+     * */
+    private val json = Json { ignoreUnknownKeys = true }
 
     // Retrofit object instantiation
     private val retrofit: Retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(jikanBaseUrl)
         .build()
 

@@ -41,9 +41,9 @@ fun HomeScreen(
         }
         Text(
             text = homeViewModel.totalContentsReceived,
-            modifier = Modifier.padding(30.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary
+            modifier = Modifier.fillMaxWidth().padding(15.dp),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
