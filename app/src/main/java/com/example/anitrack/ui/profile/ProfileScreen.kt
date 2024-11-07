@@ -11,9 +11,6 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
     ) {
         // ProfileHeader ocupa el 30% de la pantalla
         ProfileHeader(
