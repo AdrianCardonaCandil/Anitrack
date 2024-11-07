@@ -24,4 +24,14 @@
     <string name="newSeasonContentGridLabel">New Season</string>
     <string name="topAnimeContentGridLabel">Top Anime</string>
     <string name="upcomingContentGridLabel">Upcoming</string>
+
+    <!-- List Screen Strings Resources  -->
+    <string name="tab_watching">Watching</string>
+    <string name="tab_completed">Completed</string>
+    <string name="tab_plan_to_watch">Plan to Watch</string>
+    <string name="tab_loved">Loved</string>
+    <string name="tab_watching_header"> Already Watching</string>
+    <string name="tab_completed_header"> Completed Animes</string>
+    <string name="tab_plan_to_watch_header">Planning to watch Animes</string>
+    <string name="tab_loved_header">Loved Animes</string>
 </resources>
