@@ -39,11 +39,5 @@ fun HomeScreen(
                     .padding(15.dp)
             )
         }
-        Text(
-            text = homeViewModel.totalContentsReceived,
-            modifier = Modifier.fillMaxWidth().padding(15.dp),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 }
