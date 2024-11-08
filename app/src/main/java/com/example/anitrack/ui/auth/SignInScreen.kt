@@ -16,7 +16,11 @@ import androidx.compose.ui.unit.sp
 import com.example.anitrack.network.AuthState
 
 @Composable
-fun SignInScreen(authViewModel: AuthViewModel, onSignUpClick: () -> Unit) {
+fun SignInScreen(
+    authViewModel: AuthViewModel,
+    onSignInSuccess: () -> Unit,          // Callback for successful login
+    onSignUpClick: () -> Unit             // Callback for navigating to sign-up screen
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val authState by authViewModel.authState.collectAsState()
@@ -29,7 +33,7 @@ fun SignInScreen(authViewModel: AuthViewModel, onSignUpClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Log In",
+            text = "Sign In to Anitrack",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -56,7 +60,7 @@ fun SignInScreen(authViewModel: AuthViewModel, onSignUpClick: () -> Unit) {
             Text(text = "Log In", color = Color.White)
         }
 
-        // Display error message if sign-in fails
+        // Display login result based on authState
         when (authState) {
             is AuthState.Error -> {
                 Text(
@@ -65,7 +69,10 @@ fun SignInScreen(authViewModel: AuthViewModel, onSignUpClick: () -> Unit) {
                 )
             }
             is AuthState.Success -> {
-                Text(text = "Login successful!", color = Color.Green)
+                // Call onSignInSuccess to trigger navigation
+                LaunchedEffect(Unit) {
+                    onSignInSuccess()
+                }
             }
             else -> {}
         }
@@ -79,5 +86,4 @@ fun SignInScreen(authViewModel: AuthViewModel, onSignUpClick: () -> Unit) {
         )
     }
 }
-
 

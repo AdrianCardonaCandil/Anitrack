@@ -12,11 +12,24 @@ import com.example.anitrack.network.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.update
+import com.google.firebase.auth.FirebaseAuth
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState = _authState.asStateFlow()
+
+    // State for logged-in status
+    private val _isLoggedIn = MutableStateFlow(FirebaseAuth.getInstance().currentUser != null)
+    val isLoggedIn = _isLoggedIn.asStateFlow()
+
+    init {
+        // Listen to FirebaseAuth state changes to update isLoggedIn
+        FirebaseAuth.getInstance().addAuthStateListener { auth ->
+            _isLoggedIn.value = auth.currentUser != null
+        }
+    }
 
     fun signUp(username: String, email: String, password: String, confirmPassword: String) {
         if (validateSignUp(username, email, password, confirmPassword)) {
@@ -31,7 +44,6 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     fun signIn(username: String, password: String) {
         viewModelScope.launch {
-            // Call validateSignIn in the repository to check credentials
             val result = authRepository.validateSignIn(username, password)
             _authState.value = result
         }

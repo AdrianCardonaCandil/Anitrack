@@ -5,5 +5,6 @@ enum class AnitrackRoutes {
     Search,
     Lists,
     Content,
-    Profile
+    Profile,
+    Auth
 }

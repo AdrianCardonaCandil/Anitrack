@@ -9,11 +9,11 @@ sealed interface AuthResult {
     data class Failure(val error: Exception) : AuthResult
 }
 sealed class AuthState {
-    object Idle : AuthState()                  // Estado inicial sin ninguna operación en curso
-    object Success : AuthState()               // La autenticación fue exitosa
-    data class Loading(val message: String = "Loading...") : AuthState()  // La autenticación está en proceso
-    data class Error(val exception: Throwable) : AuthState()  // Ocurrió un error en la autenticación
-    data class ValidationError(val message: String) : AuthState()  // Error en los datos de entrada (ej. email inválido)
+    object Idle : AuthState()
+    object Success : AuthState()
+    data class Loading(val message: String = "Loading...") : AuthState()
+    data class Error(val exception: Throwable) : AuthState()
+    data class ValidationError(val message: String) : AuthState()
 }
 
 interface AuthService {
@@ -25,7 +25,7 @@ interface AuthService {
 
 class FirebaseAuthService(
     private val auth: FirebaseAuth,
-    private val firestoreService: DatabaseService  // Inject DatabaseService for Firestore operations
+    private val firestoreService: DatabaseService
 ) : AuthService {
 
     override suspend fun signUp(email: String, password: String): AuthResult {
@@ -57,7 +57,6 @@ class FirebaseAuthService(
 
     override suspend fun validateSignIn(username: String, password: String): AuthResult {
         return try {
-            // Use DatabaseService to find the document with the specified username
             val result = firestoreService.filterCollection(
                 collectionPath = "users",
                 fieldName = "username",
@@ -66,14 +65,12 @@ class FirebaseAuthService(
                 model = User::class.java
             )
 
-            // Process the DatabaseResult
             when (result) {
                 is DatabaseResult.Success -> {
                     val user = result.data.firstOrNull()
                     if (user == null) {
                         AuthResult.Failure(Exception("User not found"))
                     } else {
-                        // Get the email associated with the username and attempt sign-in with password
                         val email = user.email
                         try {
                             auth.signInWithEmailAndPassword(email, password).await()

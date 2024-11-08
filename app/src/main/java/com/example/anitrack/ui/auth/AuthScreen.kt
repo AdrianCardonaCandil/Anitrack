@@ -8,12 +8,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
+fun AuthScreen(
+    authViewModel: AuthViewModel = viewModel(),
+    onSignInSuccess: () -> Unit           // Callback to handle successful login
+) {
     var showSignIn by remember { mutableStateOf(true) }
 
     if (showSignIn) {
         SignInScreen(
             authViewModel = authViewModel,
+            onSignInSuccess = onSignInSuccess,   
             onSignUpClick = { showSignIn = false }
         )
     } else {
