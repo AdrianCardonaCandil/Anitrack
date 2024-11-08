@@ -15,7 +15,11 @@ interface FirebaseContainer {
 
 class DefaultFirebaseContainer : FirebaseContainer {
     override val authService: AuthService by lazy {
-        FirebaseAuthService(Firebase.auth)
+
+        FirebaseAuthService(
+            auth = Firebase.auth,
+            firestoreService = firestoreService
+        )
     }
 
     override val firestoreService: DatabaseService by lazy {
