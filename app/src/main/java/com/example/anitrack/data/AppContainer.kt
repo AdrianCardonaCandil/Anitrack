@@ -8,6 +8,8 @@ import retrofit2.Retrofit
 
 interface AppContainer {
     val jikanRepository: JikanRepository
+    val databaseRepository: DatabaseRepository
+    val authRepository: AuthRepository
 }
 
 class DefaultAppContainer : AppContainer {
@@ -34,5 +36,19 @@ class DefaultAppContainer : AppContainer {
     override val jikanRepository: JikanRepository by lazy {
         NetworkJikanRepository(jikanApiService)
     }
+
+    // Initializing the firebase container with the firebase services
+    private val firebaseContainer: FirebaseContainer = DefaultFirebaseContainer()
+
+    // Initializing the FirestoreFirebaseRepository
+    override val databaseRepository: DatabaseRepository by lazy {
+        FirestoreFirebaseRepository(firebaseContainer.firestoreService)
+    }
+
+    // Initializing the AuthFirebaseRepository
+    override val authRepository: AuthRepository by lazy {
+        AuthFirebaseRepository(firebaseContainer.authService)
+    }
+
 }
 
