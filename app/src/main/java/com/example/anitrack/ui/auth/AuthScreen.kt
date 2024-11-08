@@ -5,14 +5,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun AuthScreen() {
+fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
     var showSignIn by remember { mutableStateOf(true) }
 
     if (showSignIn) {
-        SignInScreen { showSignIn = false }
+        SignInScreen(
+            authViewModel = authViewModel,
+            onSignUpClick = { showSignIn = false }
+        )
     } else {
-        SignUpScreen { showSignIn = true }
+        SignUpScreen(
+            authViewModel = authViewModel,
+            onLoginClick = { showSignIn = true }
+        )
     }
 }

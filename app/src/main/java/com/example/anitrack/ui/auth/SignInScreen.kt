@@ -13,9 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.anitrack.network.AuthState
 
 @Composable
-fun SignInScreen(onSignUpClick: () -> Unit) {
+fun SignInScreen(authViewModel: AuthViewModel, onSignUpClick: () -> Unit) {
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val authState by authViewModel.authState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,36 +41,43 @@ fun SignInScreen(onSignUpClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Text(
-            text = "Welcome back to Anitrack",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
+        CustomTextField(label = "Username", onValueChange = { username = it })
+        Spacer(modifier = Modifier.height(16.dp))
+        CustomTextField(label = "Password", isPassword = true, onValueChange = { password = it })
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        CustomTextField(label = "UserName")
-        Spacer(modifier = Modifier.height(16.dp))
-        CustomTextField(label = "Password", isPassword = true)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "New here? Sign Up",
-            color = Color(0xFF6886C5),
-            modifier = Modifier.clickable { onSignUpClick() }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Handle Login action */ },
+            onClick = { authViewModel.signIn(username, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
             Text(text = "Log In", color = Color.White)
         }
+
+        // Display error message if sign-in fails
+        when (authState) {
+            is AuthState.Error -> {
+                Text(
+                    text = (authState as AuthState.Error).exception.message ?: "Error",
+                    color = Color.Red
+                )
+            }
+            is AuthState.Success -> {
+                Text(text = "Login successful!", color = Color.Green)
+            }
+            else -> {}
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "New here? Sign Up",
+            color = Color(0xFF6886C5),
+            modifier = Modifier.clickable { onSignUpClick() }
+        )
     }
 }
+
+
