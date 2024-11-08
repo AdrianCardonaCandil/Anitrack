@@ -62,7 +62,7 @@ interface DatabaseService {
         collectionPath: String,
         documentId: String,
         updates: Map<String, Any>
-    ) : DatabaseResult<Unit>
+    ) : DatabaseResult<Boolean>
 
     /** Deletes a concrete document specified by id.
      * @param collectionPath Collection route
@@ -73,7 +73,7 @@ interface DatabaseService {
     suspend fun deleteDocument(
         collectionPath: String,
         documentId: String
-    ) : DatabaseResult<Unit>
+    ) : DatabaseResult<Boolean>
 
     suspend fun <T> filterCollection(
         collectionPath: String,
@@ -143,10 +143,10 @@ class FirebaseFirestoreService(val firestore: FirebaseFirestore) : DatabaseServi
         collectionPath: String,
         documentId: String,
         updates: Map<String, Any>
-    ): DatabaseResult<Unit> {
+    ): DatabaseResult<Boolean> {
         return try {
             firestore.collection(collectionPath).document(documentId).update(updates).await()
-            DatabaseResult.Success(Unit)
+            DatabaseResult.Success(true)
         } catch (e: Exception) {
             DatabaseResult.Failure(e)
         }
@@ -155,10 +155,10 @@ class FirebaseFirestoreService(val firestore: FirebaseFirestore) : DatabaseServi
     override suspend fun deleteDocument(
         collectionPath: String,
         documentId: String
-    ): DatabaseResult<Unit> {
+    ): DatabaseResult<Boolean> {
         return try {
             firestore.collection(collectionPath).document(documentId).delete().await()
-            DatabaseResult.Success(Unit)
+            DatabaseResult.Success(true)
         } catch (e: Exception) {
             DatabaseResult.Failure(e)
         }
