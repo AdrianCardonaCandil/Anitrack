@@ -1,6 +1,7 @@
 package com.example.anitrack.ui.auth
 
-import androidx.compose.foundation.background
+import CustomTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -14,9 +15,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anitrack.network.AuthState
+import com.example.anitrack.ui.global.GenericButton
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
+    modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
     onSignInSuccess: () -> Unit,
     onSignUpClick: () -> Unit
@@ -24,45 +29,49 @@ fun SignInScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val authState by authViewModel.authState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+    var isTimeout by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE5E5E5))
             .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = "Sign In to Anitrack",
-            fontSize = 24.sp,
+            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFF222034))
-                .padding(16.dp),
-            color = Color.White
+                .fillMaxWidth(),
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(40.dp))
-
         CustomTextField(label = "Username", onValueChange = { username = it })
         Spacer(modifier = Modifier.height(16.dp))
         CustomTextField(label = "Password", isPassword = true, onValueChange = { password = it })
-
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(
-            onClick = { authViewModel.signIn(username, password) },
+        GenericButton(
+            text = "Sign In",
+            onClick = {
+                isTimeout = false
+                authViewModel.signIn(username, password)
+                coroutineScope.launch {
+                    delay(10000) // Espera de 10 segundos
+                    if (authState is AuthState.Loading) {
+                        isTimeout = true
+                        authViewModel.setAuthError(AuthState.Error(Exception("Authentication timed out. Please try again.")))
+                    }
+                }
+            },
             modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Text(text = "Log In", color = Color.White)
-        }
+        )
 
         when (authState) {
             is AuthState.Loading -> {
-                CircularProgressIndicator(color = Color.Blue)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
             is AuthState.Error -> {
                 Text(
@@ -76,11 +85,18 @@ fun SignInScreen(
             else -> {}
         }
 
+        if (isTimeout) {
+            Text(
+                text = "Authentication is taking longer than expected. Please check your connection and try again.",
+                color = Color.Red
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "New here? Sign Up",
-            color = Color(0xFF6886C5),
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.clickable { onSignUpClick() }
         )
     }

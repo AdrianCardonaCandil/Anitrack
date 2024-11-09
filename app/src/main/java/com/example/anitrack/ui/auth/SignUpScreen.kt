@@ -1,5 +1,6 @@
 package com.example.anitrack.ui.auth
 
+import CustomTextField
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,11 @@ import androidx.compose.ui.unit.sp
 import com.example.anitrack.network.AuthState
 
 @Composable
-fun SignUpScreen(authViewModel: AuthViewModel, onLoginClick: () -> Unit) {
+fun SignUpScreen(
+    modifier: Modifier = Modifier,
+    authViewModel: AuthViewModel,
+    onSignInSuccess: () -> Unit,
+    onLoginClick: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -35,7 +40,6 @@ fun SignUpScreen(authViewModel: AuthViewModel, onLoginClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE5E5E5))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

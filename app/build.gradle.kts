@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.ui.test.android)
     implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.androidx.tv.material)
     testImplementation(libs.junit)
     implementation(libs.coil.compose)
     androidTestImplementation(libs.androidx.junit)

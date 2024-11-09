@@ -65,6 +65,7 @@ fun AnitrackApp(
                 ProfileScreen(modifier = Modifier.fillMaxSize())
             } else {
                 AuthScreen(
+                    modifier = Modifier.fillMaxSize(),
                     authViewModel = authViewModel,
                     onSignInSuccess = {
                         navController.navigate(AnitrackRoutes.Home.name)
