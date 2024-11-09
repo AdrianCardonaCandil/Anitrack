@@ -2,7 +2,6 @@ package com.example.anitrack.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -20,39 +19,42 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState = _authState.asStateFlow()
 
-    // State for logged-in status
-    private val _isLoggedIn = MutableStateFlow(FirebaseAuth.getInstance().currentUser != null)
+    private val firebaseAuth = FirebaseAuth.getInstance()
+
+    private val _isLoggedIn = MutableStateFlow<Boolean>(firebaseAuth.currentUser != null)
     val isLoggedIn = _isLoggedIn.asStateFlow()
 
     init {
-        // Listen to FirebaseAuth state changes to update isLoggedIn
-        FirebaseAuth.getInstance().addAuthStateListener { auth ->
+        // Monitor Firebase Auth state
+        firebaseAuth.addAuthStateListener { auth ->
             _isLoggedIn.value = auth.currentUser != null
         }
     }
 
     fun signUp(username: String, email: String, password: String, confirmPassword: String) {
         if (validateSignUp(username, email, password, confirmPassword)) {
+            _authState.update { AuthState.Loading() }
             viewModelScope.launch {
                 val result = authRepository.signUp(email, password)
-                _authState.value = result
+                _authState.update { result }
+                if (result is AuthState.Success) {
+                    _isLoggedIn.update { true }
+                }
             }
         } else {
-            _authState.value = AuthState.ValidationError("Invalid input data")
+            _authState.update { AuthState.ValidationError("Invalid input data") }
         }
     }
 
     fun signIn(username: String, password: String) {
+        _authState.update { AuthState.Loading() }
         viewModelScope.launch {
             val result = authRepository.validateSignIn(username, password)
-            _authState.value = result
-        }
-    }
+            _authState.update { result }
 
-    fun removeUser() {
-        viewModelScope.launch {
-            val result = authRepository.removeUser()
-            _authState.value = result
+            if (result is AuthState.Success) {
+                _isLoggedIn.update { true }
+            }
         }
     }
 
@@ -60,7 +62,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 AuthViewModel(
-                    authRepository = (this[APPLICATION_KEY] as AnitrackApplication)
+                    authRepository = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AnitrackApplication)
                         .container.authRepository
                 )
             }

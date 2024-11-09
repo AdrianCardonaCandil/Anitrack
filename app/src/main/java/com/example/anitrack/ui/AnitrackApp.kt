@@ -64,23 +64,20 @@ fun AnitrackApp(
             if (isLoggedIn) {
                 ProfileScreen(modifier = Modifier.fillMaxSize())
             } else {
-                navController.navigate(AnitrackRoutes.Auth.name) {
-                    // Clear backstack to avoid layering
-                    popUpTo(AnitrackRoutes.Home.name) { inclusive = true }
-                }
+                AuthScreen(
+                    authViewModel = authViewModel,
+                    onSignInSuccess = {
+                        navController.navigate(AnitrackRoutes.Home.name)
+                    }
+                )
             }
         }
-        composable(route = AnitrackRoutes.Auth.name) {
-            AuthScreen(
-                authViewModel = authViewModel,
-                onSignInSuccess = {
-                    navController.navigate(AnitrackRoutes.Profile.name) {
-                        popUpTo(AnitrackRoutes.Home.name) { inclusive = true }
-                    }
-                }
-            )
-        }
     }
+}
+
+@Composable
+fun LoadingScreen() {
+    androidx.compose.material3.CircularProgressIndicator(modifier = Modifier.fillMaxSize())
 }
 
 @Preview(showSystemUi = true)

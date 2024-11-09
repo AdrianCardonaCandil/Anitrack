@@ -10,7 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun AuthScreen(
     authViewModel: AuthViewModel = viewModel(),
-    onSignInSuccess: () -> Unit           // Callback to handle successful login
+    onSignInSuccess: () -> Unit
 ) {
     var showSignIn by remember { mutableStateOf(true) }
 

@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-
 import androidx.compose.material3.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +18,8 @@ import com.example.anitrack.network.AuthState
 @Composable
 fun SignInScreen(
     authViewModel: AuthViewModel,
-    onSignInSuccess: () -> Unit,          // Callback for successful login
-    onSignUpClick: () -> Unit             // Callback for navigating to sign-up screen
+    onSignInSuccess: () -> Unit,
+    onSignUpClick: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -60,8 +60,10 @@ fun SignInScreen(
             Text(text = "Log In", color = Color.White)
         }
 
-        // Display login result based on authState
         when (authState) {
+            is AuthState.Loading -> {
+                CircularProgressIndicator(color = Color.Blue)
+            }
             is AuthState.Error -> {
                 Text(
                     text = (authState as AuthState.Error).exception.message ?: "Error",
@@ -69,10 +71,7 @@ fun SignInScreen(
                 )
             }
             is AuthState.Success -> {
-                // Call onSignInSuccess to trigger navigation
-                LaunchedEffect(Unit) {
-                    onSignInSuccess()
-                }
+                LaunchedEffect(authState) { onSignInSuccess() }
             }
             else -> {}
         }
@@ -86,4 +85,3 @@ fun SignInScreen(
         )
     }
 }
-
