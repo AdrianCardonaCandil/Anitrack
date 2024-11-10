@@ -2,7 +2,6 @@ package com.example.anitrack.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -39,10 +37,10 @@ contentId: Int
 @Composable
 fun ContentGridCard(
     modifier: Modifier = Modifier,
-    contentTitle: String = "defaultContentName",
-    contentImageUrl: String = "https://cdn.myanimelist.net/images/anime/1015/138006l.webp",
+    contentTitle: String?,
+    contentImageUrl: String?,
+    contentId: Int = 0,
     onClick: () -> Unit,
-    contentId: Int = 0
 ){
     Card(
         colors = CardDefaults.cardColors(
@@ -86,7 +84,7 @@ fun ContentGridCard(
                 }
             }
             Text(
-                text = contentTitle,
+                text = contentTitle ?: "No Title",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
@@ -96,12 +94,4 @@ fun ContentGridCard(
             )
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ContentGridCardPreview() {
-    ContentGridCard(
-        onClick = {}
-    )
 }
