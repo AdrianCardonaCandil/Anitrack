@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -25,7 +26,8 @@ import androidx.compose.ui.unit.sp
 fun CustomTextField(
     label: String,
     isPassword: Boolean = false,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    isValid: Boolean = true
 ) {
     var text by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
@@ -53,7 +55,6 @@ fun CustomTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp, bottom = 8.dp)
-                .background(Color.Transparent)
                 .height(48.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged { focusState ->
@@ -61,6 +62,6 @@ fun CustomTextField(
                 }
         )
 
-        Divider(color = Color.Black, thickness = 1.dp)
+        Divider(color = if (isFocused) (if (isValid) Color.Green else Color.Red) else Color.Black, thickness = 1.dp)
     }
 }

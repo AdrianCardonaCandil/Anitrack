@@ -4,6 +4,7 @@ import CustomTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,9 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anitrack.network.AuthState
-import com.example.anitrack.ui.global.GenericButton
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun SignInScreen(
@@ -31,6 +32,9 @@ fun SignInScreen(
     val authState by authViewModel.authState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     var isTimeout by remember { mutableStateOf(false) }
+
+    val isUsernameValid = username.isNotEmpty()
+    val isPasswordValid = password.isNotEmpty()
 
     Column(
         modifier = Modifier
@@ -48,26 +52,40 @@ fun SignInScreen(
         )
 
         Spacer(modifier = Modifier.height(40.dp))
-        CustomTextField(label = "Username", onValueChange = { username = it })
+        CustomTextField(label = "Username", onValueChange = { username = it }, isValid = isUsernameValid)
         Spacer(modifier = Modifier.height(16.dp))
-        CustomTextField(label = "Password", isPassword = true, onValueChange = { password = it })
+        CustomTextField(label = "Password", isPassword = true, onValueChange = { password = it }, isValid = isPasswordValid)
         Spacer(modifier = Modifier.height(24.dp))
 
-        GenericButton(
-            text = "Sign In",
+
+
+        Button(
             onClick = {
-                isTimeout = false
-                authViewModel.signIn(username, password)
-                coroutineScope.launch {
-                    delay(10000) // Espera de 10 segundos
-                    if (authState is AuthState.Loading) {
-                        isTimeout = true
-                        authViewModel.setAuthError(AuthState.Error(Exception("Authentication timed out. Please try again.")))
+                if (isUsernameValid && isPasswordValid) {
+                    isTimeout = false
+                    authViewModel.signIn(username, password)
+                    coroutineScope.launch {
+                        delay(10000) // Espera de 10 segundos
+                        if (authState is AuthState.Loading) {
+                            isTimeout = true
+                            authViewModel.setAuthError(AuthState.Error(Exception("Authentication timed out. Please try again.")))
+                        }
                     }
                 }
             },
             modifier = Modifier
-        )
+                .wrapContentWidth()
+                .wrapContentHeight()
+                .padding(8.dp),
+            shape = RoundedCornerShape(10.dp),
+            enabled = isUsernameValid && isPasswordValid
+        ) {
+            Text(
+                text = "Sign In",
+                color = Color.White,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp) // Padding interno alrededor del texto
+            )
+        }
 
         when (authState) {
             is AuthState.Loading -> {
