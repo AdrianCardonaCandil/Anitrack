@@ -55,7 +55,7 @@ fun ContentGridCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.widthIn(
                 min = 150.dp,
-                max = 170.dp
+                max = 160.dp
             )
         ) {
             val painter = rememberAsyncImagePainter(

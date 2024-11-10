@@ -5,14 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -28,10 +32,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.anitrack.R
 
 /* This card needs the following attributes to draw the information needed on the screen
@@ -63,7 +72,7 @@ fun ContentCard(
     userContentEpisodes: Int = 0,
     totalContentEpisodes: Int = 0,
     contentType: String = "DefaultContentType",
-    contentImageUrl: String = "DefaultContentImageUrl",
+    contentImageUrl: String = "https://cdn.myanimelist.net/images/anime/1015/138006l.webp",
     contentGenres: List<String> = listOf("Genre1", "Genre2", "Genre3"),
     showEpisodes: Boolean = true
 ){
@@ -78,11 +87,37 @@ fun ContentCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(R.drawable.coverimage),
-                    contentDescription = null,
-                    modifier = Modifier.clip(MaterialTheme.shapes.extraSmall)
-                )
+                Box(modifier = Modifier
+                    .widthIn(
+                        min = 150.dp,
+                        max = 160.dp
+                    )
+                ) {
+                    val painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(contentImageUrl)
+                            .size(coil.size.Size.ORIGINAL)
+                            .build()
+                    )
+                    when (painter.state) {
+                        is AsyncImagePainter.State.Loading -> {
+                            ImagePlaceholder(modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(3/4f)
+                                .background(brush = shimmerEffect())
+                            )
+                        }
+                        else -> {
+                            Image(
+                                painter = painter,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(3/4f)
+                            )
+                        }
+                    }
+                }
                 Column(
                     modifier = Modifier
                         .padding(
@@ -242,6 +277,7 @@ fun ContentCardPreview(){
                 top = 15.dp,
                 start = 15.dp,
                 end = 15.dp
-            )
+            ),
+        contentImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006l.webp"
     )
 }
