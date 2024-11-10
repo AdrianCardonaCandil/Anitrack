@@ -61,8 +61,8 @@ fun MainInfoContainer(
         ) {
             Box(
                 modifier = Modifier.widthIn(
-                    min = 150.dp,
-                    max = 160.dp
+                    min = 145.dp,
+                    max = 155.dp
                 ).align(Alignment.CenterVertically)
             ) {
                 val painter = rememberAsyncImagePainter(

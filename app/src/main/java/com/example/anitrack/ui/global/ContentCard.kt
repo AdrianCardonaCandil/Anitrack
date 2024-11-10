@@ -89,8 +89,8 @@ fun ContentCard(
             ) {
                 Box(modifier = Modifier
                     .widthIn(
-                        min = 150.dp,
-                        max = 160.dp
+                        min = 145.dp,
+                        max = 155.dp
                     )
                 ) {
                     val painter = rememberAsyncImagePainter(
