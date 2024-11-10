@@ -2,6 +2,7 @@ package com.example.anitrack.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,6 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,13 +48,14 @@ fun ContentGridCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
+        shape = MaterialTheme.shapes.extraSmall,
         modifier = modifier.clickable { onClick() }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.widthIn(
-                min = 145.dp,
-                max = 155.dp
+                min = 135.dp,
+                max = 145.dp
             )
         ) {
             val painter = rememberAsyncImagePainter(
@@ -63,7 +68,8 @@ fun ContentGridCard(
                 is AsyncImagePainter.State.Loading -> {
                     ImagePlaceholder(modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(3/4f)
+                        .aspectRatio(3/4.25f)
+                        .clip(MaterialTheme.shapes.extraSmall)
                         .background(brush = shimmerEffect())
                     )
                 }
@@ -73,7 +79,9 @@ fun ContentGridCard(
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(3/4f)
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .aspectRatio(3/4.25f),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }

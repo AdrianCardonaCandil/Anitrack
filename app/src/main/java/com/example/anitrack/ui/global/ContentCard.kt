@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,9 +86,9 @@ fun ContentCard(
             ) {
                 Box(modifier = Modifier
                     .widthIn(
-                        min = 145.dp,
-                        max = 155.dp
-                    )
+                        min = 135.dp,
+                        max = 145.dp
+                    ).clip(MaterialTheme.shapes.extraSmall)
                 ) {
                     val painter = rememberAsyncImagePainter(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -99,7 +100,8 @@ fun ContentCard(
                         is AsyncImagePainter.State.Loading -> {
                             ImagePlaceholder(modifier = Modifier
                                 .fillMaxWidth()
-                                .aspectRatio(3/4f)
+                                .aspectRatio(3/4.25f)
+                                .clip(MaterialTheme.shapes.extraSmall)
                                 .background(brush = shimmerEffect())
                             )
                         }
@@ -109,7 +111,9 @@ fun ContentCard(
                                 contentDescription = null,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(3/4f)
+                                    .clip(MaterialTheme.shapes.extraSmall)
+                                    .aspectRatio(3/4.25f),
+                                contentScale = ContentScale.Crop
                             )
                         }
                     }
