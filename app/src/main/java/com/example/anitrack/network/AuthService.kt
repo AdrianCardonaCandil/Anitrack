@@ -22,8 +22,6 @@ interface AuthService {
     suspend fun signIn(email: String, password: String): AuthResult
     suspend fun removeUser(): AuthResult
     suspend fun validateSignIn(username: String, password: String): AuthResult
-    suspend fun isUsernameTaken(username: String): AuthResult
-    suspend fun isEmailTaken(email: String): AuthResult
 }
 
 class FirebaseAuthService(
@@ -84,46 +82,6 @@ class FirebaseAuthService(
                     }
                 }
                 is DatabaseResult.Failure -> AuthResult.Failure(result.error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Failure(e)
-        }
-    }
-
-    override suspend fun isUsernameTaken(username: String): AuthResult {
-        return try {
-            val result = firestoreService.filterCollection(
-                collectionPath = "users",
-                fieldName = "username",
-                value = username,
-                operation = DatabaseService.ComparisonType.Equals,
-                model = User::class.java
-            )
-
-            if (result is DatabaseResult.Success && result.data.isNotEmpty()) {
-                AuthResult.Success
-            } else {
-                AuthResult.Failure(Exception("Username is available"))
-            }
-        } catch (e: Exception) {
-            AuthResult.Failure(e)
-        }
-    }
-
-    override suspend fun isEmailTaken(email: String): AuthResult {
-        return try {
-            val result = firestoreService.filterCollection(
-                collectionPath = "users",
-                fieldName = "email",
-                value = email,
-                operation = DatabaseService.ComparisonType.Equals,
-                model = User::class.java
-            )
-
-            if (result is DatabaseResult.Success && result.data.isNotEmpty()) {
-                AuthResult.Success
-            } else {
-                AuthResult.Failure(Exception("Email is available"))
             }
         } catch (e: Exception) {
             AuthResult.Failure(e)

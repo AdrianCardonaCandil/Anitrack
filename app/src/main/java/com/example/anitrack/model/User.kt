@@ -16,9 +16,7 @@ data class User(
     val id: String = "",
     val username: String = "",
     val email: String = "",
-    val password: String = "",
     val description: String = "",
-    val country: String = "",
     val profilePicture: String = "",
 
     val watching: List<String> = emptyList(),
