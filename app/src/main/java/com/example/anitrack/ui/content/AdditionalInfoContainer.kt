@@ -35,7 +35,7 @@ fun AdditionalInfoContainer(
     source: String = "defaultSource",
     airedFrom: String = "00-00-0000",
     airedTo: String = "00-00-0000",
-    averageDuration: Int = 0,
+    averageDuration: String = "",
     rating: String = "defaultRating",
     season: String = "defaultSeason",
     year: Int = 0
@@ -48,7 +48,7 @@ fun AdditionalInfoContainer(
             "Source" to source,
             "Aired From" to airedFrom,
             "Aired To" to airedTo,
-            "Duration per episode" to "$averageDuration m",
+            "Duration" to averageDuration,
             "Rating" to rating,
             "Season" to season,
             "Year" to year
