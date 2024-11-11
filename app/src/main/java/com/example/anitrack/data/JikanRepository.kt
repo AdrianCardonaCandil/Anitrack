@@ -2,6 +2,7 @@ package com.example.anitrack.data
 
 import com.example.anitrack.model.Content
 import com.example.anitrack.model.JikanResponseWithPagination
+import com.example.anitrack.model.JikanResponseWithoutPagination
 import com.example.anitrack.network.JikanApiService
 
 interface JikanRepository {
@@ -17,6 +18,10 @@ interface JikanRepository {
         limit: Int? = null,
         page: Int? = 1
     ): JikanResponseWithPagination<Content>
+
+    suspend fun getAnimeById (
+        id: Int
+    ): JikanResponseWithoutPagination<Content>
 }
 
 class NetworkJikanRepository(private val jikanApiService: JikanApiService) : JikanRepository {
@@ -46,4 +51,9 @@ class NetworkJikanRepository(private val jikanApiService: JikanApiService) : Jik
         limit = limit,
         page = page
     )
+
+    override suspend fun getAnimeById(id: Int): JikanResponseWithoutPagination<Content> =
+        jikanApiService.getAnimeById(
+            id = id
+        )
 }

@@ -19,7 +19,7 @@ import com.example.anitrack.model.Content
 @Composable
 fun ContentGrid(
     modifier: Modifier = Modifier,
-    onCardClicked: () -> Unit,
+    onCardClicked: (id: Int) -> Unit,
     gridName:String = "Grid Name:",
     contentList: List<Content>?
 ) {
@@ -41,7 +41,7 @@ fun ContentGrid(
                     contentTitle = it.title,
                     contentImageUrl = it.coverImage,
                     contentId = it.id,
-                    onClick = { onCardClicked() },
+                    onClick = { onCardClicked(it) },
                     modifier = Modifier.padding(10.dp)
                 )
             }

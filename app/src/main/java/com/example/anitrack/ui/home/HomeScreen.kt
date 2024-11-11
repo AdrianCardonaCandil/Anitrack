@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    onGridContentClicked: () -> Unit,
+    onGridContentClicked: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ){
     val gridContentLists = listOf(
@@ -38,9 +37,9 @@ fun HomeScreen(
         Spacer(modifier = Modifier.padding(vertical = 15.dp))
         gridContentLists.forEachIndexed { index, value ->
             ContentGrid(
-                onCardClicked = { onGridContentClicked() },
+                onCardClicked = { onGridContentClicked(it) },
                 gridName = stringResource(homeViewModel.contentGridNameResources[index]),
-                contentList = gridContentLists[index].value,
+                contentList = value.value,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp)

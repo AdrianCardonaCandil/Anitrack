@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.anitrack.navigation.AnitrackRoutes
 import com.example.anitrack.ui.content.ContentScreen
+import com.example.anitrack.ui.content.ContentViewModel
 import com.example.anitrack.ui.home.HomeScreen
 import com.example.anitrack.ui.home.HomeViewModel
 import com.example.anitrack.ui.lists.ListsScreen
@@ -23,6 +24,7 @@ import com.example.anitrack.ui.theme.AnitrackTheme
 @Composable
 fun AnitrackApp(
     modifier: Modifier = Modifier,
+    contentViewModel: ContentViewModel = viewModel(factory = ContentViewModel.Factory),
     homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
     navController: NavHostController = rememberNavController(),
 ) {
@@ -35,7 +37,10 @@ fun AnitrackApp(
             HomeScreen(modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-                onGridContentClicked = {navController.navigate(AnitrackRoutes.Content.name)},
+                onGridContentClicked = {
+                    contentViewModel.updateContentId(it)
+                    navController.navigate(AnitrackRoutes.Content.name)
+                },
                 homeViewModel = homeViewModel
             )
         }
@@ -45,9 +50,11 @@ fun AnitrackApp(
             )
         }
         composable(route = AnitrackRoutes.Content.name){
-            ContentScreen(modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+            ContentScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                contentViewModel = contentViewModel
             )
         }
         composable(route = AnitrackRoutes.Lists.name){
