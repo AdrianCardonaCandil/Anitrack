@@ -1,5 +1,6 @@
 package com.example.anitrack.network
 
+import com.example.anitrack.model.Character
 import com.example.anitrack.model.Content
 import com.example.anitrack.model.JikanResponseWithPagination
 import com.example.anitrack.model.JikanResponseWithoutPagination
@@ -33,4 +34,9 @@ interface JikanApiService {
     suspend fun getAnimeById(
         @Path("id") id: Int
     ): JikanResponseWithoutPagination<Content>
+
+    @GET("anime/{id}/characters")
+    suspend fun getAnimeCharacters(
+        @Path("id") id: Int
+    ): JikanResponseWithoutPagination<List<Character>?>
 }

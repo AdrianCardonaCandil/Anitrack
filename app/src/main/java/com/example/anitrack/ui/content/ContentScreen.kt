@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.anitrack.model.Character
 import com.example.anitrack.model.Content
 import com.example.anitrack.ui.global.ImagePlaceholder
 import com.example.anitrack.ui.global.shimmerEffect
@@ -31,6 +32,7 @@ fun ContentScreen(
     modifier: Modifier = Modifier
 ){
     val content: Content? = contentViewModel.content.collectAsState().value
+    val characters: List<Character>? = contentViewModel.characters.collectAsState().value
     Column(modifier = modifier) {
         Box(
             modifier = Modifier.fillMaxWidth().heightIn(
@@ -135,18 +137,7 @@ fun ContentScreen(
             fontWeight = FontWeight.ExtraBold
         )
         CharactersContainer(
-            characters = listOf(
-                "character1",
-                "character2",
-                "character3",
-                "character4",
-                "character5",
-                "character6",
-                "character7",
-                "character8",
-                "character9",
-                "character10"
-            ),
+            characters = characters ?: listOf(),
             modifier = Modifier.padding(15.dp).heightIn(max = 250.dp)
         )
         Spacer(modifier = Modifier.padding(top = 15.dp))

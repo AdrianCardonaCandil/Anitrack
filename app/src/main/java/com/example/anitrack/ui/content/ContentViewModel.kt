@@ -11,10 +11,14 @@ import com.example.anitrack.AnitrackApplication
 import com.example.anitrack.data.DatabaseCollections
 import com.example.anitrack.data.DatabaseRepository
 import com.example.anitrack.data.JikanRepository
+import com.example.anitrack.model.Character
+import com.example.anitrack.model.CharacterList
 import com.example.anitrack.model.Content
 import com.example.anitrack.network.DatabaseResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ContentViewModel(
     val jikanRepository: JikanRepository,
@@ -23,24 +27,67 @@ class ContentViewModel(
     private val contentId = MutableStateFlow<Int?>(null)
     var content = MutableStateFlow<Content?>(null)
         private set
+    var characters = MutableStateFlow<List<Character>?>(null)
+        private set
 
     init {
         viewModelScope.launch {
             contentId.collect {
-                getContent(it)
+                withContext(Dispatchers.IO) {
+                    launch { getContent(it) }
+                    launch { getCharacters(it) }
+                }
             }
         }
+    }
+
+    private suspend fun getCharacters(it: Int?) {
+        it?.let {
+            val databaseCharacters = getCharactersFromDatabase(it)
+            val charactersFromApi = databaseCharacters ?: getCharactersFromApi(it)
+            characters.value = charactersFromApi
+            if (databaseCharacters == null && charactersFromApi != null){
+                storeCharacters(it, charactersFromApi)
+            }
+        }
+    }
+
+    private suspend fun storeCharacters(id: Int, charactersFromApi: List<Character>) {
+        databaseRepository.createDocument(
+            collectionPath = DatabaseCollections.Characters,
+            data = CharacterList(data = charactersFromApi),
+            documentId = id.toString()
+        )
+    }
+
+    private suspend fun getCharactersFromDatabase(id: Int): List<Character>? {
+        val databaseResult = databaseRepository.readDocument(
+            collectionPath = DatabaseCollections.Characters,
+            model = CharacterList::class.java,
+            documentId = id.toString()
+        )
+        return when (databaseResult) {
+            is DatabaseResult.Success -> databaseResult.data?.data
+            is DatabaseResult.Failure -> {
+                Log.d("contentViewModel", databaseResult.error.toString())
+                null
+            }
+        }
+    }
+
+    private suspend fun getCharactersFromApi(id: Int): List<Character>? {
+        return jikanRepository.getAnimeCharacters(id).data
     }
 
     fun updateContentId(newContentId: Int){
         contentId.value = newContentId
     }
-
-
+    
+    
     private suspend fun getContent(it: Int?) {
         it?.let {
-            val databaseContent = getFromDatabase(it)
-            val contentFromApi = databaseContent ?: getFromApi(it)
+            val databaseContent = getContentFromDatabase(it)
+            val contentFromApi = databaseContent ?: getContentFromApi(it)
             content.value = contentFromApi
             if (databaseContent == null && contentFromApi != null) {
                 storeContent(it, contentFromApi)
@@ -56,11 +103,11 @@ class ContentViewModel(
         )
     }
 
-    private suspend fun getFromApi(id: Int): Content? {
+    private suspend fun getContentFromApi(id: Int): Content? {
         return jikanRepository.getAnimeById(id).data
     }
 
-    private suspend fun getFromDatabase(id : Int): Content? {
+    private suspend fun getContentFromDatabase(id : Int): Content? {
         val databaseResult = databaseRepository.readDocument(
             collectionPath = DatabaseCollections.Contents,
             model = Content::class.java,

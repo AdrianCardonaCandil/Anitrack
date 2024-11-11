@@ -1,5 +1,6 @@
 package com.example.anitrack.data
 
+import com.example.anitrack.model.Character
 import com.example.anitrack.model.Content
 import com.example.anitrack.model.JikanResponseWithPagination
 import com.example.anitrack.model.JikanResponseWithoutPagination
@@ -22,6 +23,10 @@ interface JikanRepository {
     suspend fun getAnimeById (
         id: Int
     ): JikanResponseWithoutPagination<Content>
+
+    suspend fun getAnimeCharacters (
+        id: Int
+    ): JikanResponseWithoutPagination<List<Character>?>
 }
 
 class NetworkJikanRepository(private val jikanApiService: JikanApiService) : JikanRepository {
@@ -56,4 +61,10 @@ class NetworkJikanRepository(private val jikanApiService: JikanApiService) : Jik
         jikanApiService.getAnimeById(
             id = id
         )
+
+    override suspend fun getAnimeCharacters(id: Int): JikanResponseWithoutPagination<List<Character>?> =
+        jikanApiService.getAnimeCharacters(
+            id = id
+        )
+
 }
