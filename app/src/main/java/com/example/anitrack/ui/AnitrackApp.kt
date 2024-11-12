@@ -19,6 +19,7 @@ import com.example.anitrack.ui.home.HomeViewModel
 import com.example.anitrack.ui.lists.ListsScreen
 import com.example.anitrack.ui.profile.ProfileScreen
 import com.example.anitrack.ui.search.SearchScreen
+import com.example.anitrack.ui.search.SearchViewModel
 import com.example.anitrack.ui.theme.AnitrackTheme
 
 @Composable
@@ -26,6 +27,7 @@ fun AnitrackApp(
     modifier: Modifier = Modifier,
     contentViewModel: ContentViewModel = viewModel(factory = ContentViewModel.Factory),
     homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
+    searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory),
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
@@ -45,8 +47,14 @@ fun AnitrackApp(
             )
         }
         composable(route = AnitrackRoutes.Search.name){
-            SearchScreen(modifier = Modifier
-                .fillMaxSize()
+            SearchScreen(
+                modifier = Modifier
+                    .fillMaxSize(),
+                searchViewModel = searchViewModel,
+                onSearchCardClicked = {
+                    contentViewModel.updateContentId(it)
+                    navController.navigate((AnitrackRoutes.Content.name))
+                }
             )
         }
         composable(route = AnitrackRoutes.Content.name){

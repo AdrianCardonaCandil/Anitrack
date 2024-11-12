@@ -39,4 +39,12 @@ interface JikanApiService {
     suspend fun getAnimeCharacters(
         @Path("id") id: Int
     ): JikanResponseWithoutPagination<List<Character>?>
+
+    @GET("anime")
+    suspend fun animeSearch(
+        @Query("sfw") sfw: Boolean? = true,
+        @Query("limit") limit: Int? = null,
+        @Query("page") page: Int? = 1,
+        @Query("q") q: String
+    ): JikanResponseWithPagination<Content>
 }

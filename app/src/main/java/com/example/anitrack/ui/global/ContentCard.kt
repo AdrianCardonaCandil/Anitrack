@@ -3,6 +3,7 @@ package com.example.anitrack.ui.global
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.anitrack.model.Content
 
 /* This card needs the following attributes to draw the information needed on the screen
 * contentTitle:String,
@@ -65,17 +67,14 @@ import coil.request.ImageRequest
 @Composable
 fun ContentCard(
     modifier: Modifier = Modifier,
-    contentTitle: String = "DefaultContentTitle",
+    content: Content,
     userContentEpisodes: Int = 0,
-    totalContentEpisodes: Int = 0,
-    contentType: String = "DefaultContentType",
-    contentImageUrl: String = "https://cdn.myanimelist.net/images/anime/1015/138006l.webp",
-    contentGenres: List<String> = listOf("Genre1", "Genre2", "Genre3"),
-    showEpisodes: Boolean = true
+    showEpisodes: Boolean = true,
+    onCardClicked: (Int) -> Unit
 ){
     Column (modifier = modifier){
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clickable { onCardClicked(content.id) },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background
             ),
@@ -92,7 +91,7 @@ fun ContentCard(
                 ) {
                     val painter = rememberAsyncImagePainter(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(contentImageUrl)
+                            .data(content.coverImage)
                             .size(coil.size.Size.ORIGINAL)
                             .build()
                     )
@@ -126,7 +125,7 @@ fun ContentCard(
                         ),
                 ) {
                     Text(
-                        text = contentTitle,
+                        text = content.title ?: "",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.primary,
@@ -134,7 +133,7 @@ fun ContentCard(
                     )
                     if (showEpisodes){
                         EpisodesHandler(
-                            totalContentEpisodes = totalContentEpisodes,
+                            totalContentEpisodes = content.episodes ?: 0,
                             userContentEpisodes = userContentEpisodes,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -144,7 +143,7 @@ fun ContentCard(
                         Spacer(modifier = Modifier.padding(vertical = 40.dp))
                     }
                     GenresList(
-                        contentGenres = contentGenres,
+                        contentGenres = content.contentGenres ?: listOf(),
                         modifier = Modifier
                             .padding(top = 5.dp)
                             .clip(MaterialTheme.shapes.extraSmall)
@@ -153,7 +152,7 @@ fun ContentCard(
                     )
                     Spacer(modifier = Modifier.padding(top = 5.dp))
                     Text(
-                        text = contentType,
+                        text = content.type ?: "",
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.extraSmall)
@@ -246,7 +245,7 @@ fun EpisodesIndicator(
 @Composable // DONE
 fun GenresList(
     modifier: Modifier = Modifier,
-    contentGenres: List<String>,
+    contentGenres: List<String?>,
 ) {
     FlowRow(
         modifier = modifier,
@@ -254,30 +253,11 @@ fun GenresList(
     ) {
         contentGenres.forEach { item ->
             Text(
-                text = item,
+                text = item ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(5.dp)
             )
         }
     }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-
-)
-@Composable
-fun ContentCardPreview(){
-    ContentCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                top = 15.dp,
-                start = 15.dp,
-                end = 15.dp
-            ),
-        contentImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006l.webp"
-    )
 }

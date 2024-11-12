@@ -27,6 +27,13 @@ interface JikanRepository {
     suspend fun getAnimeCharacters (
         id: Int
     ): JikanResponseWithoutPagination<List<Character>?>
+
+    suspend fun animeSearch (
+        sfw: Boolean? = true,
+        limit: Int? = null,
+        page: Int? = 1,
+        q: String
+    ) : JikanResponseWithPagination<Content>
 }
 
 class NetworkJikanRepository(private val jikanApiService: JikanApiService) : JikanRepository {
@@ -57,14 +64,31 @@ class NetworkJikanRepository(private val jikanApiService: JikanApiService) : Jik
         page = page
     )
 
-    override suspend fun getAnimeById(id: Int): JikanResponseWithoutPagination<Content> =
+    override suspend fun getAnimeById(
+        id: Int
+    ): JikanResponseWithoutPagination<Content> =
         jikanApiService.getAnimeById(
             id = id
         )
 
-    override suspend fun getAnimeCharacters(id: Int): JikanResponseWithoutPagination<List<Character>?> =
+    override suspend fun getAnimeCharacters(
+        id: Int
+    ): JikanResponseWithoutPagination<List<Character>?> =
         jikanApiService.getAnimeCharacters(
             id = id
+        )
+
+    override suspend fun animeSearch(
+        sfw: Boolean?,
+        limit: Int?,
+        page: Int?,
+        q: String
+    ): JikanResponseWithPagination<Content> =
+        jikanApiService.animeSearch(
+            sfw = sfw,
+            limit = limit,
+            page = page,
+            q = q
         )
 
 }

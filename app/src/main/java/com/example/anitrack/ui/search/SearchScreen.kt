@@ -5,22 +5,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.anitrack.ui.global.ContentCard
 
 @Composable
-fun SearchScreen(modifier: Modifier = Modifier){
+fun SearchScreen(
+    searchViewModel: SearchViewModel,
+    onSearchCardClicked: (Int) -> Unit,
+    modifier: Modifier = Modifier
+){
+    val searchResult = searchViewModel.searchResult.collectAsState()
     LazyColumn(
         modifier = modifier
     ) {
         item {
             SearchBar(
+                currentInput = searchViewModel.userInput.collectAsState().value,
+                onUserInput = { searchViewModel.onUserInput(it) },
                 modifier = Modifier.padding(15.dp)
             )
         }
-        items(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)){
+        items(searchResult.value ?: listOf()){
             ContentCard(
+                content = it,
+                onCardClicked = { onSearchCardClicked(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
