@@ -3,16 +3,20 @@ package com.example.anitrack.ui.global
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -28,11 +32,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.anitrack.R
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.example.anitrack.model.Content
 
 /* This card needs the following attributes to draw the information needed on the screen
 * contentTitle:String,
@@ -59,17 +67,14 @@ import com.example.anitrack.R
 @Composable
 fun ContentCard(
     modifier: Modifier = Modifier,
-    contentTitle: String = "DefaultContentTitle",
+    content: Content,
     userContentEpisodes: Int = 0,
-    totalContentEpisodes: Int = 0,
-    contentType: String = "DefaultContentType",
-    contentImageUrl: String = "DefaultContentImageUrl",
-    contentGenres: List<String> = listOf("Genre1", "Genre2", "Genre3"),
-    showEpisodes: Boolean = true
+    showEpisodes: Boolean = true,
+    onCardClicked: (Int) -> Unit
 ){
     Column (modifier = modifier){
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clickable { onCardClicked(content.id) },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background
             ),
@@ -78,11 +83,40 @@ fun ContentCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(R.drawable.coverimage),
-                    contentDescription = null,
-                    modifier = Modifier.clip(MaterialTheme.shapes.extraSmall)
-                )
+                Box(modifier = Modifier
+                    .widthIn(
+                        min = 135.dp,
+                        max = 145.dp
+                    ).clip(MaterialTheme.shapes.extraSmall)
+                ) {
+                    val painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(content.coverImage)
+                            .size(coil.size.Size.ORIGINAL)
+                            .build()
+                    )
+                    when (painter.state) {
+                        is AsyncImagePainter.State.Loading -> {
+                            ImagePlaceholder(modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(3/4.25f)
+                                .clip(MaterialTheme.shapes.extraSmall)
+                                .background(brush = shimmerEffect())
+                            )
+                        }
+                        else -> {
+                            Image(
+                                painter = painter,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(MaterialTheme.shapes.extraSmall)
+                                    .aspectRatio(3/4.25f),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                }
                 Column(
                     modifier = Modifier
                         .padding(
@@ -91,7 +125,7 @@ fun ContentCard(
                         ),
                 ) {
                     Text(
-                        text = contentTitle,
+                        text = content.title ?: "",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.primary,
@@ -99,7 +133,7 @@ fun ContentCard(
                     )
                     if (showEpisodes){
                         EpisodesHandler(
-                            totalContentEpisodes = totalContentEpisodes,
+                            totalContentEpisodes = content.episodes ?: 0,
                             userContentEpisodes = userContentEpisodes,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -109,7 +143,7 @@ fun ContentCard(
                         Spacer(modifier = Modifier.padding(vertical = 40.dp))
                     }
                     GenresList(
-                        contentGenres = contentGenres,
+                        contentGenres = content.contentGenres ?: listOf(),
                         modifier = Modifier
                             .padding(top = 5.dp)
                             .clip(MaterialTheme.shapes.extraSmall)
@@ -118,7 +152,7 @@ fun ContentCard(
                     )
                     Spacer(modifier = Modifier.padding(top = 5.dp))
                     Text(
-                        text = contentType,
+                        text = content.type ?: "",
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.extraSmall)
@@ -211,7 +245,7 @@ fun EpisodesIndicator(
 @Composable // DONE
 fun GenresList(
     modifier: Modifier = Modifier,
-    contentGenres: List<String>,
+    contentGenres: List<String?>,
 ) {
     FlowRow(
         modifier = modifier,
@@ -219,29 +253,11 @@ fun GenresList(
     ) {
         contentGenres.forEach { item ->
             Text(
-                text = item,
+                text = item ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(5.dp)
             )
         }
     }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-
-)
-@Composable
-fun ContentCardPreview(){
-    ContentCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                top = 15.dp,
-                start = 15.dp,
-                end = 15.dp
-            )
-    )
 }
