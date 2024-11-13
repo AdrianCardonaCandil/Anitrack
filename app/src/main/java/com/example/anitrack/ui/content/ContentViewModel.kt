@@ -1,6 +1,9 @@
 package com.example.anitrack.ui.content
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -24,6 +27,8 @@ class ContentViewModel(
     val jikanRepository: JikanRepository,
     val databaseRepository: DatabaseRepository
 ) : ViewModel() {
+    var showEditDialog by mutableStateOf(false)
+        private set
     private val contentId = MutableStateFlow<Int?>(null)
     var content = MutableStateFlow<Content?>(null)
         private set
@@ -122,6 +127,10 @@ class ContentViewModel(
                 null
             }
         }
+    }
+
+    fun changeDialogVisibility(show: Boolean) {
+        showEditDialog = show
     }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
