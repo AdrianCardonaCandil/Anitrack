@@ -5,35 +5,35 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Character(
-    val character: CharacterData?
+    val character: CharacterData? = null
 ) {
     @Serializable
     data class CharacterData(
         @SerialName("mal_id")
-        val id: Int,
-        val name: String?,
-        private val images: Images?,
+        val id: Int = 0,
+        val name: String? = null,
+        private val images: Images? = null,
         val image: String? = images?.webp?.imageUrl ?: images?.jpg?.imageUrl,
     ) {
         @Serializable
         data class Images(
-            val jpg: Jpg?,
-            val webp: Webp?,
+            val jpg: Jpg? = null,
+            val webp: Webp? = null,
         ) {
             @Serializable
             data class Jpg(
                 @SerialName("image_url")
-                val imageUrl: String,
+                val imageUrl: String? = null,
             )
             @Serializable
             data class Webp(
                 @SerialName("image_url")
-                val imageUrl: String,
+                val imageUrl: String? = null,
             )
         }
     }
 }
 
 data class CharacterList(
-    val data: List<Character>?
+    val data: List<Character>? = null
 )

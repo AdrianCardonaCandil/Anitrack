@@ -1,9 +1,6 @@
 package com.example.anitrack.ui.search
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -35,7 +32,7 @@ class SearchViewModel(
 
     init {
         viewModelScope.launch {
-            userInput.debounce(2000).collect {
+            userInput.debounce(500).collect {
                 getSearchResult(it)
             }
         }

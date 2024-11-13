@@ -38,7 +38,7 @@ fun ContentGridCard(
     modifier: Modifier = Modifier,
     contentTitle: String?,
     contentImageUrl: String?,
-    contentId: Int = 0,
+    contentId: Int? = null,
     onClick: (id: Int) -> Unit,
 ){
     Card(
@@ -46,7 +46,7 @@ fun ContentGridCard(
             containerColor = MaterialTheme.colorScheme.background
         ),
         shape = MaterialTheme.shapes.extraSmall,
-        modifier = modifier.clickable { onClick(contentId) }
+        modifier = modifier.clickable { if (contentId != null) onClick(contentId) }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
