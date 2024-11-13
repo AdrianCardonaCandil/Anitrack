@@ -34,11 +34,11 @@ fun ContentGrid(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            contentList?.forEach {
+            contentList?.forEach { content ->
                 ContentGridCard(
-                    contentTitle = it.title,
-                    contentImageUrl = it.coverImage,
-                    contentId = it.id,
+                    contentTitle = content.title,
+                    contentImageUrl = content.coverImage,
+                    contentId = content.id,
                     onClick = { onCardClicked(it) },
                     modifier = Modifier.padding(10.dp)
                 )

@@ -44,6 +44,7 @@ class ContentViewModel(
     private suspend fun getCharacters(it: Int?) {
         it?.let {
             val databaseCharacters = getCharactersFromDatabase(it)
+            Log.d("contentViewModel", databaseCharacters.toString())
             val charactersFromApi = databaseCharacters ?: getCharactersFromApi(it)
             characters.value = charactersFromApi
             if (databaseCharacters == null && charactersFromApi != null){
@@ -87,6 +88,7 @@ class ContentViewModel(
     private suspend fun getContent(it: Int?) {
         it?.let {
             val databaseContent = getContentFromDatabase(it)
+            Log.d("contentViewModel", databaseContent.toString())
             val contentFromApi = databaseContent ?: getContentFromApi(it)
             content.value = contentFromApi
             if (databaseContent == null && contentFromApi != null) {
