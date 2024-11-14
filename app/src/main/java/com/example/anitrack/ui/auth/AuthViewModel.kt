@@ -39,6 +39,10 @@ class AuthViewModel(
         _isLoggedIn.value = auth.currentUser != null
     }
 
+    fun resetAuthState() {
+        _authState.update { AuthState.Idle }
+    }
+
     init {
         // Add the authStateListener to monitor authentication state
         firebaseAuth.addAuthStateListener(authStateListener)

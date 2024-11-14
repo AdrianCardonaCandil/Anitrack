@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +36,7 @@ fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onLoginClick: () -> Unit
 ) {
+
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -46,6 +48,9 @@ fun SignUpScreen(
     val isPasswordValid = password.length >= 8 && password.any { it.isDigit() } && password.any { it.isUpperCase() }
     val isPasswordMatch = password == confirmPassword
 
+    LaunchedEffect(Unit) {
+        authViewModel.resetAuthState()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
