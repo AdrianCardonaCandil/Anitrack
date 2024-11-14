@@ -77,16 +77,31 @@ fun AnitrackApp(
         }
         composable(route = AnitrackRoutes.Profile.name) {
             if (isLoggedIn) {
-                ProfileScreen(modifier = Modifier.fillMaxSize())
+                ProfileScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onSignOutClick = {
+                        authViewModel.signOut()
+                        navController.navigate(AnitrackRoutes.Auth.name)
+                    }
+                )
             } else {
                 AuthScreen(
                     modifier = Modifier.fillMaxSize(),
                     authViewModel = authViewModel,
-                    onSignInSuccess = {
+                    onSignSuccess = {
                         navController.navigate(AnitrackRoutes.Home.name)
                     }
                 )
             }
+        }
+        composable(route = AnitrackRoutes.Auth.name){
+            AuthScreen(
+                modifier = Modifier.fillMaxSize(),
+                authViewModel = authViewModel,
+                onSignSuccess = {
+                    navController.navigate(AnitrackRoutes.Profile.name)
+                }
+            )
         }
     }
 }

@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.update
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class AuthViewModel(
     private val authRepository: AuthRepository,
@@ -32,12 +34,34 @@ class AuthViewModel(
     private val _isLoggedIn = MutableStateFlow(firebaseAuth.currentUser != null)
     val isLoggedIn = _isLoggedIn.asStateFlow()
 
-    init {
-        firebaseAuth.addAuthStateListener { auth ->
-            _isLoggedIn.value = auth.currentUser != null
-        }
+    // Initialize authStateListener directly
+    private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+        _isLoggedIn.value = auth.currentUser != null
     }
 
+    init {
+        // Add the authStateListener to monitor authentication state
+        firebaseAuth.addAuthStateListener(authStateListener)
+    }
+
+
+
+    // Remove the listener when ViewModel is cleared to prevent memory leaks
+    override fun onCleared() {
+        super.onCleared()
+        firebaseAuth.removeAuthStateListener(authStateListener)
+    }
+
+    fun signOut() {
+        _authState.update { AuthState.Loading() }
+        viewModelScope.launch {
+            val result = authRepository.signOut()
+            _authState.update { result }
+            if (result is AuthState.Success) {
+                _isLoggedIn.update { false }
+            }
+        }
+    }
     fun signUp(username: String, email: String, password: String, confirmPassword: String) {
         if (validateSignUp(username, email, password, confirmPassword)) {
             _authState.update { AuthState.Loading() }
@@ -50,10 +74,20 @@ class AuthViewModel(
                 } else if (emailExists) {
                     _authState.update { AuthState.ValidationError("Email already registered") }
                 } else {
-                    val result = createUser(username, email, password)
-                    _authState.update { result }
-                    if (result is AuthState.Success) {
-                        _isLoggedIn.update { true }
+                    val authResult = authRepository.signUp(email, password)
+                    if (authResult is AuthState.Success) {
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                        if (userId != null) {
+                            val firestoreResult = createUser(userId, username, email)
+                            _authState.update { firestoreResult }
+                            if (firestoreResult is AuthState.Success) {
+                                _isLoggedIn.update { true }
+                            }
+                        } else {
+                            _authState.update { AuthState.Error(Exception("Failed to retrieve user ID after sign up")) }
+                        }
+                    } else if (authResult is AuthState.Error) {
+                        _authState.update { authResult }
                     }
                 }
             }
@@ -96,40 +130,77 @@ class AuthViewModel(
         }
     }
 
-    private suspend fun createUser(username: String, email: String, password: String): AuthState {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+    private suspend fun createUser(userId: String, username: String, email: String): AuthState {
         val user = User(
             id = userId,
             username = username,
             email = email,
-            createdAt = System.currentTimeMillis().toString()
+            createdAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).toString()
         )
+
         val result = databaseRepository.createDocument(
             collectionPath = DatabaseCollections.Users,
             data = user,
-            documentId = user.id
+            documentId = userId
         )
+
         return when (result) {
-            is DatabaseResult.Success -> AuthState.Success
-            is DatabaseResult.Failure -> AuthState.Error(result.error)
+            is DatabaseResult.Success -> {
+                println("User created successfully with ID: $userId")
+                AuthState.Success
+            }
+            is DatabaseResult.Failure -> {
+                println("Failed to create user document: ${result.error.message}")
+                AuthState.Error(result.error)
+            }
         }
     }
+
 
     fun signIn(username: String, password: String) {
         _authState.update { AuthState.Loading() }
         viewModelScope.launch {
-            val userExists = authRepository.validateSignIn(username, password)
-            if (userExists is AuthState.Error) {
-                _authState.update { AuthState.ValidationError("User not found or incorrect credentials") }
-            } else {
-                val result = authRepository.validateSignIn(username, password)
-                _authState.update { result }
-                if (result is AuthState.Success) {
+
+            val emailResult = getEmailByUsername(username)
+
+            if (emailResult is DatabaseResult.Success && emailResult.data != null) {
+                val email = emailResult.data
+                println("Email: $email")
+                val authResult = authRepository.signIn(email, password)
+
+                if (authResult is AuthState.Success) {
                     _isLoggedIn.update { true }
+                    _authState.update { AuthState.Success }
+                } else if (authResult is AuthState.Error) {
+                    _authState.update { AuthState.ValidationError("User not found or incorrect credentials") }
                 }
+            } else {
+                _authState.update { AuthState.ValidationError("Username not found") }
             }
         }
     }
+    private suspend fun getEmailByUsername(username: String): DatabaseResult<String?> {
+        val result = databaseRepository.filterCollection(
+            collectionPath = DatabaseCollections.Users,
+            fieldName = "username",
+            value = username,
+            operation = DatabaseService.ComparisonType.Equals,
+            model = User::class.java
+        )
+
+        return when (result) {
+            is DatabaseResult.Success -> {
+                val user = result.data.firstOrNull()
+                if (user != null) {
+                    DatabaseResult.Success(user.email)
+                } else {
+                    DatabaseResult.Success(null)
+                }
+            }
+            is DatabaseResult.Failure -> DatabaseResult.Failure(result.error)
+        }
+    }
+
 
     fun setAuthError(authState: AuthState.Error) {
         _authState.update { authState }

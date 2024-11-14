@@ -12,7 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun AuthScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = viewModel(),
-    onSignInSuccess: () -> Unit
+    onSignSuccess: () -> Unit
 ) {
     var showSignIn by remember { mutableStateOf(true) }
 
@@ -20,14 +20,14 @@ fun AuthScreen(
         SignInScreen(
             modifier = modifier,
             authViewModel = authViewModel,
-            onSignInSuccess = onSignInSuccess,   
+            onSignInSuccess = onSignSuccess,
             onSignUpClick = { showSignIn = false }
         )
     } else {
         SignUpScreen(
             modifier = modifier,
             authViewModel = authViewModel,
-            onSignInSuccess = onSignInSuccess,
+            onSignUpSuccess = onSignSuccess,
             onLoginClick = { showSignIn = true }
         )
     }

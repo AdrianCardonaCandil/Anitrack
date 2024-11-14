@@ -32,7 +32,7 @@ import com.example.anitrack.network.AuthState
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = viewModel(),
-    onSignInSuccess: () -> Unit,
+    onSignUpSuccess: () -> Unit,
     onLoginClick: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
@@ -93,7 +93,7 @@ fun SignUpScreen(
             Text(text = "Sign Up", color = Color.White)
         }
 
-        // Handle auth state
+
         when (authState) {
             is AuthState.Loading -> {
                 Text(text = "Loading...", color = Color.Gray)

@@ -21,12 +21,11 @@ interface AuthService {
     suspend fun signUp(email: String, password: String): AuthResult
     suspend fun signIn(email: String, password: String): AuthResult
     suspend fun removeUser(): AuthResult
-    suspend fun validateSignIn(username: String, password: String): AuthResult
+    suspend fun signOut(): AuthResult
 }
 
 class FirebaseAuthService(
     private val auth: FirebaseAuth,
-    private val firestoreService: DatabaseService
 ) : AuthService {
 
     override suspend fun signUp(email: String, password: String): AuthResult {
@@ -46,6 +45,14 @@ class FirebaseAuthService(
             AuthResult.Failure(e)
         }
     }
+    override suspend fun signOut(): AuthResult {
+        return try {
+            auth.signOut()
+            AuthResult.Success
+        } catch (e: Exception) {
+            AuthResult.Failure(e)
+        }
+    }
 
     override suspend fun removeUser(): AuthResult {
         return try {
@@ -56,35 +63,4 @@ class FirebaseAuthService(
         }
     }
 
-    override suspend fun validateSignIn(username: String, password: String): AuthResult {
-        return try {
-            val result = firestoreService.filterCollection(
-                collectionPath = "users",
-                fieldName = "username",
-                value = username,
-                operation = DatabaseService.ComparisonType.Equals,
-                model = User::class.java
-            )
-
-            when (result) {
-                is DatabaseResult.Success -> {
-                    val user = result.data.firstOrNull()
-                    if (user == null) {
-                        AuthResult.Failure(Exception("User not found"))
-                    } else {
-                        val email = user.email
-                        try {
-                            auth.signInWithEmailAndPassword(email, password).await()
-                            AuthResult.Success
-                        } catch (e: Exception) {
-                            AuthResult.Failure(Exception("Incorrect password"))
-                        }
-                    }
-                }
-                is DatabaseResult.Failure -> AuthResult.Failure(result.error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Failure(e)
-        }
-    }
 }

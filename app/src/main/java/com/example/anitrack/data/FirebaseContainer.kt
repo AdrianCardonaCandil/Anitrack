@@ -18,7 +18,6 @@ class DefaultFirebaseContainer : FirebaseContainer {
 
         FirebaseAuthService(
             auth = Firebase.auth,
-            firestoreService = firestoreService
         )
     }
 

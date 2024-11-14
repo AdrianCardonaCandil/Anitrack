@@ -57,20 +57,18 @@ fun SignInScreen(
         CustomTextField(label = "Password", isPassword = true, onValueChange = { password = it }, isValid = isPasswordValid)
         Spacer(modifier = Modifier.height(24.dp))
 
+        Text(
+            text = "New here? Sign Up",
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable { onSignUpClick() }
+        )
 
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
                 if (isUsernameValid && isPasswordValid) {
-                    isTimeout = false
                     authViewModel.signIn(username, password)
-                    coroutineScope.launch {
-                        delay(10000) // Espera de 10 segundos
-                        if (authState is AuthState.Loading) {
-                            isTimeout = true
-                            authViewModel.setAuthError(AuthState.Error(Exception("Authentication timed out. Please try again.")))
-                        }
-                    }
                 }
             },
             modifier = Modifier
@@ -83,39 +81,25 @@ fun SignInScreen(
             Text(
                 text = "Sign In",
                 color = Color.White,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp) // Padding interno alrededor del texto
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
 
         when (authState) {
             is AuthState.Loading -> {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                Text(text = "Loading...", color = Color.Gray)
             }
             is AuthState.Error -> {
-                Text(
-                    text = (authState as AuthState.Error).exception.message ?: "Error",
-                    color = Color.Red
-                )
+                Text(text = (authState as AuthState.Error).exception.message ?: "Unknown error", color = Color.Red)
+            }
+            is AuthState.ValidationError -> {
+                Text(text = (authState as AuthState.ValidationError).message, color = Color.Red)
             }
             is AuthState.Success -> {
-                LaunchedEffect(authState) { onSignInSuccess() }
+                Text(text = "Sign-up successful!", color = Color.Green)
             }
             else -> {}
         }
 
-        if (isTimeout) {
-            Text(
-                text = "Authentication is taking longer than expected. Please check your connection and try again.",
-                color = Color.Red
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "New here? Sign Up",
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { onSignUpClick() }
-        )
     }
 }
