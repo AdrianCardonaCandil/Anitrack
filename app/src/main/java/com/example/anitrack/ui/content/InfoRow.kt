@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 fun InfoRow(
     modifier: Modifier = Modifier,
     label: String = "DefaultLabel",
-    info: List<String> = listOf("Madhouse", "Kyoto Animation", "Mappa", "White Fox"),
+    info: List<String?> = listOf("Madhouse", "Kyoto Animation", "Mappa", "White Fox"),
     contentColor: Color,
     containerColor: Color,
 ){
@@ -47,7 +47,7 @@ fun InfoRow(
                         .padding(5.dp)
                 ) {
                     Text(
-                        text = it,
+                        text = it ?: "",
                         style = MaterialTheme.typography.bodyLarge,
                         color = contentColor
                     )

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -15,9 +16,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    onGridContentClicked: () -> Unit,
+    onGridContentClicked: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ){
+    val gridContentLists = listOf(
+        homeViewModel.currentSeasonList.collectAsState(),
+        homeViewModel.upcomingSeasonList.collectAsState(),
+        homeViewModel.topAnimeList.collectAsState()
+    )
     Column(modifier) {
         Banner(modifier = Modifier
             .fillMaxWidth()
@@ -29,10 +35,11 @@ fun HomeScreen(
             .padding(15.dp)
         )
         Spacer(modifier = Modifier.padding(vertical = 15.dp))
-        contentGridNameResources.forEach {
+        gridContentLists.forEachIndexed { index, value ->
             ContentGrid(
-                onCardClicked = { onGridContentClicked() },
-                gridName = stringResource(it),
+                onCardClicked = { onGridContentClicked(it) },
+                gridName = stringResource(homeViewModel.contentGridNameResources[index]),
+                contentList = value.value,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp)

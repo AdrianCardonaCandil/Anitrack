@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,7 +35,7 @@ fun AdditionalInfoContainer(
     source: String = "defaultSource",
     airedFrom: String = "00-00-0000",
     airedTo: String = "00-00-0000",
-    averageDuration: Int = 0,
+    averageDuration: String = "",
     rating: String = "defaultRating",
     season: String = "defaultSeason",
     year: Int = 0
@@ -49,7 +48,7 @@ fun AdditionalInfoContainer(
             "Source" to source,
             "Aired From" to airedFrom,
             "Aired To" to airedTo,
-            "Duration per episode" to "$averageDuration m",
+            "Duration" to averageDuration,
             "Rating" to rating,
             "Season" to season,
             "Year" to year

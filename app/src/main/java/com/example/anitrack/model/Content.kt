@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Content(
     @SerialName("mal_id")
-    val id: Int,
+    val id: Int = 0,
     val title: String? = null,
     @SerialName("title_english")
     val englishTitle: String? = null,
@@ -45,63 +45,63 @@ data class Content(
 ) {
     @Serializable
     data class Images(
-        val jpg: Jpg?,
-        val webp: Webp?
+        val jpg: Jpg? = null,
+        val webp: Webp? = null
     ) {
         @Serializable
         data class Jpg(
             @SerialName("small_image_url")
-            val smallImageUrl: String?,
+            val smallImageUrl: String? = null,
             @SerialName("image_url")
-            val imageUrl: String?,
+            val imageUrl: String? = null,
             @SerialName("large_image_url")
-            val largeImageUrl: String?,
+            val largeImageUrl: String? = null,
         )
         @Serializable
         data class Webp(
             @SerialName("small_image_url")
-            val smallImageUrl: String?,
+            val smallImageUrl: String? = null,
             @SerialName("image_url")
-            val imageUrl: String?,
+            val imageUrl: String? = null,
             @SerialName("large_image_url")
-            val largeImageUrl: String?,
+            val largeImageUrl: String? = null,
         )
     }
     @Serializable
     data class Trailer(
-        val images: Images?
+        val images: Images? = null
     ) {
         @Serializable
         data class Images(
             @SerialName("small_image_url")
-            val smallImageUrl: String?,
+            val smallImageUrl: String? = null,
             @SerialName("image_url")
-            val imageUrl: String?,
+            val imageUrl: String? = null,
             @SerialName("medium_image_url")
-            val mediumImageUrl: String?,
+            val mediumImageUrl: String? = null,
             @SerialName("large_image_url")
-            val largeImageUrl: String?,
+            val largeImageUrl: String? = null,
             @SerialName("maximum_image_url")
-            val maximumImageUrl: String?,
+            val maximumImageUrl: String? = null,
         )
     }
     @Serializable
     data class Aired(
-        val from: String?,
-        val to: String?
+        val from: String? = null,
+        val to: String? = null
     )
     @Serializable
     data class Studio(
         @SerialName("mal_id")
-        val id: Int?,
-        val name: String?
+        val id: Int? = null,
+        val name: String? = null
     )
     @Serializable
     data class Genre(
         @SerialName("mal_id")
-        val id: Int?,
-        val type: String?,
-        val name: String?
+        val id: Int? = null,
+        val type: String? = null,
+        val name: String? = null
     )
 }
 

@@ -8,6 +8,10 @@
     <string name="bottomNavListsLabel">Lists</string>
     <string name="bottomNavProfileLabel">Profile</string>
 
+    <!-- Edit Content Dialog Labels -->
+    <string name="AddToListLabel">Add to list</string>
+    <string name="AddToLovedLabel">Add to loved</string>
+
     <!-- Home Screen Strings Resources  -->
     <!-- Banner -->
     <string name="slogan">We Keep It Simple For You. Don\'t forget</string>
@@ -25,13 +29,8 @@
     <string name="topAnimeContentGridLabel">Top Anime</string>
     <string name="upcomingContentGridLabel">Upcoming</string>
 
-    <!-- List Screen Strings Resources  -->
-    <string name="tab_watching">Watching</string>
-    <string name="tab_completed">Completed</string>
-    <string name="tab_plan_to_watch">Plan to Watch</string>
-    <string name="tab_loved">Loved</string>
-    <string name="tab_watching_header"> Already Watching</string>
-    <string name="tab_completed_header"> Completed Animes</string>
-    <string name="tab_plan_to_watch_header">Planning to watch Animes</string>
-    <string name="tab_loved_header">Loved Animes</string>
+    <!-- List Names -->
+    <string name="watchingListName">Watching</string>
+    <string name="CompletedListName">Completed</string>
+    <string name="PlanToWatchListName">Plan To Watch</string>
 </resources>

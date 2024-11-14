@@ -10,17 +10,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.anitrack.R
+import com.example.anitrack.model.Content
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ContentGrid(
     modifier: Modifier = Modifier,
-    onCardClicked: () -> Unit,
+    onCardClicked: (id: Int) -> Unit,
     gridName:String = "Grid Name:",
-    defaultItemCount: Int = 4
+    contentList: List<Content>?
 ) {
     Column(modifier = modifier) {
         Text(
@@ -35,29 +34,15 @@ fun ContentGrid(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            (1..defaultItemCount).forEach { _ ->
+            contentList?.forEach { content ->
                 ContentGridCard(
-                    onClick = { onCardClicked() },
+                    contentTitle = content.title,
+                    contentImageUrl = content.coverImage,
+                    contentId = content.id,
+                    onClick = { onCardClicked(it) },
                     modifier = Modifier.padding(10.dp)
                 )
             }
         }
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun SearchGridPreview(){
-    ContentGrid(
-        onCardClicked = {},
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)
-    )
-}
-
-val contentGridNameResources: List<Int> = listOf(
-    R.string.newSeasonContentGridLabel,
-    R.string.topAnimeContentGridLabel,
-    R.string.upcomingContentGridLabel
-)
