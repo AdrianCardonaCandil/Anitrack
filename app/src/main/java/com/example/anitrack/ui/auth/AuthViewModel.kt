@@ -139,7 +139,7 @@ class AuthViewModel(
             id = userId,
             username = username,
             email = email,
-            createdAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).toString()
+            createdAt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(System.currentTimeMillis())
         )
 
         val result = databaseRepository.createDocument(

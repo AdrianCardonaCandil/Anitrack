@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anitrack.R
@@ -18,12 +17,11 @@ import com.example.anitrack.ui.theme.onPrimaryContainerLight
 
 @Composable
 fun ListHeader(selectedTabIndex: Int, itemCount: Int) {
-    // Define header text based on selected tab index
     val headerText = when (selectedTabIndex) {
-        0 -> stringResource(R.string.tab_watching_header)
-        1 -> stringResource(R.string.tab_completed_header)
-        2 -> stringResource(R.string.tab_plan_to_watch_header)
-        3 -> stringResource(R.string.tab_loved_header)
+        0 -> "Watching"
+        1 -> "Completed"
+        2 -> "Plan to Watch"
+        3 -> "Loved"
         else -> ""
     }
 
@@ -41,7 +39,6 @@ fun ListHeader(selectedTabIndex: Int, itemCount: Int) {
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        // Row for Count and Icon
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "$itemCount",
@@ -53,7 +50,7 @@ fun ListHeader(selectedTabIndex: Int, itemCount: Int) {
                 painter = painterResource(id = R.drawable.baseline_bar_chart_24),
                 contentDescription = "Statistics",
                 modifier = Modifier.size(20.dp),
-                tint =onPrimaryContainerLight
+                tint = onPrimaryContainerLight
             )
         }
     }

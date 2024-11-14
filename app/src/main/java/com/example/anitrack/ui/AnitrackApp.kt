@@ -1,5 +1,6 @@
 package com.example.anitrack.ui
 
+import android.provider.ContactsContract.Profile
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,7 +22,9 @@ import com.example.anitrack.ui.content.ContentViewModel
 import com.example.anitrack.ui.home.HomeScreen
 import com.example.anitrack.ui.home.HomeViewModel
 import com.example.anitrack.ui.lists.ListsScreen
+import com.example.anitrack.ui.lists.ListsViewModel
 import com.example.anitrack.ui.profile.ProfileScreen
+import com.example.anitrack.ui.profile.ProfileViewModel
 import com.example.anitrack.ui.search.SearchScreen
 import com.example.anitrack.ui.search.SearchViewModel
 import com.example.anitrack.ui.theme.AnitrackTheme
@@ -31,6 +34,8 @@ fun AnitrackApp(
     modifier: Modifier = Modifier,
     contentViewModel: ContentViewModel = viewModel(factory = ContentViewModel.Factory),
     homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
+    listViewModel: ListsViewModel = viewModel(factory = ListsViewModel.Factory),
+    profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
     searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory),
     authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory),
     navController: NavHostController = rememberNavController(),
@@ -73,12 +78,15 @@ fun AnitrackApp(
             )
         }
         composable(route = AnitrackRoutes.Lists.name){
-            ListsScreen(modifier = Modifier.fillMaxSize())
+            ListsScreen(
+                modifier = Modifier.fillMaxSize(),
+                viewModel = listViewModel)
         }
         composable(route = AnitrackRoutes.Profile.name) {
             if (isLoggedIn) {
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
+                    viewModel= profileViewModel,
                     onSignOutClick = {
                         authViewModel.signOut()
                         navController.navigate(AnitrackRoutes.Auth.name)

@@ -35,9 +35,6 @@ fun SignInScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val authState by authViewModel.authState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
-    var isTimeout by remember { mutableStateOf(false) }
-
     val isUsernameValid = username.isNotEmpty()
     val isPasswordValid = password.isNotEmpty()
 

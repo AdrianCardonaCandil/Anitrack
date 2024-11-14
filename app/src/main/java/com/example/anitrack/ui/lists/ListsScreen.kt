@@ -1,39 +1,36 @@
 package com.example.anitrack.ui.lists
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.anitrack.ui.global.TopAppBar
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun ListsScreen(
+    viewModel: ListsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    // State to track the selected tab index
     var selectedTabIndex by remember { mutableStateOf(0) }
-
-    // Get the user list based on the selected tab
+    val contentList by viewModel.userContentList.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
 
-        // Tab Row
+        // Tab Row para seleccionar la lista de contenido
         ListsTabRow(selectedTabIndex) { newIndex ->
             selectedTabIndex = newIndex
+            viewModel.loadUserContents(newIndex) // Cargar la lista correspondiente
         }
 
-        // List Header with item count
+        // List Header con el conteo de elementos
         ListHeader(
             selectedTabIndex = selectedTabIndex,
-            itemCount = 0 // Pass the number of items in the list
+            itemCount = contentList.size
         )
 
-        // Content List
+        // Mostrar el ContentList con los contenidos actuales
         ContentList(
-            selectedTabIndex = selectedTabIndex,
+            contentList = contentList,
             modifier = Modifier.fillMaxSize()
         )
     }
