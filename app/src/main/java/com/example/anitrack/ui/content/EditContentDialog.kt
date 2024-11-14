@@ -22,10 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.anitrack.R
+import com.example.anitrack.ui.lists.ListHandler
 
 @Composable
 fun EditContentDialog(
     modifier: Modifier = Modifier,
+    viewModel: ContentViewModel,
+    userId: String,
+    contentId: String,
     onDismissDialogEvent: (Boolean) -> Unit,
     isActive: Boolean
 ){
@@ -48,9 +52,18 @@ fun EditContentDialog(
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Spacer(modifier = Modifier.padding(vertical = 7.5.dp))
-                    listOf(R.string.PlanToWatchListName, R.string.watchingListName, R.string.CompletedListName).forEach {
+                    ListHandler.ListType.values().forEach { listType ->
+                        val isInList = viewModel.contentListsState.value.contains(listType)
                         OutlinedListButton(
-                            name = stringResource(it),
+                            name = stringResource(id = getListNameResource(listType)),
+                            isSelected = isInList,
+                            onClick = {
+                                if (isInList) {
+                                    viewModel.removeFromList(userId, contentId, listType)
+                                } else {
+                                    viewModel.addToList(userId, contentId, listType)
+                                }
+                            },
                             modifier = Modifier.padding(vertical = 5.dp)
                         )
                     }
@@ -61,12 +74,21 @@ fun EditContentDialog(
                     )
                     Icon(
                         imageVector = Icons.Default.Favorite,
-                        tint = MaterialTheme.colorScheme.tertiary,
+                        tint = if (viewModel.contentListsState.value.contains(ListHandler.ListType.FAVORITES))
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .padding(top = 10.dp)
                             .size(75.dp)
-                            .clickable { TODO() },
+                            .clickable {
+                                if (viewModel.contentListsState.value.contains(ListHandler.ListType.FAVORITES)) {
+                                    viewModel.removeFromList(userId, contentId, ListHandler.ListType.FAVORITES)
+                                } else {
+                                    viewModel.addToList(userId, contentId, ListHandler.ListType.FAVORITES)
+                                }
+                            },
                         contentDescription = null
                     )
                 }
@@ -76,14 +98,25 @@ fun EditContentDialog(
 }
 
 @Composable
-fun OutlinedListButton(name: String, modifier: Modifier = Modifier) {
+fun OutlinedListButton(name: String, isSelected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     OutlinedButton(
-        modifier = modifier,
-        onClick = { TODO() }
+        modifier = modifier
+            .background(if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else MaterialTheme.colorScheme.surface),
+        onClick = onClick
     ) {
         Text(
             text = name,
-            modifier = Modifier.padding(vertical = 5.dp)
+            modifier = Modifier.padding(vertical = 5.dp),
+            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
         )
+    }
+}
+@Composable
+fun getListNameResource(listType: ListHandler.ListType): Int {
+    return when (listType) {
+        ListHandler.ListType.WATCHING -> R.string.watchingListName
+        ListHandler.ListType.COMPLETED -> R.string.CompletedListName
+        ListHandler.ListType.PLAN_TO_WATCH -> R.string.PlanToWatchListName
+        ListHandler.ListType.FAVORITES -> R.string.AddToLovedLabel
     }
 }

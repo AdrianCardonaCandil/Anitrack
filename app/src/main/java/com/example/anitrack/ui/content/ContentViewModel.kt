@@ -17,7 +17,9 @@ import com.example.anitrack.data.JikanRepository
 import com.example.anitrack.model.Character
 import com.example.anitrack.model.CharacterList
 import com.example.anitrack.model.Content
+import com.example.anitrack.model.User
 import com.example.anitrack.network.DatabaseResult
+import com.example.anitrack.ui.lists.ListHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -33,6 +35,10 @@ class ContentViewModel(
     var content = MutableStateFlow<Content?>(null)
         private set
     var characters = MutableStateFlow<List<Character>?>(null)
+        private set
+
+    private val listHandler = ListHandler(databaseRepository)
+    var contentListsState = mutableStateOf(emptyList<ListHandler.ListType>())
         private set
 
     init {
@@ -131,6 +137,48 @@ class ContentViewModel(
 
     fun changeDialogVisibility(show: Boolean) {
         showEditDialog = show
+    }
+
+    private fun updateContentListsState(userId: String, contentId: String) {
+        viewModelScope.launch {
+            val userResult = databaseRepository.readDocument(
+                collectionPath = DatabaseCollections.Users,
+                model = User::class.java,
+                documentId = userId
+            )
+            if (userResult is DatabaseResult.Success) {
+                val user = userResult.data
+                contentListsState.value = listOfNotNull(
+                    if (user?.watching?.contains(contentId) == true) ListHandler.ListType.WATCHING else null,
+                    if (user?.completed?.contains(contentId) == true) ListHandler.ListType.COMPLETED else null,
+                    if (user?.planToWatch?.contains(contentId) == true) ListHandler.ListType.PLAN_TO_WATCH else null,
+                    if (user?.favorites?.contains(contentId) == true) ListHandler.ListType.FAVORITES else null
+                )
+            }
+        }
+    }
+    fun addToList(userId: String, contentId: String, listType: ListHandler.ListType) {
+        viewModelScope.launch {
+            val result = listHandler.addToList(userId, contentId, listType)
+            if (result is DatabaseResult.Success) {
+                updateContentListsState(userId, contentId)
+            }
+        }
+    }
+
+    fun removeFromList(userId: String, contentId: String, listType: ListHandler.ListType) {
+        viewModelScope.launch {
+            // Llama directamente a `removeFromList` en `ListHandler`
+            val result = listHandler.removeFromList(userId, contentId, listType)
+            if (result is DatabaseResult.Success) {
+                updateContentListsState(userId, contentId) // Actualiza el estado de la lista en la interfaz
+            }
+        }
+    }
+
+    fun loadContentAndUpdateLists(userId: String, contentId: String) {
+        updateContentId(contentId.toIntOrNull() ?: return)
+        updateContentListsState(userId, contentId)
     }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
