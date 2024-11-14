@@ -31,6 +31,7 @@ fun SearchScreen(
             ContentCard(
                 content = it,
                 onCardClicked = { onSearchCardClicked(it) },
+                showEpisodes = false,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
