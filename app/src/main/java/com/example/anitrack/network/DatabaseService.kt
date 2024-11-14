@@ -174,8 +174,8 @@ class FirebaseFirestoreService(val firestore: FirebaseFirestore) : DatabaseServi
         return try {
             val path = firestore.collection(collectionPath)
             val query = when (operation) {
-                DatabaseService.ComparisonType.Equals -> path.whereLessThan(fieldName, value)
-                DatabaseService.ComparisonType.Less -> path.whereEqualTo(fieldName, value)
+                DatabaseService.ComparisonType.Equals -> path.whereEqualTo(fieldName, value)
+                DatabaseService.ComparisonType.Less -> path.whereLessThan(fieldName, value)
                 DatabaseService.ComparisonType.Greater -> path.whereGreaterThan(fieldName, value)
             }
             DatabaseResult.Success(query.get().await().toObjects(model))
