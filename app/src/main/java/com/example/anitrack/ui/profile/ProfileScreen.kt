@@ -15,15 +15,14 @@ import com.example.anitrack.ui.lists.ContentList
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel,
+    onContentClicked: (Int) -> Unit,
     onSignOutClick: () -> Unit
 ) {
-    // Observe the user profile and content list state flows
     val userProfileState by viewModel.userProfile.collectAsState()
-    val contentListState by viewModel.contentList.collectAsState()
+    val userContentListState by viewModel.userContentList.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
 
-        // Display the profile header only if user profile data is successfully loaded
         when (val profileResult = userProfileState) {
             is DatabaseResult.Success -> {
                 val user = profileResult.data
@@ -49,9 +48,7 @@ fun ProfileScreen(
             }
             else -> Text(text = "Loading profile...", modifier = Modifier.padding(16.dp))
         }
-
-        // Display the content list header and the actual content list if loaded
-        when (val contentResult = contentListState) {
+        when (val contentResult = userContentListState) {
             is DatabaseResult.Success -> {
                 val contentList = contentResult.data
 
@@ -64,6 +61,7 @@ fun ProfileScreen(
 
                 ContentList(
                     contentList = contentList,
+                    onContentClicked = onContentClicked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(0.6f)
@@ -78,7 +76,6 @@ fun ProfileScreen(
             else -> Text(text = "Loading contents...", modifier = Modifier.padding(16.dp))
         }
 
-        // Sign Out Button
         Button(
             onClick = { onSignOutClick() },
             modifier = Modifier

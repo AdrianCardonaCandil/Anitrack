@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun ListsScreen(
     viewModel: ListsViewModel = viewModel(),
+    onContentClicked: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
@@ -31,6 +32,7 @@ fun ListsScreen(
         // Mostrar el ContentList con los contenidos actuales
         ContentList(
             contentList = contentList,
+            onContentClicked = onContentClicked,
             modifier = Modifier.fillMaxSize()
         )
     }

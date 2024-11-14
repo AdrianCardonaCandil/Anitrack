@@ -15,6 +15,7 @@ import com.example.anitrack.ui.global.ContentCard
 @Composable
 fun ContentList(
     contentList: List<Content>,
+    onContentClicked: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -25,7 +26,7 @@ fun ContentList(
             ContentCard(
                 content = contentData,
                 userContentEpisodes = contentData.episodes ?: 0,
-                onCardClicked = { /* Implementa la lógica de click */ },
+                onCardClicked = {onContentClicked(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 15.dp, start = 15.dp, end = 15.dp)

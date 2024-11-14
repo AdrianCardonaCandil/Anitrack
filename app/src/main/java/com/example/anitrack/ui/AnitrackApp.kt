@@ -80,6 +80,10 @@ fun AnitrackApp(
         composable(route = AnitrackRoutes.Lists.name){
             ListsScreen(
                 modifier = Modifier.fillMaxSize(),
+                onContentClicked = {
+                    contentViewModel.updateContentId(it)
+                    navController.navigate(AnitrackRoutes.Content.name)
+                },
                 viewModel = listViewModel)
         }
         composable(route = AnitrackRoutes.Profile.name) {
@@ -87,6 +91,10 @@ fun AnitrackApp(
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
                     viewModel= profileViewModel,
+                    onContentClicked = {
+                        contentViewModel.updateContentId(it)
+                        navController.navigate(AnitrackRoutes.Content.name)
+                    },
                     onSignOutClick = {
                         authViewModel.signOut()
                         navController.navigate(AnitrackRoutes.Auth.name)
