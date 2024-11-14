@@ -1,5 +1,6 @@
 package com.example.anitrack.ui.content
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -64,7 +65,8 @@ fun EditContentDialog(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .padding(top = 10.dp)
-                            .size(75.dp),
+                            .size(75.dp)
+                            .clickable { TODO() },
                         contentDescription = null
                     )
                 }
