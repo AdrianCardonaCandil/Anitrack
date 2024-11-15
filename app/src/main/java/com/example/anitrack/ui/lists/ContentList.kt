@@ -20,7 +20,8 @@ fun ContentList(
     showProgressControls: Boolean = false,
     contentProgress: Map<String, Int> = emptyMap(), // Añadir contentProgress
     onEpisodeIncrement: (Int) -> Unit = {},
-    onEpisodeDecrement: (Int) -> Unit = {}
+    onEpisodeDecrement: (Int) -> Unit = {},
+    onMoveToCompleted: (Int) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -36,7 +37,8 @@ fun ContentList(
                     .padding(top = 15.dp, start = 15.dp, end = 15.dp),
                 showProgressControls = showProgressControls,
                 onEpisodeIncrement = { onEpisodeIncrement(contentData.id) },
-                onEpisodeDecrement = { onEpisodeDecrement(contentData.id) }
+                onEpisodeDecrement = { onEpisodeDecrement(contentData.id) },
+                onMoveToCompleted = { onMoveToCompleted(contentData.id) }
             )
         }
     }

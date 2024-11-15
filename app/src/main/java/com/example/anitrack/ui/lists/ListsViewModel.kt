@@ -22,7 +22,7 @@ class ListsViewModel(
 
     private val _userContentList = MutableStateFlow<List<Content>>(emptyList())
     val userContentList: StateFlow<List<Content>> = _userContentList
-
+    private val listHandler = ListHandler(databaseRepository)
     private val _contentProgress = MutableStateFlow<Map<String, Int>>(emptyMap())
     val contentProgress: StateFlow<Map<String, Int>> = _contentProgress
 
@@ -95,6 +95,20 @@ class ListsViewModel(
             }
         }
     }
+
+    fun moveToCompleted(userId: String, contentId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // Primero, eliminar de la lista "Watching"
+            listHandler.removeFromList(userId, contentId, ListHandler.ListType.WATCHING)
+
+            // Luego, agregar a la lista "Completed"
+            listHandler.addToList(userId, contentId, ListHandler.ListType.COMPLETED)
+
+            // Recargar contenidos para actualizar la interfaz
+            loadUserContents(0, userId)
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

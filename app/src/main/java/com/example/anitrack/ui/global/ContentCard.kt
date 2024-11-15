@@ -75,11 +75,14 @@ fun ContentCard(
     userContentEpisodes: Int = 0,
     showEpisodes: Boolean = true,
     showProgressControls: Boolean = false,
+    onMoveToCompleted: (Int) -> Unit,
     onEpisodeIncrement: (Int) -> Unit,
     onEpisodeDecrement: (Int) -> Unit,
     onCardClicked: (Int) -> Unit
 ) {
     var currentEpisodes by remember { mutableStateOf(userContentEpisodes) }
+    var showDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(userContentEpisodes) {
         currentEpisodes = userContentEpisodes
     }
@@ -130,6 +133,8 @@ fun ContentCard(
                             )
                         }
                     }
+
+
                 }
                 Column(
                     modifier = Modifier
@@ -152,7 +157,11 @@ fun ContentCard(
                             onEpisodeIncrement = {
                                 if (currentEpisodes < (content.episodes ?: 0)) {
                                     currentEpisodes++
-                                    onEpisodeIncrement(content.id)
+                                    if (currentEpisodes == content.episodes) {
+                                        showDialog = true
+                                    } else {
+                                        onEpisodeIncrement(content.id)
+                                    }
                                 }
                             },
                             onEpisodeDecrement = {
@@ -190,6 +199,19 @@ fun ContentCard(
                     )
                 }
             }
+            if (showDialog) {
+                MoveToCompletedDialog(
+                    onConfirm = {
+                        onMoveToCompleted(content.id)
+                        showDialog = false
+                    },
+                    onDismiss = {
+                        currentEpisodes--
+                        onEpisodeDecrement(content.id)
+                        showDialog = false
+                    }
+                )
+            }
         }
         HorizontalDivider(
             thickness = 0.25.dp,
@@ -197,6 +219,27 @@ fun ContentCard(
             color = MaterialTheme.colorScheme.primary
         )
     }
+}
+@Composable
+fun MoveToCompletedDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = onConfirm) {
+                Text("Yes")
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                Text("No")
+            }
+        },
+        title = { Text("Move to Completed") },
+        text = { Text("You have reached the last episode. Do you want to move this content to the Completed list?") }
+    )
 }
 
 @Composable

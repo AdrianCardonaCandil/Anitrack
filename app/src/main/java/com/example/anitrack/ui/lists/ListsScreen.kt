@@ -15,7 +15,7 @@ fun ListsScreen(
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val contentList by viewModel.userContentList.collectAsState()
-    val contentProgress by viewModel.contentProgress.collectAsState() // Obteniendo el progreso
+    val contentProgress by viewModel.contentProgress.collectAsState()
 
     LaunchedEffect(selectedTabIndex) {
         viewModel.loadUserContents(selectedTabIndex, userId)
@@ -33,7 +33,7 @@ fun ListsScreen(
 
         ContentList(
             contentList = contentList,
-            contentProgress = contentProgress, // Pasando el progreso aquí
+            contentProgress = contentProgress,
             onContentClicked = onContentClicked,
             modifier = Modifier.fillMaxSize(),
             showProgressControls = (selectedTabIndex == 0),
@@ -44,6 +44,9 @@ fun ListsScreen(
             onEpisodeDecrement = { contentId ->
                 val currentEpisodes = contentProgress[contentId.toString()] ?: 0
                 viewModel.decrementEpisode(userId, contentId.toString(), currentEpisodes)
+            },
+            onMoveToCompleted = { contentId ->
+                viewModel.moveToCompleted(userId, contentId.toString())
             }
         )
     }
