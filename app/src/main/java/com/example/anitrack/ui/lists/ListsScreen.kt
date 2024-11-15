@@ -2,6 +2,7 @@ package com.example.anitrack.ui.lists
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -13,8 +14,12 @@ fun ListsScreen(
     onContentClicked: (Int) -> Unit,
     userId : String,
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val contentList by viewModel.userContentList.collectAsState()
+
+    LaunchedEffect(selectedTabIndex) {
+        viewModel.loadUserContents(selectedTabIndex, userId)
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
 
@@ -22,7 +27,7 @@ fun ListsScreen(
             selectedTabIndex = newIndex
             viewModel.loadUserContents(newIndex, userId)
         }
-        
+
         ListHeader(
             selectedTabIndex = selectedTabIndex,
             itemCount = contentList.size
