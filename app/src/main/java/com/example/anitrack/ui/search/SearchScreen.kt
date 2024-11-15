@@ -38,7 +38,9 @@ fun SearchScreen(
                         top = 15.dp,
                         start = 15.dp,
                         end = 15.dp
-                    )
+                    ),
+                onEpisodeIncrement = {},
+                onEpisodeDecrement = {}
             )
         }
     }

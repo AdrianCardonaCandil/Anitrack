@@ -16,7 +16,11 @@ import com.example.anitrack.ui.global.ContentCard
 fun ContentList(
     contentList: List<Content>,
     onContentClicked: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showProgressControls: Boolean = false,
+    contentProgress: Map<String, Int> = emptyMap(), // Añadir contentProgress
+    onEpisodeIncrement: (Int) -> Unit = {},
+    onEpisodeDecrement: (Int) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -25,11 +29,14 @@ fun ContentList(
         items(contentList) { contentData ->
             ContentCard(
                 content = contentData,
-                userContentEpisodes = contentData.episodes ?: 0,
-                onCardClicked = {onContentClicked(it) },
+                userContentEpisodes = contentProgress[contentData.id.toString()] ?: 0, // Obtener el progreso
+                onCardClicked = { onContentClicked(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 15.dp, start = 15.dp, end = 15.dp)
+                    .padding(top = 15.dp, start = 15.dp, end = 15.dp),
+                showProgressControls = showProgressControls,
+                onEpisodeIncrement = { onEpisodeIncrement(contentData.id) },
+                onEpisodeDecrement = { onEpisodeDecrement(contentData.id) }
             )
         }
     }

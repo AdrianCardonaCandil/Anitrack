@@ -23,6 +23,9 @@ class ListsViewModel(
     private val _userContentList = MutableStateFlow<List<Content>>(emptyList())
     val userContentList: StateFlow<List<Content>> = _userContentList
 
+    private val _contentProgress = MutableStateFlow<Map<String, Int>>(emptyMap())
+    val contentProgress: StateFlow<Map<String, Int>> = _contentProgress
+
     fun loadUserContents(tabIndex: Int, userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _userContentList.emit(emptyList())
@@ -35,6 +38,8 @@ class ListsViewModel(
 
             if (userResult is DatabaseResult.Success) {
                 val user = userResult.data
+                _contentProgress.emit(user?.contentProgress ?: emptyMap()) // Actualizar el progreso
+
                 val contentIds = when (tabIndex) {
                     0 -> user?.watching ?: emptyList()
                     1 -> user?.completed ?: emptyList()
@@ -63,6 +68,33 @@ class ListsViewModel(
         }
     }
 
+    fun incrementEpisode(userId: String, contentId: String, currentEpisodes: Int) {
+        updateEpisodeProgress(userId, contentId, currentEpisodes + 1)
+    }
+
+    fun decrementEpisode(userId: String, contentId: String, currentEpisodes: Int) {
+        if (currentEpisodes > 0) {
+            updateEpisodeProgress(userId, contentId, currentEpisodes - 1)
+        }
+    }
+
+    private fun updateEpisodeProgress(userId: String, contentId: String, newEpisodes: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updates = mapOf("contentProgress.$contentId" to newEpisodes)
+            val result = databaseRepository.updateDocument(
+                DatabaseCollections.Users,
+                userId,
+                updates
+            )
+
+            if (result is DatabaseResult.Success) {
+                // Actualiza el progreso localmente en lugar de recargar todo
+                _contentProgress.emit(_contentProgress.value.toMutableMap().apply {
+                    this[contentId] = newEpisodes
+                })
+            }
+        }
+    }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

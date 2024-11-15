@@ -29,6 +29,11 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -69,11 +74,21 @@ fun ContentCard(
     content: Content,
     userContentEpisodes: Int = 0,
     showEpisodes: Boolean = true,
+    showProgressControls: Boolean = false,
+    onEpisodeIncrement: (Int) -> Unit,
+    onEpisodeDecrement: (Int) -> Unit,
     onCardClicked: (Int) -> Unit
-){
-    Column (modifier = modifier){
+) {
+    var currentEpisodes by remember { mutableStateOf(userContentEpisodes) }
+    LaunchedEffect(userContentEpisodes) {
+        currentEpisodes = userContentEpisodes
+    }
+
+    Column(modifier = modifier) {
         Card(
-            modifier = Modifier.fillMaxWidth().clickable { onCardClicked(content.id) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onCardClicked(content.id) },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background
             ),
@@ -98,7 +113,7 @@ fun ContentCard(
                         is AsyncImagePainter.State.Loading -> {
                             ImagePlaceholder(modifier = Modifier
                                 .fillMaxWidth()
-                                .aspectRatio(3/4.25f)
+                                .aspectRatio(3 / 4.25f)
                                 .clip(MaterialTheme.shapes.extraSmall)
                                 .background(brush = shimmerEffect())
                             )
@@ -110,7 +125,7 @@ fun ContentCard(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(MaterialTheme.shapes.extraSmall)
-                                    .aspectRatio(3/4.25f),
+                                    .aspectRatio(3 / 4.25f),
                                 contentScale = ContentScale.Crop
                             )
                         }
@@ -130,10 +145,22 @@ fun ContentCard(
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleSmall
                     )
-                    if (showEpisodes){
+                    if (showEpisodes && showProgressControls) {
                         EpisodesHandler(
                             totalContentEpisodes = content.episodes ?: 0,
-                            userContentEpisodes = userContentEpisodes,
+                            userContentEpisodes = currentEpisodes,
+                            onEpisodeIncrement = {
+                                if (currentEpisodes < (content.episodes ?: 0)) {
+                                    currentEpisodes++
+                                    onEpisodeIncrement(content.id)
+                                }
+                            },
+                            onEpisodeDecrement = {
+                                if (currentEpisodes > 0) {
+                                    currentEpisodes--
+                                    onEpisodeDecrement(content.id)
+                                }
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 5.dp)
@@ -172,12 +199,14 @@ fun ContentCard(
     }
 }
 
-@Composable // DONE
+@Composable
 fun EpisodesHandler(
     totalContentEpisodes: Int,
     userContentEpisodes: Int,
+    onEpisodeIncrement: () -> Unit,
+    onEpisodeDecrement: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     EpisodesIndicator(
         totalContentEpisodes = totalContentEpisodes,
         userContentEpisodes = userContentEpisodes,
@@ -192,16 +221,32 @@ fun EpisodesHandler(
         Icon(
             imageVector = Icons.Default.KeyboardArrowUp,
             contentDescription = null,
-            modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.secondary)
+            modifier = Modifier
+                .border(1.dp, MaterialTheme.colorScheme.secondary)
+                .clickable {
+                    // Solo incrementar si no ha alcanzado el límite
+                    if (userContentEpisodes < totalContentEpisodes) {
+                        onEpisodeIncrement()
+                    }
+                }
         )
         Spacer(modifier = Modifier.padding(start = 5.dp))
         Icon(
             imageVector = Icons.Default.KeyboardArrowDown,
             contentDescription = null,
-            modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.secondary)
+            modifier = Modifier
+                .border(1.dp, MaterialTheme.colorScheme.secondary)
+                .clickable {
+                    // Solo decrementar si no es menor a 0
+                    if (userContentEpisodes > 0) {
+                        onEpisodeDecrement()
+                    }
+                }
         )
     }
 }
+
+
 
 @Composable
 fun EpisodesIndicator(
@@ -209,8 +254,13 @@ fun EpisodesIndicator(
     label: String = "Episodes:",
     totalContentEpisodes: Int,
     userContentEpisodes: Int,
-    progressFactor: Float = userContentEpisodes / totalContentEpisodes.toFloat()
-){
+) {
+    val progressFactor = if (totalContentEpisodes > 0) {
+        userContentEpisodes / totalContentEpisodes.toFloat()
+    } else {
+        0f
+    }
+
     Column(modifier = modifier) {
         Row(
             modifier = Modifier
@@ -224,7 +274,7 @@ fun EpisodesIndicator(
                 color = MaterialTheme.colorScheme.secondary
             )
             Text(
-                text = "${userContentEpisodes}/${totalContentEpisodes}",
+                text = "$userContentEpisodes/$totalContentEpisodes",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -235,10 +285,12 @@ fun EpisodesIndicator(
                 .fillMaxWidth()
                 .padding(bottom = 5.dp)
                 .height(20.dp)
-                .clip(MaterialTheme.shapes.extraSmall)
+                .clip(MaterialTheme.shapes.extraSmall),
         )
     }
 }
+
+
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable // DONE
