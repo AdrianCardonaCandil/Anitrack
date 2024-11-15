@@ -36,6 +36,20 @@ interface DatabaseService {
         model: Class<T>
     ) : DatabaseResult<List<T>>
 
+    /** Reads a list of documents specified by id.
+     * @param collectionPath Collection route
+     * @param model Model on which the documents will be stored
+     * @param documentIds List of document ids
+     * @return Success or failure of the operation. If the operation
+     * results in success, a list of models with the data will be returned.
+     */
+
+    suspend fun <T> readDocuments(
+        collectionPath: String,
+        model: Class<T>,
+        documentIds: List<String>
+    ): DatabaseResult<List<T>>
+
     /** Reads a document specified by id.
      * @param collectionPath Collection route
      * @param model Model on which the document will be stored
@@ -121,6 +135,23 @@ class FirebaseFirestoreService(val firestore: FirebaseFirestore) : DatabaseServi
         }
     }
 
+    override suspend fun <T> readDocuments(
+        collectionPath: String,
+        model: Class<T>,
+        documentIds: List<String>
+    ): DatabaseResult<List<T>> {
+        return try {
+
+            val documents = firestore.collection(collectionPath)
+                .whereIn("__name__", documentIds)
+                .get()
+                .await()
+                .toObjects(model)
+            DatabaseResult.Success(documents)
+        } catch (e: Exception) {
+            DatabaseResult.Failure(e)
+        }
+    }
     override suspend fun <T> readDocument(
         collectionPath: String,
         model: Class<T>,

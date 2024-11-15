@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.update
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -25,6 +26,9 @@ class AuthViewModel(
     private val authRepository: AuthRepository,
     private val databaseRepository: DatabaseRepository
 ) : ViewModel() {
+
+    private val _userId = MutableStateFlow(FirebaseAuth.getInstance().currentUser?.uid)
+    val userId: StateFlow<String?> = _userId.asStateFlow()
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState = _authState.asStateFlow()
@@ -44,13 +48,9 @@ class AuthViewModel(
     }
 
     init {
-        // Add the authStateListener to monitor authentication state
         firebaseAuth.addAuthStateListener(authStateListener)
     }
 
-
-
-    // Remove the listener when ViewModel is cleared to prevent memory leaks
     override fun onCleared() {
         super.onCleared()
         firebaseAuth.removeAuthStateListener(authStateListener)

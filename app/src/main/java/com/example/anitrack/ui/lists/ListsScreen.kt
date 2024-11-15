@@ -8,28 +8,26 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun ListsScreen(
+    modifier: Modifier = Modifier,
     viewModel: ListsViewModel = viewModel(),
     onContentClicked: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    userId : String,
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
     val contentList by viewModel.userContentList.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
 
-        // Tab Row para seleccionar la lista de contenido
         ListsTabRow(selectedTabIndex) { newIndex ->
             selectedTabIndex = newIndex
-            viewModel.loadUserContents(newIndex) // Cargar la lista correspondiente
+            viewModel.loadUserContents(newIndex, userId)
         }
-
-        // List Header con el conteo de elementos
+        
         ListHeader(
             selectedTabIndex = selectedTabIndex,
             itemCount = contentList.size
         )
 
-        // Mostrar el ContentList con los contenidos actuales
         ContentList(
             contentList = contentList,
             onContentClicked = onContentClicked,

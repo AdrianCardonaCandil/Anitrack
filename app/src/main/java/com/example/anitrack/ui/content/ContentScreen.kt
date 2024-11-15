@@ -36,15 +36,14 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun ContentScreen(
     contentViewModel: ContentViewModel,
+    userId:String,
     modifier: Modifier = Modifier
 ){
-    val userId = FirebaseAuth.getInstance().currentUser?.uid
     val content: Content? = contentViewModel.content.collectAsState().value
     val characters: List<Character>? = contentViewModel.characters.collectAsState().value
-    if (content != null) {
-        if (userId != null) {
-            contentViewModel.loadContentAndUpdateLists(userId, content.id.toString())
-        }
+
+    if (content != null && userId.isNotBlank()) {
+        contentViewModel.updateContentListsState(userId, content.id.toString())
     }
 
     Box {
@@ -57,16 +56,14 @@ fun ContentScreen(
             modifier = Modifier.align(Alignment.BottomEnd).padding(25.dp),
             onEditContentActionButtonClicked = {contentViewModel.changeDialogVisibility(it)}
         )
-        if (userId != null) {
-            if (content != null) {
-                EditContentDialog(
-                    viewModel = contentViewModel,
-                    userId = userId,
-                    contentId = content.id.toString(),
-                    isActive = contentViewModel.showEditDialog,
-                    onDismissDialogEvent = { contentViewModel.changeDialogVisibility(it) }
-                )
-            }
+        if (content != null) {
+            EditContentDialog(
+                viewModel = contentViewModel,
+                userId = userId,
+                contentId = content.id.toString(),
+                isActive = contentViewModel.showEditDialog,
+                onDismissDialogEvent = { contentViewModel.changeDialogVisibility(it) }
+            )
         }
     }
 

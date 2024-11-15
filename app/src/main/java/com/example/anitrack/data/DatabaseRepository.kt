@@ -15,6 +15,12 @@ interface DatabaseRepository {
         model: Class<T>,
     ) : DatabaseResult<List<T>>
 
+    suspend fun <T> readDocuments(
+        collectionPath: DatabaseCollections,
+        model: Class<T>,
+        documentIds: List<String>
+    ): DatabaseResult<List<T>>
+
     suspend fun <T> readDocument (
         collectionPath: DatabaseCollections,
         model: Class<T>,
@@ -63,6 +69,17 @@ class FirestoreFirebaseRepository(private val firestoreService: DatabaseService)
             model = model
         )
 
+    override suspend fun <T> readDocuments(
+        collectionPath: DatabaseCollections,
+        model: Class<T>,
+        documentIds: List<String>
+    ): DatabaseResult<List<T>> =
+        this.firestoreService.readDocuments(
+            collectionPath = collectionPath.name,
+            model = model,
+            documentIds = documentIds
+        )
+
     override suspend fun <T> readDocument(
         collectionPath: DatabaseCollections,
         model: Class<T>,
@@ -108,6 +125,8 @@ class FirestoreFirebaseRepository(private val firestoreService: DatabaseService)
             operation = operation,
             model = model
         )
+
+
 }
 
 enum class DatabaseCollections {

@@ -52,7 +52,7 @@ fun EditContentDialog(
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Spacer(modifier = Modifier.padding(vertical = 7.5.dp))
-                    ListHandler.ListType.values().forEach { listType ->
+                    ListHandler.ListType.entries.forEach { listType ->
                         val isInList = viewModel.contentListsState.value.contains(listType)
                         OutlinedListButton(
                             name = stringResource(id = getListNameResource(listType)),

@@ -1,6 +1,5 @@
 package com.example.anitrack.ui
 
-import android.provider.ContactsContract.Profile
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -40,17 +39,18 @@ fun AnitrackApp(
     authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory),
     navController: NavHostController = rememberNavController(),
 ) {
-    val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+    val userId by authViewModel.userId.collectAsState()
 
     NavHost(
         startDestination = AnitrackRoutes.Home.name,
         navController = navController,
         modifier = modifier
     ) {
-        composable(route = AnitrackRoutes.Home.name){
-            HomeScreen(modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+        composable(route = AnitrackRoutes.Home.name) {
+            HomeScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
                 onGridContentClicked = {
                     contentViewModel.updateContentId(it)
                     navController.navigate(AnitrackRoutes.Content.name)
@@ -58,7 +58,8 @@ fun AnitrackApp(
                 homeViewModel = homeViewModel
             )
         }
-        composable(route = AnitrackRoutes.Search.name){
+
+        composable(route = AnitrackRoutes.Search.name) {
             SearchScreen(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -69,28 +70,37 @@ fun AnitrackApp(
                 }
             )
         }
-        composable(route = AnitrackRoutes.Content.name){
+
+        composable(route = AnitrackRoutes.Content.name) {
             ContentScreen(
+                userId = userId ?: "",
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 contentViewModel = contentViewModel
             )
         }
-        composable(route = AnitrackRoutes.Lists.name){
-            ListsScreen(
-                modifier = Modifier.fillMaxSize(),
-                onContentClicked = {
-                    contentViewModel.updateContentId(it)
-                    navController.navigate(AnitrackRoutes.Content.name)
-                },
-                viewModel = listViewModel)
+
+        composable(route = AnitrackRoutes.Lists.name) {
+            userId?.let { nonNullUserId ->
+                ListsScreen(
+                    userId = nonNullUserId,
+                    modifier = Modifier.fillMaxSize(),
+                    onContentClicked = {
+                        contentViewModel.updateContentId(it)
+                        navController.navigate(AnitrackRoutes.Content.name)
+                    },
+                    viewModel = listViewModel
+                )
+            } ?: navController.navigate(AnitrackRoutes.Auth.name)
         }
+
         composable(route = AnitrackRoutes.Profile.name) {
-            if (isLoggedIn) {
+            userId?.let { nonNullUserId ->
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
-                    viewModel= profileViewModel,
+                    userId = nonNullUserId,
+                    viewModel = profileViewModel,
                     onContentClicked = {
                         contentViewModel.updateContentId(it)
                         navController.navigate(AnitrackRoutes.Content.name)
@@ -100,17 +110,10 @@ fun AnitrackApp(
                         navController.navigate(AnitrackRoutes.Auth.name)
                     }
                 )
-            } else {
-                AuthScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    authViewModel = authViewModel,
-                    onSignSuccess = {
-                        navController.navigate(AnitrackRoutes.Home.name)
-                    }
-                )
-            }
+            } ?: navController.navigate(AnitrackRoutes.Auth.name)
         }
-        composable(route = AnitrackRoutes.Auth.name){
+
+        composable(route = AnitrackRoutes.Auth.name) {
             AuthScreen(
                 modifier = Modifier.fillMaxSize(),
                 authViewModel = authViewModel,
@@ -121,6 +124,8 @@ fun AnitrackApp(
         }
     }
 }
+
+
 
 @Preview(showSystemUi = true)
 @Composable

@@ -14,6 +14,7 @@ import com.example.anitrack.ui.lists.ContentList
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
+    userId: String,
     viewModel: ProfileViewModel,
     onContentClicked: (Int) -> Unit,
     onSignOutClick: () -> Unit
@@ -21,8 +22,11 @@ fun ProfileScreen(
     val userProfileState by viewModel.userProfile.collectAsState()
     val userContentListState by viewModel.userContentList.collectAsState()
 
-    Column(modifier = modifier.fillMaxSize()) {
+    LaunchedEffect(userId) {
+        viewModel.loadUserProfile(userId)
+    }
 
+    Column(modifier = modifier.fillMaxSize()) {
         when (val profileResult = userProfileState) {
             is DatabaseResult.Success -> {
                 val user = profileResult.data
@@ -48,6 +52,7 @@ fun ProfileScreen(
             }
             else -> Text(text = "Loading profile...", modifier = Modifier.padding(16.dp))
         }
+
         when (val contentResult = userContentListState) {
             is DatabaseResult.Success -> {
                 val contentList = contentResult.data

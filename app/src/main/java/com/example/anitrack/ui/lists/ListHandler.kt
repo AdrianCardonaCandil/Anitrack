@@ -32,25 +32,43 @@ class ListHandler(private val databaseRepository: DatabaseRepository) {
         if (userResult is DatabaseResult.Success) {
             val user = userResult.data
             if (user != null) {
-                // Si la lista no es `favorites`, elimina el contenido de otras listas que no sean `favorites`
+                // Si el targetList no es FAVORITES, primero eliminamos el contenido de las listas conflictivas
                 val updatedUser = if (targetList != ListType.FAVORITES) {
                     removeContentFromOtherLists(user, contentId)
                 } else user
 
-                // Agrega el contenido a la lista objetivo
+                // Actualizamos el documento del usuario en Firestore para reflejar la eliminación
+                val updateResult = databaseRepository.updateDocument(
+                    collectionPath = DatabaseCollections.Users,
+                    documentId = userId,
+                    updates = mapOf(
+                        "watching" to updatedUser.watching,
+                        "completed" to updatedUser.completed,
+                        "planToWatch" to updatedUser.planToWatch
+                    )
+                )
+
+                if (updateResult is DatabaseResult.Failure) {
+                    // Si la actualización falla, devolvemos el error inmediatamente
+                    return updateResult
+                }
+
+                // Crear la nueva lista para el tipo objetivo después de limpiar listas conflictivas
                 val newList = when (targetList) {
                     ListType.WATCHING -> updatedUser.watching + contentId
                     ListType.COMPLETED -> updatedUser.completed + contentId
                     ListType.PLAN_TO_WATCH -> updatedUser.planToWatch + contentId
-                    ListType.FAVORITES -> updatedUser.favorites + contentId
-                }
+                    ListType.FAVORITES -> if (!updatedUser.favorites.contains(contentId)) updatedUser.favorites + contentId else updatedUser.favorites
+                }.distinct() // Evitar duplicados
 
+                // Finalmente, actualizamos el documento con el contenido añadido a la nueva lista
                 return updateUserDocument(userId, targetList, newList)
             }
         }
 
         return DatabaseResult.Failure(Exception("Failed to fetch user data"))
     }
+
 
     suspend fun removeFromList(userId: String, contentId: String, targetList: ListType): DatabaseResult<Boolean> {
         val userResult = databaseRepository.readDocument(
@@ -62,7 +80,6 @@ class ListHandler(private val databaseRepository: DatabaseRepository) {
         if (userResult is DatabaseResult.Success) {
             val user = userResult.data
             if (user != null) {
-                // Elimina el contenido de la lista seleccionada
                 val newList = when (targetList) {
                     ListType.WATCHING -> user.watching - contentId
                     ListType.COMPLETED -> user.completed - contentId
