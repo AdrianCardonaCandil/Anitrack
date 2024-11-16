@@ -38,7 +38,7 @@ class AuthViewModel(
     private val _isLoggedIn = MutableStateFlow(firebaseAuth.currentUser != null)
     val isLoggedIn = _isLoggedIn.asStateFlow()
 
-    // Initialize authStateListener directly
+
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
         _isLoggedIn.value = auth.currentUser != null
     }
@@ -174,6 +174,7 @@ class AuthViewModel(
 
                 if (authResult is AuthState.Success) {
                     _isLoggedIn.update { true }
+                    _userId.update { FirebaseAuth.getInstance().currentUser?.uid }
                     _authState.update { AuthState.Success }
                 } else if (authResult is AuthState.Error) {
                     _authState.update { AuthState.ValidationError("User not found or incorrect credentials") }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ListsViewModel(
     private val databaseRepository: DatabaseRepository
@@ -88,13 +89,15 @@ class ListsViewModel(
             )
 
             if (result is DatabaseResult.Success) {
-                // Actualiza el progreso localmente en lugar de recargar todo
-                _contentProgress.emit(_contentProgress.value.toMutableMap().apply {
-                    this[contentId] = newEpisodes
-                })
+                withContext(Dispatchers.Main) {
+                    _contentProgress.value = _contentProgress.value.toMutableMap().apply {
+                        this[contentId] = newEpisodes
+                    }
+                }
             }
         }
     }
+
 
     fun moveToCompleted(userId: String, contentId: String) {
         viewModelScope.launch(Dispatchers.IO) {

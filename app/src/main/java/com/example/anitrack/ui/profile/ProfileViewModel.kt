@@ -13,10 +13,12 @@ import com.example.anitrack.model.User
 import com.example.anitrack.network.DatabaseResult
 import com.example.anitrack.network.DatabaseService
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileViewModel(
     private val databaseRepository: DatabaseRepository
@@ -28,44 +30,42 @@ class ProfileViewModel(
     private val _userContentList = MutableStateFlow<DatabaseResult<List<Content>>>(DatabaseResult.Success(emptyList()))
     val userContentList: StateFlow<DatabaseResult<List<Content>>> = _userContentList.asStateFlow()
 
-    fun loadUserProfile(userId: String) {
-        viewModelScope.launch {
-            val result = databaseRepository.readDocument(
+
+
+    fun loadUserProfileAndFavorites(userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userResult = databaseRepository.readDocument(
                 collectionPath = DatabaseCollections.Users,
                 model = User::class.java,
                 documentId = userId
             )
 
-            if (result is DatabaseResult.Success) {
-                _userProfile.value = result
-                loadUserFavorites(result.data)
+            if (userResult is DatabaseResult.Success) {
+                val user = userResult.data
+                val favoriteContentIds = user?.favorites.orEmpty().distinct()
+
+                val contentResult = if (favoriteContentIds.isNotEmpty()) {
+                    databaseRepository.readDocuments(
+                        collectionPath = DatabaseCollections.Contents,
+                        model = Content::class.java,
+                        documentIds = favoriteContentIds
+                    )
+                } else {
+                    DatabaseResult.Success(emptyList())
+                }
+
+                withContext(Dispatchers.Main) {
+                    _userProfile.value = userResult
+                    _userContentList.value = contentResult
+                }
             } else {
-                _userProfile.value = result
+                withContext(Dispatchers.Main) {
+                    _userProfile.value = userResult
+                }
             }
         }
     }
 
-    private fun loadUserFavorites(user: User?) {
-        viewModelScope.launch {
-            if (user == null) {
-                _userContentList.value = DatabaseResult.Failure(Exception("User data not found"))
-                return@launch
-            }
-
-            val favoriteContentIds = user.favorites.distinct()
-            if (favoriteContentIds.isEmpty()) {
-                _userContentList.value = DatabaseResult.Success(emptyList())
-                return@launch
-            }
-
-            val contentResult = databaseRepository.readDocuments(
-                collectionPath = DatabaseCollections.Contents,
-                model = Content::class.java,
-                documentIds = favoriteContentIds
-            )
-            _userContentList.value = contentResult
-        }
-    }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

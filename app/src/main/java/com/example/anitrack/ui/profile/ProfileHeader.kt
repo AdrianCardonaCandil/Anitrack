@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun ProfileHeader(
@@ -23,16 +24,19 @@ fun ProfileHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(10.dp)
     ) {
-        // Imagen de perfil cuadrada con bordes redondeados, ocupa 100% de la altura disponible
+
+
         Image(
-            painter = rememberImagePainter(data = profileImageUrl),
+            painter = if (profileImageUrl.isNotEmpty()) {
+                rememberAsyncImagePainter(model = profileImageUrl)
+            } else {
+                painterResource(id = com.example.anitrack.R.drawable.default_pfp)
+            },
             contentDescription = "Profile Picture",
             modifier = Modifier
-                .fillMaxHeight()
-                .aspectRatio(0.8f)
-                .background(Color.Gray)
+                .size(150.dp)
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -41,25 +45,25 @@ fun ProfileHeader(
             modifier = Modifier
                 .fillMaxHeight()
         ) {
-            // UserDetails ocupa el 70% de la altura
+
             UserDetails(
                 userName = userName,
                 joinedDate = joinedDate,
                 description = description,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.7f)
+                    .weight(0.8f)
+                    .padding(8.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // ProfileActions ocupa el 30% de la altura
             ProfileActions(
                 onEditProfileClick = onEditProfileClick,
                 onShareProfileClick = onShareProfileClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.3f)
+                    .weight(0.2f)
             )
         }
     }

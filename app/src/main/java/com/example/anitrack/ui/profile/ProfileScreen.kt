@@ -23,11 +23,12 @@ fun ProfileScreen(
     val userContentListState by viewModel.userContentList.collectAsState()
 
     LaunchedEffect(userId) {
-        viewModel.loadUserProfile(userId)
+        viewModel.loadUserProfileAndFavorites(userId)
     }
 
     Column(modifier = modifier.fillMaxSize()) {
         when (val profileResult = userProfileState) {
+
             is DatabaseResult.Success -> {
                 val user = profileResult.data
                 user?.let {
