@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -82,6 +83,14 @@ fun AnitrackApp(
         }
 
         composable(route = AnitrackRoutes.Lists.name) {
+            LaunchedEffect(userId) {
+                if (userId == null) {
+                    navController.navigate(AnitrackRoutes.Auth.name) {
+                        popUpTo(AnitrackRoutes.Lists.name) { inclusive = true }
+                    }
+                }
+            }
+
             userId?.let { nonNullUserId ->
                 ListsScreen(
                     userId = nonNullUserId,
@@ -92,10 +101,19 @@ fun AnitrackApp(
                     },
                     viewModel = listViewModel
                 )
-            } ?: navController.navigate(AnitrackRoutes.Auth.name)
+            }
         }
 
+
         composable(route = AnitrackRoutes.Profile.name) {
+            LaunchedEffect(userId) {
+                if (userId == null) {
+                    navController.navigate(AnitrackRoutes.Auth.name) {
+                        popUpTo(AnitrackRoutes.Profile.name) { inclusive = true }
+                    }
+                }
+            }
+
             userId?.let { nonNullUserId ->
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
@@ -110,9 +128,8 @@ fun AnitrackApp(
                         navController.navigate(AnitrackRoutes.Auth.name)
                     }
                 )
-            } ?: navController.navigate(AnitrackRoutes.Auth.name)
+            }
         }
-
         composable(route = AnitrackRoutes.Auth.name) {
             AuthScreen(
                 modifier = Modifier.fillMaxSize(),
