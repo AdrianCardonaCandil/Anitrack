@@ -135,10 +135,13 @@ fun AnitrackApp(
                 modifier = Modifier.fillMaxSize(),
                 authViewModel = authViewModel,
                 onSignSuccess = {
-                    navController.navigate(AnitrackRoutes.Profile.name)
+                    navController.navigate(AnitrackRoutes.Profile.name) {
+                        popUpTo(AnitrackRoutes.Auth.name) { inclusive = true }
+                    }
                 }
             )
         }
+
     }
 }
 
