@@ -130,6 +130,24 @@ fun AnitrackApp(
                 )
             }
         }
+        composable(route = "profile/{userId}") { backStackEntry ->
+            val otherUserId = backStackEntry.arguments?.getString("userId") ?: return@composable
+
+            ProfileScreen(
+                modifier = Modifier.fillMaxSize(),
+                userId = otherUserId,
+                viewModel = profileViewModel,
+                onContentClicked = {
+                    contentViewModel.updateContentId(it)
+                    navController.navigate(AnitrackRoutes.Content.name)
+                },
+                onSignOutClick = {
+                    authViewModel.signOut()
+                    navController.navigate(AnitrackRoutes.Auth.name)
+                }
+            )
+        }
+
         composable(route = AnitrackRoutes.Auth.name) {
             AuthScreen(
                 modifier = Modifier.fillMaxSize(),

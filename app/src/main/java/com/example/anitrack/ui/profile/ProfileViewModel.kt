@@ -30,8 +30,6 @@ class ProfileViewModel(
     private val _userContentList = MutableStateFlow<DatabaseResult<List<Content>>>(DatabaseResult.Success(emptyList()))
     val userContentList: StateFlow<DatabaseResult<List<Content>>> = _userContentList.asStateFlow()
 
-
-
     fun loadUserProfileAndFavorites(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val userResult = databaseRepository.readDocument(

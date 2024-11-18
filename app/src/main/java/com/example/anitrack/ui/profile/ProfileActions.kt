@@ -6,6 +6,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -16,8 +20,10 @@ import com.example.anitrack.ui.theme.AppTypography
 fun ProfileActions(
     onEditProfileClick: () -> Unit,
     onShareProfileClick: () -> Unit,
+    userId: String,
     modifier: Modifier = Modifier
 ) {
+    var isDialogOpen by remember { mutableStateOf(false) }
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -41,7 +47,7 @@ fun ProfileActions(
         }
 
         Button(
-            onClick = onShareProfileClick,
+            onClick = { isDialogOpen = true },
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 8.dp),
@@ -54,7 +60,13 @@ fun ProfileActions(
                     painter = painterResource(id = com.example.anitrack.R.drawable.baseline_share_qr_24),
                     contentDescription = "Share Profile"
                 )
-                }
+            }
+        }
+        if (isDialogOpen) {
+            ShareProfileDialog(
+                userId = userId,
+                onDismiss = { isDialogOpen = false }
+            )
         }
     }
 }

@@ -15,6 +15,7 @@ import coil.compose.rememberAsyncImagePainter
 fun ProfileHeader(
     profileImageUrl: String,
     userName: String,
+    userId: String,
     joinedDate: String,
     description: String,
     onEditProfileClick: () -> Unit,
@@ -61,6 +62,7 @@ fun ProfileHeader(
             ProfileActions(
                 onEditProfileClick = onEditProfileClick,
                 onShareProfileClick = onShareProfileClick,
+                userId = userId,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.2f)

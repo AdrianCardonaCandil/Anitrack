@@ -37,6 +37,7 @@ fun ProfileScreen(
                         userName = user.username,
                         joinedDate = user.createdAt ?: "Unknown",
                         description = user.description,
+                        userId = user.id,
                         onEditProfileClick = {},
                         onShareProfileClick = {},
                         modifier = Modifier
