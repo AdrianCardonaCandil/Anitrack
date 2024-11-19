@@ -20,7 +20,7 @@ sealed class AuthState {
 interface AuthService {
     suspend fun signUp(email: String, password: String): AuthResult
     suspend fun signIn(email: String, password: String): AuthResult
-    suspend fun removeUser(): AuthResult
+    suspend fun deleteAccount(): AuthResult
     suspend fun signOut(): AuthResult
 }
 
@@ -54,7 +54,7 @@ class FirebaseAuthService(
         }
     }
 
-    override suspend fun removeUser(): AuthResult {
+    override suspend fun deleteAccount(): AuthResult {
         return try {
             auth.currentUser?.delete()?.await()
             AuthResult.Success

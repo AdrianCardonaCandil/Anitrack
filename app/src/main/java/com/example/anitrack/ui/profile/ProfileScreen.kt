@@ -17,7 +17,9 @@ fun ProfileScreen(
     userId: String,
     viewModel: ProfileViewModel,
     onContentClicked: (Int) -> Unit,
-    onSignOutClick: () -> Unit
+    onSignOutClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
+
 ) {
     val userProfileState by viewModel.userProfile.collectAsState()
     val userContentListState by viewModel.userContentList.collectAsState()
@@ -38,8 +40,7 @@ fun ProfileScreen(
                         joinedDate = user.createdAt ?: "Unknown",
                         description = user.description,
                         userId = user.id,
-                        onEditProfileClick = {},
-                        onShareProfileClick = {},
+                        onDeleteAccountClick = onDeleteAccountClick,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(0.3f)

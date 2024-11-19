@@ -42,8 +42,6 @@ class MainActivity : ComponentActivity() {
                         navController = navController
                     )
                 }
-
-                // Manejar el intent inicial después de configurar NavController
                 androidx.compose.runtime.LaunchedEffect(navController) {
                     handleDeepLink(intent)
                 }
@@ -57,20 +55,25 @@ class MainActivity : ComponentActivity() {
     private fun observeDeepLink() {
         lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                val currentIntent = intent
-                if (currentIntent != null && currentIntent.data != null) {
-                    handleDeepLink(currentIntent)
+                intent?.let { currentIntent ->
+                    if (currentIntent.data != null) {
+                        handleDeepLink(currentIntent)
+                    }
                 }
             }
         })
     }
 
 
+
     private fun handleDeepLink(intent: Intent?) {
         val deepLinkUserId = intent?.data?.pathSegments?.lastOrNull()
         if (::navController.isInitialized && deepLinkUserId != null) {
             try {
-                navController.navigate("profile/$deepLinkUserId")
+                navController.navigate("profile/$deepLinkUserId") {
+                    // Evita múltiples navegaciones al mismo destino
+                    launchSingleTop = true
+                }
                 // Limpia el intent después de manejarlo
                 this.intent = null
             } catch (e: IllegalArgumentException) {
@@ -81,5 +84,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleDeepLink(intent)
+    }
 }
+
+
+
 

@@ -18,18 +18,19 @@ import com.example.anitrack.ui.theme.AppTypography
 
 @Composable
 fun ProfileActions(
-    onEditProfileClick: () -> Unit,
-    onShareProfileClick: () -> Unit,
     userId: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDeleteAccountClick: () -> Unit
 ) {
     var isDialogOpen by remember { mutableStateOf(false) }
+    var isEditProfileDialogOpen by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Button(
-            onClick = onEditProfileClick,
+            onClick = { isEditProfileDialogOpen = true },
             modifier = Modifier
                 .weight(1f)
                 .padding(end = 8.dp),
@@ -66,6 +67,12 @@ fun ProfileActions(
             ShareProfileDialog(
                 userId = userId,
                 onDismiss = { isDialogOpen = false }
+            )
+        }
+        if (isEditProfileDialogOpen) {
+            EditProfileDialog(
+                onDismissRequest = { isEditProfileDialogOpen = false },
+                onDeleteAccountClick = { onDeleteAccountClick }
             )
         }
     }

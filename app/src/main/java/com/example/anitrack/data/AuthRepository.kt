@@ -7,9 +7,9 @@ import com.example.anitrack.network.AuthState
 interface AuthRepository {
 
     suspend fun signIn(email: String, password: String): AuthState
-    suspend fun removeUser(): AuthState
     suspend fun signUp(email: String, password: String): AuthState
     suspend fun signOut(): AuthState
+    suspend fun deleteAccount(): AuthState
 }
 
 class AuthFirebaseRepository(private val authService: AuthService) : AuthRepository {
@@ -34,8 +34,8 @@ class AuthFirebaseRepository(private val authService: AuthService) : AuthReposit
         }
     }
 
-    override suspend fun removeUser(): AuthState {
-        return when (val result = authService.removeUser()) {
+    override suspend fun deleteAccount(): AuthState {
+        return when (val result = authService.deleteAccount()) {
             is AuthResult.Success -> AuthState.Success
             is AuthResult.Failure -> AuthState.Error(result.error)
         }

@@ -179,6 +179,16 @@ class AuthViewModel(
             else -> true
         }
     }
+    fun deleteAccount() {
+        viewModelScope.launch {
+            val result = databaseRepository.deleteDocument(DatabaseCollections.Users,
+                userId.toString()
+            )
+            if (result is DatabaseResult.Success) {
+                authRepository.deleteAccount()
+            }
+        }
+    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

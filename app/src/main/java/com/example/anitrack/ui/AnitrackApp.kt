@@ -126,6 +126,10 @@ fun AnitrackApp(
                     onSignOutClick = {
                         authViewModel.signOut()
                         navController.navigate(AnitrackRoutes.Auth.name)
+                    },
+                    onDeleteAccountClick = {
+                        authViewModel.deleteAccount()
+                        navController.navigate(AnitrackRoutes.Auth.name)
                     }
                 )
             }
@@ -143,6 +147,10 @@ fun AnitrackApp(
                 },
                 onSignOutClick = {
                     authViewModel.signOut()
+                    navController.navigate(AnitrackRoutes.Auth.name)
+                },
+                onDeleteAccountClick = {
+                    authViewModel.deleteAccount()
                     navController.navigate(AnitrackRoutes.Auth.name)
                 }
             )
@@ -162,7 +170,6 @@ fun AnitrackApp(
 
     }
 }
-
 
 
 @Preview(showSystemUi = true)

@@ -18,8 +18,7 @@ fun ProfileHeader(
     userId: String,
     joinedDate: String,
     description: String,
-    onEditProfileClick: () -> Unit,
-    onShareProfileClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -60,8 +59,7 @@ fun ProfileHeader(
             Spacer(modifier = Modifier.height(8.dp))
 
             ProfileActions(
-                onEditProfileClick = onEditProfileClick,
-                onShareProfileClick = onShareProfileClick,
+                onDeleteAccountClick = onDeleteAccountClick,
                 userId = userId,
                 modifier = Modifier
                     .fillMaxWidth()
