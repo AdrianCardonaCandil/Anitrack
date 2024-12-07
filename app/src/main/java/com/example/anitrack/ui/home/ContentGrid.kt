@@ -18,7 +18,7 @@ import com.example.anitrack.model.Content
 fun ContentGrid(
     modifier: Modifier = Modifier,
     onCardClicked: (id: Int) -> Unit,
-    gridName:String = "Grid Name:",
+    gridName:String = "",
     contentList: List<Content>?
 ) {
     Column(modifier = modifier) {

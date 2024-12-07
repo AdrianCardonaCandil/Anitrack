@@ -12,6 +12,14 @@
     <string name="AddToListLabel">Add to list</string>
     <string name="AddToLovedLabel">Add to loved</string>
 
+    <!-- Content Cards Content Description -->
+    <string name="contentCardCD">Cover image of the displayed anime</string>
+    <string name="arrowUpCD">Arrow up icon to increase episodes count by one</string>
+    <string name="arrowDownCD">Arrow down icon to decrease episodes count by one</string>
+
+    <!-- Content Card Labels -->
+    <string name="episodesContentCardLabel">Episodes:</string>
+
     <!-- Home Screen Strings Resources  -->
     <!-- Banner -->
     <string name="slogan">We Keep It Simple For You. Don\'t forget</string>
@@ -22,6 +30,7 @@
         watching habits over time and discover your
         obsessions.
     </string>
+    <string name="bannerImageCD">Small image of a tracking diagram</string>
     <!-- Search Bar -->
     <string name="searchBarLabel">Browse:</string>
     <!-- Content Grids  -->
@@ -33,4 +42,18 @@
     <string name="watchingListName">Watching</string>
     <string name="CompletedListName">Completed</string>
     <string name="PlanToWatchListName">Plan To Watch</string>
+
+    <!-- Content Screen Strings Resources  -->
+    <!-- Section Labels -->
+    <string name="informationSectionLabel">Information</string>
+    <string name="studiosSectionLabel">Studios</string>
+    <string name="genresSectionLabel">Genres</string>
+    <string name="charactersSectionLabel">Characters</string>
+
+    <!-- Character Page Content Descriptions -->
+    <string name="characterImageCD">Character image</string>
+    <string name="backgroundImageCD">Anime background image</string>
+    <string name="editContentCD">Edit content list icon</string>
+    <string name="favouriteCD">Add to favourite heart icon</string>
+    <string name="contentImageCD">Anime cover image</string>
 </resources>

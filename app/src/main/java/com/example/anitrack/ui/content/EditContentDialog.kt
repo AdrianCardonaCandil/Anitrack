@@ -67,7 +67,7 @@ fun EditContentDialog(
                             .padding(top = 10.dp)
                             .size(75.dp)
                             .clickable { TODO() },
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.favouriteCD)
                     )
                 }
             }

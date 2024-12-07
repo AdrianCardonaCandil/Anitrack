@@ -34,11 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.anitrack.R
 import com.example.anitrack.model.Content
 
 /* This card needs the following attributes to draw the information needed on the screen
@@ -106,7 +108,7 @@ fun ContentCard(
                         else -> {
                             Image(
                                 painter = painter,
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.contentCardCD),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(MaterialTheme.shapes.extraSmall)
@@ -191,13 +193,13 @@ fun EpisodesHandler(
     ) {
         Icon(
             imageVector = Icons.Default.KeyboardArrowUp,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.arrowUpCD),
             modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.secondary)
         )
         Spacer(modifier = Modifier.padding(start = 5.dp))
         Icon(
             imageVector = Icons.Default.KeyboardArrowDown,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.arrowDownCD),
             modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.secondary)
         )
     }
@@ -206,7 +208,7 @@ fun EpisodesHandler(
 @Composable
 fun EpisodesIndicator(
     modifier: Modifier = Modifier,
-    label: String = "Episodes:",
+    label: String = stringResource(R.string.episodesContentCardLabel),
     totalContentEpisodes: Int,
     userContentEpisodes: Int,
     progressFactor: Float = userContentEpisodes / totalContentEpisodes.toFloat()

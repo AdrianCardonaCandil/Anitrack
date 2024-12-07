@@ -14,15 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InfoRow(
     modifier: Modifier = Modifier,
-    label: String = "DefaultLabel",
-    info: List<String?> = listOf("Madhouse", "Kyoto Animation", "Mappa", "White Fox"),
+    label: String = "",
+    info: List<String?> = listOf(),
     contentColor: Color,
     containerColor: Color,
 ){
@@ -55,16 +54,4 @@ fun InfoRow(
             }
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun InfoRowPreview(){
-    InfoRow(
-        label = "Studios",
-        modifier = Modifier.padding(15.dp),
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-        info = listOf("Madhouse", "Kyoto Animation", "Studio1", "Studio2")
-    )
 }

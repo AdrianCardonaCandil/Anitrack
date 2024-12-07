@@ -2,7 +2,6 @@ package com.example.anitrack.ui.content
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -10,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /* This section needs the following information to display:
@@ -29,15 +27,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AdditionalInfoContainer(
     modifier: Modifier = Modifier,
-    originalTitle: String = "defaultOriginalTitle",
-    romajiTitle: String = "defaultRomajiTitle",
-    englishTitle: String = "defaultEnglishTitle",
-    source: String = "defaultSource",
-    airedFrom: String = "00-00-0000",
-    airedTo: String = "00-00-0000",
+    originalTitle: String = "",
+    romajiTitle: String = "",
+    englishTitle: String = "",
+    source: String = "",
+    airedFrom: String = "",
+    airedTo: String = "",
     averageDuration: String = "",
-    rating: String = "defaultRating",
-    season: String = "defaultSeason",
+    rating: String = "",
+    season: String = "",
     year: Int = 0
 ){
     Column(modifier = modifier) {
@@ -75,7 +73,7 @@ fun AdditionalInfoLabel(
             text = "$label:",
             modifier = Modifier
                 .weight(1f),
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyLarge,
 
         )
@@ -85,7 +83,7 @@ fun AdditionalInfoLabel(
                 .weight(1f),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyLarge
         )
     }
@@ -93,10 +91,4 @@ fun AdditionalInfoLabel(
         thickness = 0.25.dp,
         color = MaterialTheme.colorScheme.tertiary
     )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AdditionalInfoContainerPreview(){
-    AdditionalInfoContainer(modifier = Modifier.fillMaxWidth().padding(15.dp))
 }

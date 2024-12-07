@@ -18,12 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.anitrack.R
 import com.example.anitrack.ui.global.ImagePlaceholder
 import com.example.anitrack.ui.global.shimmerEffect
 
@@ -73,7 +75,7 @@ fun ContentGridCard(
                 else -> {
                     Image(
                         painter = painter,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.contentCardCD),
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(MaterialTheme.shapes.extraSmall)
@@ -83,7 +85,7 @@ fun ContentGridCard(
                 }
             }
             Text(
-                text = contentTitle ?: "No Title",
+                text = contentTitle ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
