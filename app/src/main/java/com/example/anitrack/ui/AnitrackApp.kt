@@ -157,9 +157,10 @@ fun AnitrackApp(
                     navController.navigate(AnitrackRoutes.Content.name)
                 },
                 onSignOutClick = {
-                    // Sign out only makes sense for owner, will hide if not owner
                     authViewModel.signOut()
-                    navController.navigate(AnitrackRoutes.Auth.name)
+                    navController.navigate(AnitrackRoutes.Auth.name) {
+                        popUpTo(AnitrackRoutes.Home.name) { inclusive = true } // ensure stable popUpTo
+                    }
                 },
                 onDeleteAccountClick = {
                     // Only owner can delete their account, will hide if not owner

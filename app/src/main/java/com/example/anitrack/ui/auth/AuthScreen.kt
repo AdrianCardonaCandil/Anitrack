@@ -28,8 +28,10 @@ fun AuthScreen(
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             onSignSuccess()
+            authViewModel.resetAuthState() // Reset after navigating to prevent repeated navigation.
         }
     }
+
 
     if (isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
