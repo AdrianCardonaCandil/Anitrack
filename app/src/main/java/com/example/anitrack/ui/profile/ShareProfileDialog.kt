@@ -4,19 +4,17 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.unit.dp
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.common.BitMatrix
 import android.graphics.Bitmap
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShareProfileDialog(
@@ -42,6 +40,7 @@ fun ShareProfileDialog(
         }
     )
 }
+
 fun generateQRCode(content: String, size: Int = 512): Bitmap {
     val hints = hashMapOf<EncodeHintType, Any>()
     hints[EncodeHintType.MARGIN] = 1
@@ -58,7 +57,8 @@ fun generateQRCode(content: String, size: Int = 512): Bitmap {
     }
     return bitmap
 }
+
 fun generateQRCodeForDeepLink(userId: String, size: Int = 512): Bitmap {
-    val deepLinkUrl = "anitrack://perfil/user/$userId"  // Custom deep link for the app
+    val deepLinkUrl = "anitrack://perfil/user/$userId"
     return generateQRCode(deepLinkUrl, size)
 }

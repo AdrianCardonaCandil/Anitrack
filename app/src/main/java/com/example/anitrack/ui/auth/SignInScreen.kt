@@ -1,6 +1,5 @@
 package com.example.anitrack.ui.auth
 
-import CustomTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.anitrack.network.AuthState
-
+import com.example.anitrack.ui.profile.CustomTextField
 
 
 @Composable

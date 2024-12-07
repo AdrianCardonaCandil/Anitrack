@@ -125,11 +125,20 @@ fun AnitrackApp(
                     },
                     onSignOutClick = {
                         authViewModel.signOut()
-                        navController.navigate(AnitrackRoutes.Auth.name)
+                        navController.navigate(AnitrackRoutes.Auth.name) {
+                            popUpTo(AnitrackRoutes.Profile.name) { inclusive = true }
+                        }
                     },
                     onDeleteAccountClick = {
-                        authViewModel.deleteAccount()
-                        navController.navigate(AnitrackRoutes.Auth.name)
+                        // Use profileViewModel to delete account
+                        profileViewModel.deleteAccount(nonNullUserId)
+                        navController.navigate(AnitrackRoutes.Auth.name) {
+                            popUpTo(AnitrackRoutes.Profile.name) { inclusive = true }
+                        }
+                    },
+                    onEditProfileClick = {
+                        // This lambda will be used to show the EditProfileDialog inside ProfileScreen
+                        // Just leave it empty here, ProfileScreen will handle the dialog state
                     }
                 )
             }
@@ -150,8 +159,12 @@ fun AnitrackApp(
                     navController.navigate(AnitrackRoutes.Auth.name)
                 },
                 onDeleteAccountClick = {
-                    authViewModel.deleteAccount()
+                    // Deleting another user's account doesn't make sense, but if needed:
+                    profileViewModel.deleteAccount(otherUserId)
                     navController.navigate(AnitrackRoutes.Auth.name)
+                },
+                onEditProfileClick = {
+                    // If needed for other profiles, could be disabled or handled differently
                 }
             )
         }

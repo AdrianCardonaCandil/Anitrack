@@ -19,10 +19,13 @@ fun ProfileScreen(
     onContentClicked: (Int) -> Unit,
     onSignOutClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
-
+    onEditProfileClick: () -> Unit // you can use this if needed, currently handled in `ProfileHeader`
 ) {
     val userProfileState by viewModel.userProfile.collectAsState()
     val userContentListState by viewModel.userContentList.collectAsState()
+
+    var isEditProfileDialogOpen by remember { mutableStateOf(false) }
+    var isShareDialogOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(userId) {
         viewModel.loadUserProfileAndFavorites(userId)
@@ -30,17 +33,24 @@ fun ProfileScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         when (val profileResult = userProfileState) {
-
             is DatabaseResult.Success -> {
                 val user = profileResult.data
-                user?.let {
+                user?.let { currentUser ->
                     ProfileHeader(
-                        profileImageUrl = user.profilePicture,
-                        userName = user.username,
-                        joinedDate = user.createdAt ?: "Unknown",
-                        description = user.description,
-                        userId = user.id,
+                        profileImageUrl = currentUser.profilePicture,
+                        userName = currentUser.username,
+                        joinedDate = currentUser.createdAt ?: "Unknown",
+                        description = currentUser.description ?: "",
+                        userId = currentUser.id,
                         onDeleteAccountClick = onDeleteAccountClick,
+                        // Show the Edit Profile dialog
+                        onEditProfileClick = {
+                            isEditProfileDialogOpen = true
+                        },
+                        // Show the Share dialog
+                        onShareProfileClick = {
+                            isShareDialogOpen = true
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(0.3f)
@@ -59,7 +69,6 @@ fun ProfileScreen(
         when (val contentResult = userContentListState) {
             is DatabaseResult.Success -> {
                 val contentList = contentResult.data
-
                 ProfileListHeader(
                     contentCount = contentList.size,
                     modifier = Modifier
@@ -92,5 +101,32 @@ fun ProfileScreen(
         ) {
             Text(text = "Sign Out")
         }
+    }
+
+    val userData = (userProfileState as? DatabaseResult.Success<User?>)?.data
+    if (isEditProfileDialogOpen && userData != null) {
+        EditProfileDialog(
+            onDismissRequest = { isEditProfileDialogOpen = false },
+            onDeleteAccountClick = {
+                isEditProfileDialogOpen = false
+                onDeleteAccountClick()
+            },
+            userId = userData.id,
+            currentUsername = userData.username,
+            currentEmail = userData.email,
+            currentDescription = userData.description,
+            currentProfilePictureUrl = userData.profilePicture,
+            viewModel = viewModel,
+            onProfilePictureChangeRequest = {
+                // Handle picture selection
+            }
+        )
+    }
+
+    if (isShareDialogOpen && userData != null) {
+        ShareProfileDialog(
+            userId = userData.id,
+            onDismiss = { isShareDialogOpen = false }
+        )
     }
 }

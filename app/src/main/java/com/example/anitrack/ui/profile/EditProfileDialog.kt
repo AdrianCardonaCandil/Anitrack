@@ -1,46 +1,79 @@
 package com.example.anitrack.ui.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.anitrack.R
-import CustomTextField
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import coil.compose.rememberAsyncImagePainter
+import com.example.anitrack.R
+import com.example.anitrack.network.AuthState
+
 @Composable
 fun EditProfileDialog(
     onDismissRequest: () -> Unit,
-    onDeleteAccountClick: () -> Unit
+    onDeleteAccountClick: () -> Unit,
+    userId: String,
+    currentUsername: String,
+    currentEmail: String,
+    currentDescription: String?,
+    currentProfilePictureUrl: String,
+    viewModel: ProfileViewModel,
+    onProfilePictureChangeRequest: () -> Unit
 ) {
-    var username by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf(currentUsername) }
+    var description by remember { mutableStateOf(currentDescription ?: "") }
+    var email by remember { mutableStateOf(currentEmail) }
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
-    var isPictureDialogOpen by remember { mutableStateOf(false) }
-    var isDeleteDialogOpen by remember { mutableStateOf(false) }
     var showMessage by remember { mutableStateOf("") }
+
+    val editState by viewModel.profileEditState.collectAsState()
+
+    LaunchedEffect(editState) {
+        when (editState) {
+            is AuthState.Success -> {
+                showMessage = "Operation completed successfully!"
+                // Close the dialog and reload the user data to reflect changes
+                onDismissRequest()
+                viewModel.loadUserProfileAndFavorites(userId)
+            }
+            is AuthState.Error -> {
+                showMessage = (editState as AuthState.Error).exception.message ?: "Unknown error"
+            }
+            is AuthState.ValidationError -> {
+                showMessage = (editState as AuthState.ValidationError).message
+            }
+            is AuthState.Loading -> {
+                showMessage = "Loading..."
+            }
+            else -> Unit
+        }
+    }
+
+    var isDeleteDialogOpen by remember { mutableStateOf(false) }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = Color.White,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -57,7 +90,7 @@ fun EditProfileDialog(
                     Image(
                         painter = painterResource(id = R.drawable.ic_back_24),
                         contentDescription = "Back",
-                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black),
+                        colorFilter = ColorFilter.tint(Color.Black),
                         modifier = Modifier
                             .size(24.dp)
                             .clickable { onDismissRequest() }
@@ -68,8 +101,26 @@ fun EditProfileDialog(
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = Color.Black,
-                        modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 16.dp),
                         maxLines = 1
+                    )
+                }
+
+                // Current Profile Picture
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = if (currentProfilePictureUrl.isNotEmpty()) {
+                            rememberAsyncImagePainter(model = currentProfilePictureUrl)
+                        } else {
+                            painterResource(id = R.drawable.default_pfp)
+                        },
+                        contentDescription = "Current Profile Picture",
+                        modifier = Modifier.size(80.dp)
                     )
                 }
 
@@ -85,20 +136,32 @@ fun EditProfileDialog(
                 )
 
                 CustomTextField(
-                    label = "UserName",
-                    onValueChange = { username = it }
+                    label = "Username",
+                    onValueChange = { username = it },
+                    initialValue = username
                 )
                 CustomTextField(
                     label = "Description",
-                    onValueChange = { description = it }
+                    onValueChange = { description = it },
+                    initialValue = description
                 )
                 CustomTextField(
                     label = "Email",
-                    onValueChange = { email = it }
+                    onValueChange = { email = it },
+                    initialValue = email
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { showMessage = "Details saved successfully!" },
+                    onClick = {
+                        viewModel.updateUserDetails(
+                            userId = userId,
+                            currentEmail = currentEmail,
+                            currentUsername = currentUsername,
+                            newUsername = username,
+                            newEmail = email,
+                            newDescription = if (description.isBlank()) null else description
+                        )
+                    },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -119,16 +182,18 @@ fun EditProfileDialog(
                 CustomTextField(
                     label = "Password",
                     isPassword = true,
-                    onValueChange = { password = it }
+                    onValueChange = { password = it },
+                    initialValue = ""
                 )
                 CustomTextField(
                     label = "Repeat Password",
                     isPassword = true,
-                    onValueChange = { repeatPassword = it }
+                    onValueChange = { repeatPassword = it },
+                    initialValue = ""
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { showMessage = "Password changed successfully!" },
+                    onClick = { viewModel.updateUserPassword(password, repeatPassword) },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -146,7 +211,7 @@ fun EditProfileDialog(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Button(
-                    onClick = { isPictureDialogOpen = true },
+                    onClick = { onProfilePictureChangeRequest() },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -165,12 +230,12 @@ fun EditProfileDialog(
                     Text(text = "Delete Account", color = Color.White)
                 }
 
-                // Show success message
+                // Show message
                 if (showMessage.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = showMessage,
-                        color = Color.Green,
+                        color = if (editState is AuthState.Success) Color.Green else Color.Red,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
@@ -179,18 +244,6 @@ fun EditProfileDialog(
         }
     }
 
-    // Dialog for choosing a profile picture
-    if (isPictureDialogOpen) {
-        PictureSelectionDialog(
-            onDismissRequest = { isPictureDialogOpen = false },
-            onSaveClick = {
-                isPictureDialogOpen = false
-                showMessage = "Image saved successfully!"
-            }
-        )
-    }
-
-    // Confirmation dialog for deleting account
     if (isDeleteDialogOpen) {
         DeleteAccountConfirmationDialog(
             onDismissRequest = { isDeleteDialogOpen = false },
@@ -199,55 +252,6 @@ fun EditProfileDialog(
                 onDeleteAccountClick()
             }
         )
-    }
-}
-
-@Composable
-fun PictureSelectionDialog(
-    onDismissRequest: () -> Unit,
-    onSaveClick: () -> Unit
-) {
-    Dialog(onDismissRequest = onDismissRequest) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color.White,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Select a Photo",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                // Placeholder for photo gallery logic
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(Color.Gray.copy(alpha = 0.2f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "Photo Gallery Placeholder", color = Color.Black)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = onSaveClick,
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Save")
-                }
-            }
-        }
     }
 }
 
@@ -289,7 +293,9 @@ fun DeleteAccountConfirmationDialog(
                     Button(
                         onClick = onDismissRequest,
                         shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.weight(1f).padding(end = 8.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     ) {
                         Text(text = "Cancel")
                     }
@@ -298,7 +304,9 @@ fun DeleteAccountConfirmationDialog(
                         onClick = onConfirmDelete,
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                        modifier = Modifier.weight(1f).padding(start = 8.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp)
                     ) {
                         Text(text = "Delete", color = Color.White)
                     }
@@ -307,5 +315,3 @@ fun DeleteAccountConfirmationDialog(
         }
     }
 }
-
-

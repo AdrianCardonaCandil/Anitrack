@@ -1,15 +1,13 @@
-
 package com.example.anitrack.ui.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.example.anitrack.R
 
 @Composable
 fun ProfileHeader(
@@ -19,6 +17,8 @@ fun ProfileHeader(
     joinedDate: String,
     description: String,
     onDeleteAccountClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
+    onShareProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -26,13 +26,11 @@ fun ProfileHeader(
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-
-
         Image(
             painter = if (profileImageUrl.isNotEmpty()) {
                 rememberAsyncImagePainter(model = profileImageUrl)
             } else {
-                painterResource(id = com.example.anitrack.R.drawable.default_pfp)
+                painterResource(id = R.drawable.default_pfp)
             },
             contentDescription = "Profile Picture",
             modifier = Modifier
@@ -45,7 +43,6 @@ fun ProfileHeader(
             modifier = Modifier
                 .fillMaxHeight()
         ) {
-
             UserDetails(
                 userName = userName,
                 joinedDate = joinedDate,
@@ -58,9 +55,12 @@ fun ProfileHeader(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Pass onShareProfileClick directly here (no replacement)
             ProfileActions(
                 onDeleteAccountClick = onDeleteAccountClick,
                 userId = userId,
+                onEditProfileClick = onEditProfileClick,
+                onShareProfileClick = onShareProfileClick, // <-- crucial fix
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.2f)

@@ -1,6 +1,5 @@
 package com.example.anitrack.ui.auth
 
-import CustomTextField
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.anitrack.network.AuthState
+import com.example.anitrack.ui.profile.CustomTextField
 
 @Composable
 fun SignUpScreen(
