@@ -159,7 +159,7 @@ fun AnitrackApp(
                 onSignOutClick = {
                     authViewModel.signOut()
                     navController.navigate(AnitrackRoutes.Auth.name) {
-                        popUpTo(AnitrackRoutes.Home.name) { inclusive = true } // ensure stable popUpTo
+                        popUpTo(AnitrackRoutes.Home.name) { inclusive = true }
                     }
                 },
                 onDeleteAccountClick = {
