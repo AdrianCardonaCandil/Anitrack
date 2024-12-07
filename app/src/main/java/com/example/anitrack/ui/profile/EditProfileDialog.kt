@@ -16,9 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.anitrack.data.DatabaseCollections
 import com.example.anitrack.network.AuthState
 import android.net.Uri
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfileDialog(
@@ -41,13 +43,12 @@ fun EditProfileDialog(
     var showMessage by remember { mutableStateOf("") }
 
     val editState by viewModel.profileEditState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
-    // Handle edit state changes
     LaunchedEffect(editState) {
         when (editState) {
             is AuthState.Success -> {
                 showMessage = "Operation completed successfully!"
-                // Close after success and reload profile
                 onDismissRequest()
                 viewModel.loadUserProfileAndFavorites(userId)
                 viewModel.resetProfileEditState()
@@ -67,6 +68,20 @@ fun EditProfileDialog(
 
     var isDeleteDialogOpen by remember { mutableStateOf(false) }
 
+    // Compute validity states for fields to show red/green indicators
+    val trimmedUsername = username.trim()
+    val trimmedEmail = email.trim()
+    val trimmedDescription = if (description.isBlank()) null else description.trim()
+
+    val usernameValid = trimmedUsername.length >= 2 && !showMessage.startsWith("Username already taken")
+    val emailFormatValid = android.util.Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches()
+    val emailValid = emailFormatValid && !showMessage.startsWith("Email already registered")
+
+    val passwordEmpty = password.isEmpty() && repeatPassword.isEmpty()
+    val passwordValid = if (!passwordEmpty) {
+        password.length >= 8 && password.any { it.isDigit() } && password.any { it.isUpperCase() } && (password == repeatPassword)
+    } else true
+
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(16.dp),
@@ -75,7 +90,6 @@ fun EditProfileDialog(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            // Scrollable area
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,7 +100,6 @@ fun EditProfileDialog(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Header Row
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -113,7 +126,7 @@ fun EditProfileDialog(
                         }
                     }
 
-                    // Change Details Section
+                    // Profile Details
                     Text(
                         text = "Profile Details",
                         fontWeight = FontWeight.Bold,
@@ -125,17 +138,20 @@ fun EditProfileDialog(
                     CustomTextField(
                         label = "Username",
                         onValueChange = { username = it },
-                        initialValue = username
+                        initialValue = username,
+                        isValid = usernameValid
                     )
                     CustomTextField(
                         label = "Description",
                         onValueChange = { description = it },
-                        initialValue = description
+                        initialValue = description,
+                        isValid = true // Description optional, no strict validation
                     )
                     CustomTextField(
                         label = "Email",
                         onValueChange = { email = it },
-                        initialValue = email
+                        initialValue = email,
+                        isValid = emailValid
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -153,18 +169,20 @@ fun EditProfileDialog(
                         label = "Password",
                         isPassword = true,
                         onValueChange = { password = it },
-                        initialValue = ""
+                        initialValue = "",
+                        isValid = passwordEmpty || passwordValid
                     )
                     CustomTextField(
                         label = "Repeat Password",
                         isPassword = true,
                         onValueChange = { repeatPassword = it },
-                        initialValue = ""
+                        initialValue = "",
+                        isValid = passwordEmpty || passwordValid
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Change Profile Picture Section
+                    // Profile Picture Section
                     Text(
                         text = "Profile Picture",
                         fontWeight = FontWeight.Bold,
@@ -194,33 +212,72 @@ fun EditProfileDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Apply Changes Button
+                    // Apply All Changes Button
                     Button(
                         onClick = {
-                            // Apply all changes at once
-                            // 1. Update details if changed
-                            viewModel.updateUserDetails(
-                                userId = userId,
-                                currentEmail = currentEmail,
-                                currentUsername = currentUsername,
-                                newUsername = username,
-                                newEmail = email,
-                                newDescription = if (description.isBlank()) null else description
-                            )
+                            coroutineScope.launch {
+                                showMessage = ""
 
-                            // 2. Update password if provided
-                            if (password.isNotBlank() || repeatPassword.isNotBlank()) {
-                                // Validate password here or rely on ViewModel
-                                viewModel.updateUserPassword(password, repeatPassword)
+                                // Validate username
+                                if (trimmedUsername.length < 2) {
+                                    showMessage = "Username must be at least 2 characters"
+                                    return@launch
+                                }
+
+                                // Validate email format
+                                if (!emailFormatValid) {
+                                    showMessage = "Invalid email format"
+                                    return@launch
+                                }
+
+                                // Validate password if provided
+                                if (!passwordEmpty) {
+                                    if (password.length < 8 || !password.any { it.isDigit() } || !password.any { it.isUpperCase() }) {
+                                        showMessage = "Password must be at least 8 characters, include a number, and an uppercase letter"
+                                        return@launch
+                                    }
+                                    if (password != repeatPassword) {
+                                        showMessage = "Passwords do not match"
+                                        return@launch
+                                    }
+                                }
+
+                                // Check uniqueness if username changed
+                                if (trimmedUsername != currentUsername) {
+                                    val usernameTaken = viewModel.isFieldTaken(DatabaseCollections.Users, "username", trimmedUsername)
+                                    if (usernameTaken) {
+                                        showMessage = "Username already taken"
+                                        return@launch
+                                    }
+                                }
+
+                                // Check uniqueness if email changed
+                                if (trimmedEmail != currentEmail) {
+                                    val emailTaken = viewModel.isFieldTaken(DatabaseCollections.Users, "email", trimmedEmail)
+                                    if (emailTaken) {
+                                        showMessage = "Email already registered"
+                                        return@launch
+                                    }
+                                }
+
+                                // If we reach here, validations passed
+                                viewModel.updateUserDetails(
+                                    userId = userId,
+                                    currentEmail = currentEmail,
+                                    currentUsername = currentUsername,
+                                    newUsername = trimmedUsername,
+                                    newEmail = trimmedEmail,
+                                    newDescription = trimmedDescription
+                                )
+
+                                if (!passwordEmpty) {
+                                    viewModel.updateUserPassword(password, repeatPassword)
+                                }
+
+                                if (selectedImageUri != null) {
+                                    viewModel.updateUserProfilePictureFromUri(userId, selectedImageUri)
+                                }
                             }
-
-                            // 3. Update profile picture if a new one is selected
-                            if (selectedImageUri != null) {
-                                viewModel.updateUserProfilePictureFromUri(userId, selectedImageUri)
-                            }
-
-                            // If nothing changed, the ViewModel calls won't do harm.
-                            // The ViewModel or this code could also detect if no changes were made and show a message.
                         },
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()

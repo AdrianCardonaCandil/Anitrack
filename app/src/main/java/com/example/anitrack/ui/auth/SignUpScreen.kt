@@ -48,9 +48,7 @@ fun SignUpScreen(
     val isPasswordValid = password.length >= 8 && password.any { it.isDigit() } && password.any { it.isUpperCase() }
     val isPasswordMatch = password == confirmPassword
 
-    LaunchedEffect(Unit) {
-        authViewModel.resetAuthState()
-    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

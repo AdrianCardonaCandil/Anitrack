@@ -24,9 +24,6 @@ fun SignInScreen(
     onSignUpClick: () -> Unit
 ) {
 
-    LaunchedEffect(Unit) {
-        authViewModel.resetAuthState()
-    }
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }

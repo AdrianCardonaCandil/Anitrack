@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -23,7 +24,7 @@ fun CustomTextField(
     label: String,
     isPassword: Boolean = false,
     onValueChange: (String) -> Unit,
-    isValid: Boolean = true,
+    isValid: Boolean = true, // New parameter
     initialValue: String = ""
 ) {
     var text by remember { mutableStateOf(initialValue) }
@@ -59,6 +60,9 @@ fun CustomTextField(
                 }
         )
 
-        Divider(color = if (isFocused) (if (isValid) Color.Green else Color.Red) else Color.Black, thickness = 1.dp)
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = if (!isFocused && !isValid) Color.Red else if (isFocused) Color.Blue else Color.Black
+        )
     }
 }

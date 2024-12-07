@@ -22,7 +22,8 @@ fun ProfileScreen(
     onContentClicked: (Int) -> Unit,
     onSignOutClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    isOwner: Boolean // NEW parameter to indicate if current user is the owner of this profile
 ) {
     val userProfileState by viewModel.userProfile.collectAsState()
     val userContentListState by viewModel.userContentList.collectAsState()
@@ -30,23 +31,18 @@ fun ProfileScreen(
     var isEditProfileDialogOpen by remember { mutableStateOf(false) }
     var isShareDialogOpen by remember { mutableStateOf(false) }
 
-    // State to hold the selected image URI
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Launcher to pick an image from the device
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
-            // If user picked an image, update selectedImageUri
             if (uri != null) {
                 selectedImageUri = uri
             }
         }
     )
 
-    // The callback passed to EditProfileDialog to initiate image selection
     val onProfilePictureChangeRequest: () -> Unit = {
-        // Launch image picker for images only
         imagePickerLauncher.launch("image/*")
     }
 
@@ -65,18 +61,24 @@ fun ProfileScreen(
                         joinedDate = currentUser.createdAt ?: "Unknown",
                         description = currentUser.description ?: "",
                         userId = currentUser.id,
-                        onDeleteAccountClick = onDeleteAccountClick,
-                        // Show the Edit Profile dialog
-                        onEditProfileClick = {
-                            isEditProfileDialogOpen = true
+                        onDeleteAccountClick = {
+                            if (isOwner) {
+                                onDeleteAccountClick()
+                            }
+                            // If not owner, this won't be shown anyway
                         },
-                        // Show the Share dialog
+                        onEditProfileClick = {
+                            if (isOwner) {
+                                isEditProfileDialogOpen = true
+                            }
+                        },
                         onShareProfileClick = {
                             isShareDialogOpen = true
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.3f)
+                            .weight(0.3f),
+                        isOwner = isOwner // Pass isOwner down to hide edit/delete for non-owners
                     )
                 }
             }
@@ -116,22 +118,25 @@ fun ProfileScreen(
             else -> Text(text = "Loading contents...", modifier = Modifier.padding(16.dp))
         }
 
-        Button(
-            onClick = { onSignOutClick() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "Sign Out")
+        // Show Sign Out button only if owner
+        if (isOwner) {
+            Button(
+                onClick = { onSignOutClick() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(text = "Sign Out")
+            }
         }
     }
 
     val userData = (userProfileState as? DatabaseResult.Success<User?>)?.data
-    if (isEditProfileDialogOpen && userData != null) {
+    if (isEditProfileDialogOpen && userData != null && isOwner) {
         EditProfileDialog(
             onDismissRequest = {
                 isEditProfileDialogOpen = false
-                selectedImageUri = null // Reset selected image when closing dialog
+                selectedImageUri = null
             },
             onDeleteAccountClick = {
                 isEditProfileDialogOpen = false

@@ -18,37 +18,51 @@ fun ProfileActions(
     modifier: Modifier = Modifier,
     onDeleteAccountClick: () -> Unit,
     onEditProfileClick: () -> Unit,
-    onShareProfileClick: () -> Unit
+    onShareProfileClick: () -> Unit,
+    isOwner: Boolean // NEW parameter to show/hide edit and delete
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(
-            onClick = { onEditProfileClick() },
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp),
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Edit", style = AppTypography.labelMedium)
-                Spacer(modifier = Modifier.width(10.dp))
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_edit_24),
-                    contentDescription = "Edit Profile"
-                )
+        // Show Edit button only if owner
+        if (isOwner) {
+            Button(
+                onClick = { onEditProfileClick() },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Edit", style = AppTypography.labelMedium)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_edit_24),
+                        contentDescription = "Edit Profile"
+                    )
+                }
             }
+        } else {
+            // If not owner, show a spacer instead of edit button to keep layout stable
+            Spacer(modifier = Modifier.weight(1f))
         }
 
+        // Show Share button to everyone (owner or visitor)
         Button(
             onClick = { onShareProfileClick() },
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 8.dp),
+                .padding(start = if (isOwner) 8.dp else 0.dp),
             shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text("Share", style = AppTypography.labelMedium)
                 Spacer(modifier = Modifier.width(10.dp))
                 Icon(

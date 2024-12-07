@@ -79,7 +79,7 @@ class ProfileViewModel(
         _profileEditState.value = AuthState.Idle
     }
 
-    private suspend fun isFieldTaken(collection: DatabaseCollections, field: String, value: String): Boolean {
+    suspend fun isFieldTaken(collection: DatabaseCollections, field: String, value: String): Boolean {
         val result = databaseRepository.filterCollection(
             collectionPath = collection,
             fieldName = field,

@@ -19,7 +19,8 @@ fun ProfileHeader(
     onDeleteAccountClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onShareProfileClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isOwner: Boolean // NEW param
 ) {
     Row(
         modifier = modifier
@@ -62,7 +63,8 @@ fun ProfileHeader(
                 onShareProfileClick = onShareProfileClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.2f)
+                    .weight(0.2f),
+                isOwner = isOwner // pass down
             )
         }
     }

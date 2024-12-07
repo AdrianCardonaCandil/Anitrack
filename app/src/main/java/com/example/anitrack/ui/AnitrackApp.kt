@@ -130,21 +130,23 @@ fun AnitrackApp(
                         }
                     },
                     onDeleteAccountClick = {
-                        // Use profileViewModel to delete account
                         profileViewModel.deleteAccount(nonNullUserId)
                         navController.navigate(AnitrackRoutes.Auth.name) {
                             popUpTo(AnitrackRoutes.Profile.name) { inclusive = true }
                         }
                     },
                     onEditProfileClick = {
-                        // This lambda will be used to show the EditProfileDialog inside ProfileScreen
-                        // Just leave it empty here, ProfileScreen will handle the dialog state
-                    }
+                        // Handled inside ProfileScreen
+                    },
+                    isOwner = true // The AnitrackRoutes.Profile route shows the current user's profile, so isOwner = true
                 )
             }
         }
+
+        // Deep link or visited profile route
         composable(route = "profile/{userId}") { backStackEntry ->
             val otherUserId = backStackEntry.arguments?.getString("userId") ?: return@composable
+            val currentUserId = userId
 
             ProfileScreen(
                 modifier = Modifier.fillMaxSize(),
@@ -155,17 +157,21 @@ fun AnitrackApp(
                     navController.navigate(AnitrackRoutes.Content.name)
                 },
                 onSignOutClick = {
+                    // Sign out only makes sense for owner, will hide if not owner
                     authViewModel.signOut()
                     navController.navigate(AnitrackRoutes.Auth.name)
                 },
                 onDeleteAccountClick = {
-                    // Deleting another user's account doesn't make sense, but if needed:
-                    profileViewModel.deleteAccount(otherUserId)
-                    navController.navigate(AnitrackRoutes.Auth.name)
+                    // Only owner can delete their account, will hide if not owner
+                    if (currentUserId == otherUserId) {
+                        profileViewModel.deleteAccount(otherUserId)
+                        navController.navigate(AnitrackRoutes.Auth.name)
+                    }
                 },
                 onEditProfileClick = {
-                    // If needed for other profiles, could be disabled or handled differently
-                }
+                    // If not owner, won't even show edit button
+                },
+                isOwner = (currentUserId == otherUserId)
             )
         }
 
@@ -180,10 +186,8 @@ fun AnitrackApp(
                 }
             )
         }
-
     }
 }
-
 
 @Preview(showSystemUi = true)
 @Composable
