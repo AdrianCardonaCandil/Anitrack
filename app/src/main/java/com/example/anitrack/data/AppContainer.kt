@@ -10,6 +10,7 @@ interface AppContainer {
     val jikanRepository: JikanRepository
     val databaseRepository: DatabaseRepository
     val authRepository: AuthRepository
+    val storageRepository: StorageRepository
 }
 
 class DefaultAppContainer : AppContainer {
@@ -48,6 +49,11 @@ class DefaultAppContainer : AppContainer {
     // Initializing the AuthFirebaseRepository
     override val authRepository: AuthRepository by lazy {
         AuthFirebaseRepository(firebaseContainer.authService)
+    }
+
+    // Initializing the StorageRepository
+    override val storageRepository: StorageRepository by lazy {
+        firebaseContainer.storageRepository
     }
 
 }

@@ -1,5 +1,8 @@
 package com.example.anitrack.ui.profile
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -19,13 +22,33 @@ fun ProfileScreen(
     onContentClicked: (Int) -> Unit,
     onSignOutClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
-    onEditProfileClick: () -> Unit // you can use this if needed, currently handled in `ProfileHeader`
+    onEditProfileClick: () -> Unit
 ) {
     val userProfileState by viewModel.userProfile.collectAsState()
     val userContentListState by viewModel.userContentList.collectAsState()
 
     var isEditProfileDialogOpen by remember { mutableStateOf(false) }
     var isShareDialogOpen by remember { mutableStateOf(false) }
+
+    // State to hold the selected image URI
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Launcher to pick an image from the device
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            // If user picked an image, update selectedImageUri
+            if (uri != null) {
+                selectedImageUri = uri
+            }
+        }
+    )
+
+    // The callback passed to EditProfileDialog to initiate image selection
+    val onProfilePictureChangeRequest: () -> Unit = {
+        // Launch image picker for images only
+        imagePickerLauncher.launch("image/*")
+    }
 
     LaunchedEffect(userId) {
         viewModel.loadUserProfileAndFavorites(userId)
@@ -106,7 +129,10 @@ fun ProfileScreen(
     val userData = (userProfileState as? DatabaseResult.Success<User?>)?.data
     if (isEditProfileDialogOpen && userData != null) {
         EditProfileDialog(
-            onDismissRequest = { isEditProfileDialogOpen = false },
+            onDismissRequest = {
+                isEditProfileDialogOpen = false
+                selectedImageUri = null // Reset selected image when closing dialog
+            },
             onDeleteAccountClick = {
                 isEditProfileDialogOpen = false
                 onDeleteAccountClick()
@@ -115,11 +141,9 @@ fun ProfileScreen(
             currentUsername = userData.username,
             currentEmail = userData.email,
             currentDescription = userData.description,
-            currentProfilePictureUrl = userData.profilePicture,
+            selectedImageUri = selectedImageUri,
             viewModel = viewModel,
-            onProfilePictureChangeRequest = {
-                // Handle picture selection
-            }
+            onProfilePictureChangeRequest = onProfilePictureChangeRequest
         )
     }
 

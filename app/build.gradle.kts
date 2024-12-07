@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.tv.material)
     implementation(libs.androidx.appcompat)
+    implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)
     implementation(libs.coil.compose)
     androidTestImplementation(libs.androidx.junit)

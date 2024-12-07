@@ -55,12 +55,11 @@ fun ProfileHeader(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Pass onShareProfileClick directly here (no replacement)
             ProfileActions(
                 onDeleteAccountClick = onDeleteAccountClick,
                 userId = userId,
                 onEditProfileClick = onEditProfileClick,
-                onShareProfileClick = onShareProfileClick, // <-- crucial fix
+                onShareProfileClick = onShareProfileClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.2f)
