@@ -50,7 +50,7 @@ fun Banner(modifier: Modifier = Modifier){
         ) {
             Image(
                 painter = painterResource(R.drawable.bannerstats),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.bannerImageCD),
                 modifier = Modifier.padding(end = 30.dp)
             )
             Text(

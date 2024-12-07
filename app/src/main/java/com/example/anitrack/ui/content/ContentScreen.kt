@@ -22,11 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.anitrack.R
 import com.example.anitrack.model.Character
 import com.example.anitrack.model.Content
 import com.example.anitrack.ui.global.ImagePlaceholder
@@ -98,7 +100,7 @@ fun HomeScreenUI(
                 else -> {
                     Image(
                         painter = painter,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.backgroundImageCD),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -122,7 +124,7 @@ fun HomeScreenUI(
                 )
         )
         Text(
-            text = "Information",
+            text = stringResource(R.string.informationSectionLabel),
             modifier = Modifier
                 .padding(
                     start = 15.dp,
@@ -158,7 +160,10 @@ fun HomeScreenUI(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp),
-                label = listOf("Studios", "Genres")[index],
+                label = listOf(
+                    stringResource(R.string.studiosSectionLabel),
+                    stringResource(R.string.genresSectionLabel)
+                )[index],
                 info = value ?: listOf(),
                 contentColor = MaterialTheme.colorScheme.onTertiary,
                 containerColor = MaterialTheme.colorScheme.tertiary
@@ -166,7 +171,7 @@ fun HomeScreenUI(
         }
         Spacer(modifier = Modifier.padding(top = 15.dp))
         Text(
-            text = "Characters",
+            text = stringResource(R.string.charactersSectionLabel),
             modifier = Modifier
                 .padding(
                     start = 15.dp,
@@ -199,7 +204,7 @@ fun EditContentActionButton(
     ) {
         Icon(
             imageVector = Icons.Default.Edit,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.editContentCD),
             tint = MaterialTheme.colorScheme.onPrimary
         )
     }

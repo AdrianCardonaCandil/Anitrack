@@ -22,13 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.anitrack.R
 import com.example.anitrack.ui.global.ImagePlaceholder
 import com.example.anitrack.ui.global.shimmerEffect
 
@@ -45,13 +46,13 @@ import com.example.anitrack.ui.global.shimmerEffect
 @Composable
 fun MainInfoContainer(
     modifier: Modifier = Modifier,
-    contentName: String = "Sousou No Frieren",
-    contentDescription: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas molestie nibh id risus blandit, non sodales elit sollicitudin. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed accumsan odio orci, vitae commodo urna semper et.",
-    contentStatus: String = "defaultContentStatus",
-    contentType: String = "defaultContentType",
+    contentName: String = "",
+    contentDescription: String = "",
+    contentStatus: String = "",
+    contentType: String = "",
     contentEpisodes: Int = 0,
     contentScore: Float = 0f,
-    contentImageUrl: String = "https://cdn.myanimelist.net/images/anime/1015/138006l.webp"
+    contentImageUrl: String = ""
 ){
     Column(modifier = modifier) {
         Row(
@@ -82,7 +83,7 @@ fun MainInfoContainer(
                     else -> {
                         Image(
                             painter = painter,
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.contentImageCD),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(MaterialTheme.shapes.extraSmall)
@@ -117,7 +118,7 @@ fun MainInfoContainer(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 25.dp),
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyMedium,
             lineHeight = 25.sp
         )
@@ -156,16 +157,5 @@ fun InfoTag(content: String){
         maxLines = 1,
         color = MaterialTheme.colorScheme.onSecondary,
         style = MaterialTheme.typography.labelSmall
-    )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MainInfoContainerPreview(){
-    MainInfoContainer(
-        modifier = Modifier
-        .fillMaxWidth()
-        .padding(15.dp),
-        contentImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006l.webp"
     )
 }
