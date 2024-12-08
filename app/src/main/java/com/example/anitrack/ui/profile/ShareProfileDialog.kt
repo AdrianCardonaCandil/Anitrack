@@ -15,6 +15,8 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.common.BitMatrix
 import android.graphics.Bitmap
+import androidx.compose.ui.res.stringResource
+import com.example.anitrack.R
 
 @Composable
 fun ShareProfileDialog(
@@ -35,7 +37,7 @@ fun ShareProfileDialog(
         },
         confirmButton = {
             Button(onClick = onDismiss) {
-                Text("Close")
+                Text(stringResource(R.string.close))
             }
         }
     )

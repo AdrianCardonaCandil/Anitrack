@@ -1,7 +1,7 @@
 package com.example.anitrack.ui.profile
 
-import android.util.Patterns
 import android.net.Uri
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -17,11 +17,11 @@ import com.example.anitrack.model.User
 import com.example.anitrack.network.AuthState
 import com.example.anitrack.network.DatabaseResult
 import com.example.anitrack.network.DatabaseService
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ProfileViewModel(
@@ -33,13 +33,12 @@ class ProfileViewModel(
     private val _userProfile = MutableStateFlow<DatabaseResult<User?>?>(null)
     val userProfile: StateFlow<DatabaseResult<User?>?> = _userProfile.asStateFlow()
 
-    private val _userContentList = MutableStateFlow<DatabaseResult<List<Content>>>(DatabaseResult.Success(emptyList()))
+    private val _userContentList =
+        MutableStateFlow<DatabaseResult<List<Content>>>(DatabaseResult.Success(emptyList()))
     val userContentList: StateFlow<DatabaseResult<List<Content>>> = _userContentList.asStateFlow()
 
     private val _profileEditState = MutableStateFlow<AuthState>(AuthState.Idle)
     val profileEditState: StateFlow<AuthState> = _profileEditState.asStateFlow()
-
-    private val firebaseAuth = FirebaseAuth.getInstance()
 
     fun loadUserProfileAndFavorites(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -79,7 +78,11 @@ class ProfileViewModel(
         _profileEditState.value = AuthState.Idle
     }
 
-    suspend fun isFieldTaken(collection: DatabaseCollections, field: String, value: String): Boolean {
+    suspend fun isFieldTaken(
+        collection: DatabaseCollections,
+        field: String,
+        value: String
+    ): Boolean {
         val result = databaseRepository.filterCollection(
             collectionPath = collection,
             fieldName = field,
@@ -90,25 +93,32 @@ class ProfileViewModel(
         return result is DatabaseResult.Success && result.data.isNotEmpty()
     }
 
-    private suspend fun authRepositoryUpdateEmail(newEmail: String): AuthState {
+    private suspend fun updateEmail(newEmail: String): AuthState {
         return try {
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            currentUser?.updateEmail(newEmail)?.await()
-            AuthState.Success
+            val result = authRepository.updateEmail(newEmail)
+            if (result is AuthState.Success) {
+                AuthState.Success
+            } else {
+                AuthState.Error((result as AuthState.Error).exception)
+            }
         } catch (e: Exception) {
             AuthState.Error(e)
         }
     }
 
-    private suspend fun authRepositoryUpdatePassword(newPassword: String): AuthState {
+    private suspend fun updatePassword(newPassword: String): AuthState {
         return try {
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            currentUser?.updatePassword(newPassword)?.await()
-            AuthState.Success
+            val result = authRepository.updatePassword(newPassword)
+            if (result is AuthState.Success) {
+                AuthState.Success
+            } else {
+                AuthState.Error((result as AuthState.Error).exception)
+            }
         } catch (e: Exception) {
             AuthState.Error(e)
         }
     }
+
 
     fun updateUserDetails(
         userId: String,
@@ -124,9 +134,9 @@ class ProfileViewModel(
             val trimmedUsername = newUsername.trim()
             val trimmedEmail = newEmail.trim()
 
-            // Validations for username and email
             if (trimmedUsername.length < 2) {
-                _profileEditState.value = AuthState.ValidationError("Username must be at least 2 characters.")
+                _profileEditState.value =
+                    AuthState.ValidationError("Username must be at least 2 characters.")
                 return@launch
             }
 
@@ -135,16 +145,15 @@ class ProfileViewModel(
                 return@launch
             }
 
-            // Check username availability if changed
             if (trimmedUsername != currentUsername) {
-                val usernameExists = isFieldTaken(DatabaseCollections.Users, "username", trimmedUsername)
+                val usernameExists =
+                    isFieldTaken(DatabaseCollections.Users, "username", trimmedUsername)
                 if (usernameExists) {
                     _profileEditState.value = AuthState.ValidationError("Username already taken.")
                     return@launch
                 }
             }
 
-            // Check email availability if changed
             if (trimmedEmail != currentEmail) {
                 val emailExists = isFieldTaken(DatabaseCollections.Users, "email", trimmedEmail)
                 if (emailExists) {
@@ -168,9 +177,8 @@ class ProfileViewModel(
             )
 
             if (updateResult is DatabaseResult.Success) {
-                // Update email in Auth if changed
                 if (trimmedEmail != currentEmail) {
-                    val emailUpdateResult = authRepositoryUpdateEmail(trimmedEmail)
+                    val emailUpdateResult = updateEmail(trimmedEmail)
                     if (emailUpdateResult !is AuthState.Success) {
                         _profileEditState.value = emailUpdateResult
                         return@launch
@@ -178,7 +186,8 @@ class ProfileViewModel(
                 }
                 _profileEditState.value = AuthState.Success
             } else {
-                _profileEditState.value = AuthState.Error((updateResult as DatabaseResult.Failure).error)
+                _profileEditState.value =
+                    AuthState.Error((updateResult as DatabaseResult.Failure).error)
             }
         }
     }
@@ -189,7 +198,8 @@ class ProfileViewModel(
 
             // Password validations
             if (newPassword.length < 8 || !newPassword.any { it.isDigit() } || !newPassword.any { it.isUpperCase() }) {
-                _profileEditState.value = AuthState.ValidationError("Password must be at least 8 characters, include a number, and an uppercase letter.")
+                _profileEditState.value =
+                    AuthState.ValidationError("Password must be at least 8 characters, include a number, and an uppercase letter.")
                 return@launch
             }
 
@@ -198,7 +208,7 @@ class ProfileViewModel(
                 return@launch
             }
 
-            val result = authRepositoryUpdatePassword(newPassword)
+            val result = updatePassword(newPassword)
             _profileEditState.value = result
         }
     }
@@ -215,12 +225,12 @@ class ProfileViewModel(
             if (updateResult is DatabaseResult.Success) {
                 _profileEditState.value = AuthState.Success
             } else {
-                _profileEditState.value = AuthState.Error((updateResult as DatabaseResult.Failure).error)
+                _profileEditState.value =
+                    AuthState.Error((updateResult as DatabaseResult.Failure).error)
             }
         }
     }
 
-    // New function for uploading a local image to Firebase Storage and updating the profile
     fun updateUserProfilePictureFromUri(userId: String, imageUri: Uri) {
         viewModelScope.launch {
             _profileEditState.value = AuthState.Loading()
@@ -229,7 +239,8 @@ class ProfileViewModel(
             if (uploadResult is DatabaseResult.Success) {
                 updateUserProfilePicture(userId, uploadResult.data)
             } else {
-                _profileEditState.value = AuthState.Error((uploadResult as DatabaseResult.Failure).error)
+                _profileEditState.value =
+                    AuthState.Error((uploadResult as DatabaseResult.Failure).error)
             }
         }
     }
@@ -250,7 +261,8 @@ class ProfileViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AnitrackApplication
+                val application =
+                    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AnitrackApplication
                 ProfileViewModel(
                     databaseRepository = application.container.databaseRepository,
                     authRepository = application.container.authRepository,

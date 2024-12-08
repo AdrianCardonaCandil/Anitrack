@@ -12,12 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import com.example.anitrack.network.AuthState
 
 @Composable
 fun AuthScreen(
-    modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
     onSignSuccess: () -> Unit
 ) {
@@ -28,10 +26,9 @@ fun AuthScreen(
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             onSignSuccess()
-            authViewModel.resetAuthState() // Reset after navigating to prevent repeated navigation.
+            authViewModel.resetAuthState()
         }
     }
-
 
     if (isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -40,16 +37,12 @@ fun AuthScreen(
     } else {
         if (showSignIn) {
             SignInScreen(
-                modifier = modifier,
                 authViewModel = authViewModel,
-                onSignInSuccess = onSignSuccess,
                 onSignUpClick = { showSignIn = false }
             )
         } else {
             SignUpScreen(
-                modifier = modifier,
                 authViewModel = authViewModel,
-                onSignUpSuccess = onSignSuccess,
                 onLoginClick = { showSignIn = true }
             )
         }

@@ -2,6 +2,7 @@ package com.example.anitrack.ui.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +31,7 @@ fun ProfileListHeader(
                 painter = painterResource(id = R.drawable.ic_heart),
                 contentDescription = "Favorites Icon",
                 tint = Color.Red,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp).padding(top = 5.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -51,7 +52,7 @@ fun ProfileListHeader(
                 painter = painterResource(id = R.drawable.baseline_bar_chart_24),
                 contentDescription = "Content Icon",
                 modifier = Modifier.size(24.dp),
-                tint = Color.Gray
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }

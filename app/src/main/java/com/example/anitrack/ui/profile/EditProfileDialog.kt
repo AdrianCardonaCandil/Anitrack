@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,7 +18,9 @@ import androidx.compose.ui.window.Dialog
 import com.example.anitrack.data.DatabaseCollections
 import com.example.anitrack.network.AuthState
 import android.net.Uri
+import androidx.compose.ui.res.stringResource
 import coil.compose.rememberAsyncImagePainter
+import com.example.anitrack.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,14 +69,13 @@ fun EditProfileDialog(
 
     var isDeleteDialogOpen by remember { mutableStateOf(false) }
 
-    // Compute validity states for fields to show red/green indicators
     val trimmedUsername = username.trim()
     val trimmedEmail = email.trim()
     val trimmedDescription = if (description.isBlank()) null else description.trim()
 
-    val usernameValid = trimmedUsername.length >= 2 && !showMessage.startsWith("Username already taken")
+    val usernameValid = trimmedUsername.length >= 2 && !showMessage.startsWith(stringResource(R.string.username_taken))
     val emailFormatValid = android.util.Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches()
-    val emailValid = emailFormatValid && !showMessage.startsWith("Email already registered")
+    val emailValid = emailFormatValid && !showMessage.startsWith(stringResource(R.string.email_registered))
 
     val passwordEmpty = password.isEmpty() && repeatPassword.isEmpty()
     val passwordValid = if (!passwordEmpty) {
@@ -108,7 +108,7 @@ fun EditProfileDialog(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Edit Profile",
+                            text = stringResource(R.string.edit_profile_title),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             color = Color.Black,
@@ -126,9 +126,8 @@ fun EditProfileDialog(
                         }
                     }
 
-                    // Profile Details
                     Text(
-                        text = "Profile Details",
+                        text = stringResource(R.string.profile_details),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
@@ -136,19 +135,19 @@ fun EditProfileDialog(
                     )
 
                     CustomTextField(
-                        label = "Username",
+                        label = stringResource(R.string.username),
                         onValueChange = { username = it },
                         initialValue = username,
                         isValid = usernameValid
                     )
                     CustomTextField(
-                        label = "Description",
+                        label = stringResource(R.string.description),
                         onValueChange = { description = it },
                         initialValue = description,
-                        isValid = true // Description optional, no strict validation
+                        isValid = true
                     )
                     CustomTextField(
-                        label = "Email",
+                        label = stringResource(R.string.email),
                         onValueChange = { email = it },
                         initialValue = email,
                         isValid = emailValid
@@ -156,9 +155,8 @@ fun EditProfileDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Change Password Section
                     Text(
-                        text = "Change Password",
+                        text = stringResource(R.string.change_password),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
@@ -166,14 +164,14 @@ fun EditProfileDialog(
                     )
 
                     CustomTextField(
-                        label = "Password",
+                        label = stringResource(R.string.password),
                         isPassword = true,
                         onValueChange = { password = it },
                         initialValue = "",
                         isValid = passwordEmpty || passwordValid
                     )
                     CustomTextField(
-                        label = "Repeat Password",
+                        label = stringResource(R.string.repeat_password),
                         isPassword = true,
                         onValueChange = { repeatPassword = it },
                         initialValue = "",
@@ -182,9 +180,8 @@ fun EditProfileDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Profile Picture Section
                     Text(
-                        text = "Profile Picture",
+                        text = stringResource(R.string.profile_picture),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
@@ -194,7 +191,7 @@ fun EditProfileDialog(
                     selectedImageUri?.let { uri ->
                         Image(
                             painter = rememberAsyncImagePainter(model = uri),
-                            contentDescription = "Selected profile picture",
+                            contentDescription = stringResource(R.string.profile_picture),
                             modifier = Modifier
                                 .size(100.dp)
                                 .align(Alignment.CenterHorizontally)
@@ -207,30 +204,26 @@ fun EditProfileDialog(
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Pick New Picture")
+                        Text(text = stringResource(R.string.pick_new_picture))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Apply All Changes Button
                     Button(
                         onClick = {
                             coroutineScope.launch {
                                 showMessage = ""
 
-                                // Validate username
                                 if (trimmedUsername.length < 2) {
                                     showMessage = "Username must be at least 2 characters"
                                     return@launch
                                 }
 
-                                // Validate email format
                                 if (!emailFormatValid) {
                                     showMessage = "Invalid email format"
                                     return@launch
                                 }
 
-                                // Validate password if provided
                                 if (!passwordEmpty) {
                                     if (password.length < 8 || !password.any { it.isDigit() } || !password.any { it.isUpperCase() }) {
                                         showMessage = "Password must be at least 8 characters, include a number, and an uppercase letter"
@@ -242,7 +235,6 @@ fun EditProfileDialog(
                                     }
                                 }
 
-                                // Check uniqueness if username changed
                                 if (trimmedUsername != currentUsername) {
                                     val usernameTaken = viewModel.isFieldTaken(DatabaseCollections.Users, "username", trimmedUsername)
                                     if (usernameTaken) {
@@ -251,7 +243,6 @@ fun EditProfileDialog(
                                     }
                                 }
 
-                                // Check uniqueness if email changed
                                 if (trimmedEmail != currentEmail) {
                                     val emailTaken = viewModel.isFieldTaken(DatabaseCollections.Users, "email", trimmedEmail)
                                     if (emailTaken) {
@@ -260,7 +251,6 @@ fun EditProfileDialog(
                                     }
                                 }
 
-                                // If we reach here, validations passed
                                 viewModel.updateUserDetails(
                                     userId = userId,
                                     currentEmail = currentEmail,
@@ -282,19 +272,18 @@ fun EditProfileDialog(
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Apply All Changes")
+                        Text(text = stringResource(R.string.apply_all_changes))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Delete Account Section
                     Button(
                         onClick = { isDeleteDialogOpen = true },
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Delete Account", color = Color.White)
+                        Text(text = stringResource(R.string.delete_account), color = Color.White)
                     }
 
                     if (showMessage.isNotEmpty()) {
@@ -327,58 +316,28 @@ fun DeleteAccountConfirmationDialog(
     onDismissRequest: () -> Unit,
     onConfirmDelete: () -> Unit
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color.White,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(text = stringResource(R.string.confirm_deletion_title)) },
+        text = { Text(text = stringResource(R.string.confirm_deletion_message)) },
+        confirmButton = {
+            Button(
+                onClick = onConfirmDelete,
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                modifier = Modifier.padding(start = 8.dp)
             ) {
-                Text(
-                    text = "Confirm Deletion",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                Text(
-                    text = "Are you sure you want to delete your account? This action cannot be undone.",
-                    fontSize = 14.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        onClick = onDismissRequest,
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp)
-                    ) {
-                        Text(text = "Cancel")
-                    }
-
-                    Button(
-                        onClick = onConfirmDelete,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 8.dp)
-                    ) {
-                        Text(text = "Delete", color = Color.White)
-                    }
-                }
+                Text(text = stringResource(R.string.delete), color = Color.White)
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismissRequest,
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text(text = stringResource(R.string.cancel))
             }
         }
-    }
+    )
 }

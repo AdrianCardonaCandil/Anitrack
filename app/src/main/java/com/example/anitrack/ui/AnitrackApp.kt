@@ -135,15 +135,11 @@ fun AnitrackApp(
                             popUpTo(AnitrackRoutes.Profile.name) { inclusive = true }
                         }
                     },
-                    onEditProfileClick = {
-                        // Handled inside ProfileScreen
-                    },
-                    isOwner = true // The AnitrackRoutes.Profile route shows the current user's profile, so isOwner = true
+                    isOwner = true
                 )
             }
         }
 
-        // Deep link or visited profile route
         composable(route = "profile/{userId}") { backStackEntry ->
             val otherUserId = backStackEntry.arguments?.getString("userId") ?: return@composable
             val currentUserId = userId
@@ -163,14 +159,10 @@ fun AnitrackApp(
                     }
                 },
                 onDeleteAccountClick = {
-                    // Only owner can delete their account, will hide if not owner
                     if (currentUserId == otherUserId) {
                         profileViewModel.deleteAccount(otherUserId)
                         navController.navigate(AnitrackRoutes.Auth.name)
                     }
-                },
-                onEditProfileClick = {
-                    // If not owner, won't even show edit button
                 },
                 isOwner = (currentUserId == otherUserId)
             )
@@ -178,7 +170,6 @@ fun AnitrackApp(
 
         composable(route = AnitrackRoutes.Auth.name) {
             AuthScreen(
-                modifier = Modifier.fillMaxSize(),
                 authViewModel = authViewModel,
                 onSignSuccess = {
                     navController.navigate(AnitrackRoutes.Profile.name) {

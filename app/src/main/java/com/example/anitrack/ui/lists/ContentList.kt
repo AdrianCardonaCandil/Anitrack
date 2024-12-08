@@ -18,7 +18,7 @@ fun ContentList(
     onContentClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
     showProgressControls: Boolean = false,
-    contentProgress: Map<String, Int> = emptyMap(), // Añadir contentProgress
+    contentProgress: Map<String, Int> = emptyMap(),
     onEpisodeIncrement: (Int) -> Unit = {},
     onEpisodeDecrement: (Int) -> Unit = {},
     onMoveToCompleted: (Int) -> Unit = {}
@@ -30,7 +30,7 @@ fun ContentList(
         items(contentList) { contentData ->
             ContentCard(
                 content = contentData,
-                userContentEpisodes = contentProgress[contentData.id.toString()] ?: 0, // Obtener el progreso
+                userContentEpisodes = contentProgress[contentData.id.toString()] ?: 0,
                 onCardClicked = { onContentClicked(it) },
                 modifier = Modifier
                     .fillMaxWidth()

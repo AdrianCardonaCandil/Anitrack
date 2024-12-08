@@ -14,7 +14,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,17 +22,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.anitrack.R
 import com.example.anitrack.network.AuthState
 import com.example.anitrack.ui.profile.CustomTextField
 
 @Composable
 fun SignUpScreen(
-    modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = viewModel(),
-    onSignUpSuccess: () -> Unit,
     onLoginClick: () -> Unit
 ) {
 
@@ -45,7 +44,8 @@ fun SignUpScreen(
 
     val isUsernameValid = username.length >= 2
     val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    val isPasswordValid = password.length >= 8 && password.any { it.isDigit() } && password.any { it.isUpperCase() }
+    val isPasswordValid =
+        password.length >= 8 && password.any { it.isDigit() } && password.any { it.isUpperCase() }
     val isPasswordMatch = password == confirmPassword
 
 
@@ -56,7 +56,7 @@ fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Sign Up to Anitrack",
+            text = stringResource(R.string.sign_up_title),
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -66,18 +66,36 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        CustomTextField(label = "Username", onValueChange = { username = it }, isValid = isUsernameValid)
+        CustomTextField(
+            label = stringResource(R.string.username),
+            onValueChange = { username = it },
+            isValid = isUsernameValid
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        CustomTextField(label = "Email", onValueChange = { email = it }, isValid = isEmailValid)
+        CustomTextField(
+            label = stringResource(R.string.email),
+            onValueChange = { email = it },
+            isValid = isEmailValid
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        CustomTextField(label = "Password", isPassword = true, onValueChange = { password = it }, isValid = isPasswordValid)
+        CustomTextField(
+            label = stringResource(R.string.password),
+            isPassword = true,
+            onValueChange = { password = it },
+            isValid = isPasswordValid
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        CustomTextField(label = "Repeat Password", isPassword = true, onValueChange = { confirmPassword = it }, isValid = isPasswordMatch)
+        CustomTextField(
+            label = stringResource(R.string.repeat_password),
+            isPassword = true,
+            onValueChange = { confirmPassword = it },
+            isValid = isPasswordMatch
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Not new here? Sign In",
+            text = stringResource(R.string.not_new_here_sign_in),
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.clickable { onLoginClick() }
         )
@@ -93,23 +111,30 @@ fun SignUpScreen(
             shape = RoundedCornerShape(10.dp),
             enabled = isUsernameValid && isEmailValid && isPasswordValid && isPasswordMatch
         ) {
-            Text(text = "Sign Up", color = Color.White)
+            Text(text = stringResource(R.string.sign_up), color = Color.White)
         }
 
 
         when (authState) {
             is AuthState.Loading -> {
-                Text(text = "Loading...", color = Color.Gray)
+                Text(text = stringResource(R.string.loading), color = Color.Gray)
             }
+
             is AuthState.Error -> {
-                Text(text = (authState as AuthState.Error).exception.message ?: "Unknown error", color = Color.Red)
+                Text(
+                    text = (authState as AuthState.Error).exception.message ?: stringResource(R.string.unknown_error),
+                    color = Color.Red
+                )
             }
+
             is AuthState.ValidationError -> {
                 Text(text = (authState as AuthState.ValidationError).message, color = Color.Red)
             }
+
             is AuthState.Success -> {
-                Text(text = "Sign-up successful!", color = Color.Green)
+                Text(text = stringResource(R.string.sign_up_successful), color = Color.Green)
             }
+
             else -> {}
         }
     }

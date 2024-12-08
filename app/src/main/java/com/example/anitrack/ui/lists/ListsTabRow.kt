@@ -5,6 +5,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import com.example.anitrack.R
 
 @Composable
@@ -19,12 +20,16 @@ fun ListsTabRow(
         stringResource(R.string.tab_loved)
     )
 
-    TabRow(selectedTabIndex = selectedTabIndex) {
+    TabRow(selectedTabIndex = selectedTabIndex, ) {
         tabTitles.forEachIndexed { index, title ->
             Tab(
                 selected = selectedTabIndex == index,
                 onClick = { onTabSelected(index) },
-                text = { Text(text = title) },
+                text = {
+                    Text(
+                        text = title,
+                        fontSize = 13.sp
+                    ) },
             )
         }
     }

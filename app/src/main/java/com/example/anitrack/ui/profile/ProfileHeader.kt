@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitrack.R
@@ -13,14 +14,12 @@ import com.example.anitrack.R
 fun ProfileHeader(
     profileImageUrl: String,
     userName: String,
-    userId: String,
     joinedDate: String,
     description: String,
-    onDeleteAccountClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onShareProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isOwner: Boolean // NEW param
+    isOwner: Boolean
 ) {
     Row(
         modifier = modifier
@@ -33,7 +32,7 @@ fun ProfileHeader(
             } else {
                 painterResource(id = R.drawable.default_pfp)
             },
-            contentDescription = "Profile Picture",
+            contentDescription = stringResource(R.string.profile_picture),
             modifier = Modifier
                 .size(150.dp)
         )
@@ -57,14 +56,12 @@ fun ProfileHeader(
             Spacer(modifier = Modifier.height(8.dp))
 
             ProfileActions(
-                onDeleteAccountClick = onDeleteAccountClick,
-                userId = userId,
                 onEditProfileClick = onEditProfileClick,
                 onShareProfileClick = onShareProfileClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.2f),
-                isOwner = isOwner // pass down
+                isOwner = isOwner
             )
         }
     }

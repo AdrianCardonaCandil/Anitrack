@@ -13,9 +13,12 @@ import com.example.anitrack.model.User
 import com.example.anitrack.network.AuthState
 import com.example.anitrack.network.DatabaseResult
 import com.example.anitrack.network.DatabaseService
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -35,6 +38,7 @@ class AuthViewModel(
     init {
         observeAuthState()
     }
+
     private fun observeAuthState() {
         firebaseAuth.addAuthStateListener { auth ->
             viewModelScope.launch {
@@ -95,7 +99,11 @@ class AuthViewModel(
         }
     }
 
-    private suspend fun isFieldTaken(collection: DatabaseCollections, field: String, value: String): Boolean {
+    private suspend fun isFieldTaken(
+        collection: DatabaseCollections,
+        field: String,
+        value: String
+    ): Boolean {
         val result = databaseRepository.filterCollection(
             collectionPath = collection,
             fieldName = field,
@@ -106,12 +114,19 @@ class AuthViewModel(
         return result is DatabaseResult.Success && result.data.isNotEmpty()
     }
 
-    private suspend fun createUserDocument(userId: String, username: String, email: String): AuthState {
+    private suspend fun createUserDocument(
+        userId: String,
+        username: String,
+        email: String
+    ): AuthState {
         val user = User(
             id = userId,
             username = username,
             email = email,
-            createdAt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(System.currentTimeMillis())
+            createdAt = SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.getDefault()
+            ).format(System.currentTimeMillis())
         )
         val result = databaseRepository.createDocument(
             collectionPath = DatabaseCollections.Users,
@@ -158,42 +173,42 @@ class AuthViewModel(
         }
     }
 
-    private fun validateSignUp(username: String, email: String, password: String, confirmPassword: String): Boolean {
+    private fun validateSignUp(
+        username: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
         return when {
             username.length < 2 -> {
                 _authState.update { AuthState.ValidationError("Username must be at least 2 characters") }
                 false
             }
+
             !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 _authState.update { AuthState.ValidationError("Invalid email format") }
                 false
             }
+
             password.length < 8 || !password.any { it.isDigit() } || !password.any { it.isUpperCase() } -> {
                 _authState.update { AuthState.ValidationError("Password must be at least 8 characters, include a number, and an uppercase letter") }
                 false
             }
+
             password != confirmPassword -> {
                 _authState.update { AuthState.ValidationError("Passwords do not match") }
                 false
             }
+
             else -> true
-        }
-    }
-    fun deleteAccount() {
-        viewModelScope.launch {
-            val result = databaseRepository.deleteDocument(DatabaseCollections.Users,
-                userId.toString()
-            )
-            if (result is DatabaseResult.Success) {
-                authRepository.deleteAccount()
-            }
         }
     }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val app = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AnitrackApplication
+                val app =
+                    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AnitrackApplication
                 AuthViewModel(
                     authRepository = app.container.authRepository,
                     databaseRepository = app.container.databaseRepository

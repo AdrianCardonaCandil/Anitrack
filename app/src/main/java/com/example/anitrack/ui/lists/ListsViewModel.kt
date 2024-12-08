@@ -101,14 +101,11 @@ class ListsViewModel(
 
     fun moveToCompleted(userId: String, contentId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            // Primero, eliminar de la lista "Watching"
+
             listHandler.removeFromList(userId, contentId, ListHandler.ListType.WATCHING)
-
-            // Luego, agregar a la lista "Completed"
             listHandler.addToList(userId, contentId, ListHandler.ListType.COMPLETED)
-
-            // Recargar contenidos para actualizar la interfaz
             loadUserContents(0, userId)
+
         }
     }
 

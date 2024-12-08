@@ -1,18 +1,16 @@
 package com.example.anitrack.ui.profile
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import com.example.anitrack.R
 import com.example.anitrack.ui.theme.AppTypography
 
 @Composable
@@ -22,27 +20,32 @@ fun UserDetails(
     description: String,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(top = 8.dp)) {
         Text(
             text = userName,
             style = AppTypography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
 
         Text(
-            text = "Joined: $joinedDate",
+            text = stringResource(R.string.joined_date, joinedDate),
             style = AppTypography.bodySmall,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = description,
-            style = AppTypography.bodyMedium,
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 100.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(
+                text = description,
+                style = AppTypography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+            )
+        }
     }
 }

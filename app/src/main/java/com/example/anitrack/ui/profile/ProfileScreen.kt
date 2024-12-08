@@ -8,8 +8,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.anitrack.model.Content
+import com.example.anitrack.R
 import com.example.anitrack.model.User
 import com.example.anitrack.network.DatabaseResult
 import com.example.anitrack.ui.lists.ContentList
@@ -22,8 +23,7 @@ fun ProfileScreen(
     onContentClicked: (Int) -> Unit,
     onSignOutClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
-    onEditProfileClick: () -> Unit,
-    isOwner: Boolean // NEW parameter to indicate if current user is the owner of this profile
+    isOwner: Boolean
 ) {
     val userProfileState by viewModel.userProfile.collectAsState()
     val userContentListState by viewModel.userContentList.collectAsState()
@@ -58,15 +58,8 @@ fun ProfileScreen(
                     ProfileHeader(
                         profileImageUrl = currentUser.profilePicture,
                         userName = currentUser.username,
-                        joinedDate = currentUser.createdAt ?: "Unknown",
-                        description = currentUser.description ?: "",
-                        userId = currentUser.id,
-                        onDeleteAccountClick = {
-                            if (isOwner) {
-                                onDeleteAccountClick()
-                            }
-                            // If not owner, this won't be shown anyway
-                        },
+                        joinedDate = currentUser.createdAt ?: stringResource(R.string.unknown_date),
+                        description = currentUser.description,
                         onEditProfileClick = {
                             if (isOwner) {
                                 isEditProfileDialogOpen = true
@@ -78,7 +71,7 @@ fun ProfileScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(0.3f),
-                        isOwner = isOwner // Pass isOwner down to hide edit/delete for non-owners
+                        isOwner = isOwner
                     )
                 }
             }
@@ -88,7 +81,7 @@ fun ProfileScreen(
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            else -> Text(text = "Loading profile...", modifier = Modifier.padding(16.dp))
+            else -> Text(    text = stringResource(R.string.loading_profile), modifier = Modifier.padding(16.dp))
         }
 
         when (val contentResult = userContentListState) {
@@ -115,10 +108,8 @@ fun ProfileScreen(
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            else -> Text(text = "Loading contents...", modifier = Modifier.padding(16.dp))
         }
 
-        // Show Sign Out button only if owner
         if (isOwner) {
             Button(
                 onClick = { onSignOutClick() },
@@ -126,7 +117,7 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(text = "Sign Out")
+                Text(text = stringResource(R.string.sign_out))
             }
         }
     }

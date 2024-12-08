@@ -1,14 +1,14 @@
 package com.example.anitrack.network
 
-import com.example.anitrack.model.User
-import kotlinx.coroutines.tasks.await
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 
 
 sealed interface AuthResult {
     object Success : AuthResult
     data class Failure(val error: Exception) : AuthResult
 }
+
 sealed class AuthState {
     object Idle : AuthState()
     object Success : AuthState()
@@ -22,6 +22,8 @@ interface AuthService {
     suspend fun signIn(email: String, password: String): AuthResult
     suspend fun deleteAccount(): AuthResult
     suspend fun signOut(): AuthResult
+    suspend fun updateEmail(newEmail: String): AuthResult
+    suspend fun updatePassword(newPassword: String): AuthResult
 }
 
 class FirebaseAuthService(
@@ -45,6 +47,7 @@ class FirebaseAuthService(
             AuthResult.Failure(e)
         }
     }
+
     override suspend fun signOut(): AuthResult {
         return try {
             auth.signOut()
@@ -63,4 +66,23 @@ class FirebaseAuthService(
         }
     }
 
+    override suspend fun updateEmail(newEmail: String): AuthResult {
+        return try {
+            val currentUser = auth.currentUser
+            currentUser?. verifyBeforeUpdateEmail(newEmail)?.await()
+            AuthResult.Success
+        } catch (e: Exception) {
+            AuthResult.Failure(e)
+        }
+    }
+
+    override suspend fun updatePassword(newPassword: String): AuthResult {
+        return try {
+            val currentUser = auth.currentUser
+            currentUser?.updatePassword(newPassword)?.await()
+            AuthResult.Success
+        } catch (e: Exception) {
+            AuthResult.Failure(e)
+        }
+    }
 }
