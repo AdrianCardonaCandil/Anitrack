@@ -75,7 +75,10 @@ fun SignInScreen(
         Text(
             text = stringResource(R.string.new_here_sign_up),
             color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.clickable { onSignUpClick() }
+            modifier = Modifier.clickable {
+                authViewModel.resetAuthState()
+                onSignUpClick()
+            }
         )
 
         Spacer(modifier = Modifier.height(16.dp))

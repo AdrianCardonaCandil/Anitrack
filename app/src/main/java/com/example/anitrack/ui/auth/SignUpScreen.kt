@@ -68,27 +68,39 @@ fun SignUpScreen(
 
         CustomTextField(
             label = stringResource(R.string.username),
-            onValueChange = { username = it },
+            onValueChange = {
+                username = it
+                authViewModel.validateSignUp(username, email, password, confirmPassword)
+            },
             isValid = isUsernameValid
         )
         Spacer(modifier = Modifier.height(16.dp))
         CustomTextField(
             label = stringResource(R.string.email),
-            onValueChange = { email = it },
+            onValueChange = {
+                email = it
+                authViewModel.validateSignUp(username, email, password, confirmPassword)
+            },
             isValid = isEmailValid
         )
         Spacer(modifier = Modifier.height(16.dp))
         CustomTextField(
             label = stringResource(R.string.password),
             isPassword = true,
-            onValueChange = { password = it },
+            onValueChange = {
+                password = it
+                authViewModel.validateSignUp(username, email, password, confirmPassword)
+            },
             isValid = isPasswordValid
         )
         Spacer(modifier = Modifier.height(16.dp))
         CustomTextField(
             label = stringResource(R.string.repeat_password),
             isPassword = true,
-            onValueChange = { confirmPassword = it },
+            onValueChange = {
+                confirmPassword = it
+                authViewModel.validateSignUp(username, email, password, confirmPassword)
+            },
             isValid = isPasswordMatch
         )
 
@@ -97,8 +109,12 @@ fun SignUpScreen(
         Text(
             text = stringResource(R.string.not_new_here_sign_in),
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { onLoginClick() }
+            modifier = Modifier.clickable {
+                authViewModel.resetAuthState()
+                onLoginClick()
+            }
         )
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -122,7 +138,8 @@ fun SignUpScreen(
 
             is AuthState.Error -> {
                 Text(
-                    text = (authState as AuthState.Error).exception.message ?: stringResource(R.string.unknown_error),
+                    text = (authState as AuthState.Error).exception.message
+                        ?: stringResource(R.string.unknown_error),
                     color = Color.Red
                 )
             }

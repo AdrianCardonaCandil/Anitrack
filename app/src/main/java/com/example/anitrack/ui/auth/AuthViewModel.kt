@@ -173,7 +173,7 @@ class AuthViewModel(
         }
     }
 
-    private fun validateSignUp(
+    fun validateSignUp(
         username: String,
         email: String,
         password: String,
@@ -199,8 +199,10 @@ class AuthViewModel(
                 _authState.update { AuthState.ValidationError("Passwords do not match") }
                 false
             }
-
-            else -> true
+            else -> {
+                _authState.update { AuthState.Idle }
+                true
+            }
         }
     }
 
