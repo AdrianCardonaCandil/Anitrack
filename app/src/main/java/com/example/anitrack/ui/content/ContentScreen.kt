@@ -33,7 +33,6 @@ import com.example.anitrack.model.Character
 import com.example.anitrack.model.Content
 import com.example.anitrack.ui.global.ImagePlaceholder
 import com.example.anitrack.ui.global.shimmerEffect
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ContentScreen(
@@ -55,6 +54,7 @@ fun ContentScreen(
             characters = characters
         )
         EditContentActionButton(
+            userId=userId,
             modifier = Modifier.align(Alignment.BottomEnd).padding(25.dp),
             onEditContentActionButtonClicked = {contentViewModel.changeDialogVisibility(it)}
         )
@@ -193,19 +193,22 @@ fun HomeScreenUI(
 
 @Composable
 fun EditContentActionButton(
+    userId: String,
     modifier: Modifier = Modifier,
     onEditContentActionButtonClicked: (Boolean) -> Unit
 ) {
-    FloatingActionButton(
-        modifier = modifier,
-        onClick = { onEditContentActionButtonClicked(true) },
-        containerColor = MaterialTheme.colorScheme.primary,
-        shape = CircleShape
-    ) {
-        Icon(
-            imageVector = Icons.Default.Edit,
-            contentDescription = stringResource(R.string.editContentCD),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+    if (userId.isNotBlank()) {
+        FloatingActionButton(
+            modifier = modifier,
+            onClick = { onEditContentActionButtonClicked(true) },
+            containerColor = MaterialTheme.colorScheme.primary,
+            shape = CircleShape
+        ) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = stringResource(R.string.editContentCD),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
     }
 }
