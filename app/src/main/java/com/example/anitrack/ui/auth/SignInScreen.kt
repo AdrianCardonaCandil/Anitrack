@@ -74,7 +74,7 @@ fun SignInScreen(
 
         Text(
             text = stringResource(R.string.new_here_sign_up),
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.clickable { onSignUpClick() }
         )
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +44,7 @@ fun CustomTextField(
             text = label,
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
-            color = if (isFocused) Color.Blue else Color.Black
+            color = if (isFocused) colorScheme.primary else colorScheme.secondary,
         )
 
         BasicTextField(
