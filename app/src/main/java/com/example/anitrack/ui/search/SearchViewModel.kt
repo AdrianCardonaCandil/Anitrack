@@ -11,6 +11,7 @@ import com.example.anitrack.AnitrackApplication
 import com.example.anitrack.data.JikanRepository
 import com.example.anitrack.model.Content
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -32,7 +33,8 @@ class SearchViewModel(
 
     init {
         viewModelScope.launch {
-            userInput.debounce(500).collect {
+            delay(2500)
+            userInput.debounce(25).collect {
                 getSearchResult(it)
             }
         }

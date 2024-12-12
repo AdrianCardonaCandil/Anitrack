@@ -53,7 +53,7 @@ fun CustomTextField(
                 text = it
                 onValueChange(it)
             },
-            textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+            textStyle = TextStyle(color = colorScheme.primary, fontSize = 16.sp),
             visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
             keyboardOptions = KeyboardOptions(
                 keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text
