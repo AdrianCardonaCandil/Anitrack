@@ -54,18 +54,20 @@ fun EditContentDialog(
                     Spacer(modifier = Modifier.padding(vertical = 7.5.dp))
                     ListHandler.ListType.entries.forEach { listType ->
                         val isInList = viewModel.contentListsState.value.contains(listType)
-                        OutlinedListButton(
-                            name = stringResource(id = getListNameResource(listType)),
-                            isSelected = isInList,
-                            onClick = {
-                                if (isInList) {
-                                    viewModel.removeFromList(userId, contentId, listType)
-                                } else {
-                                    viewModel.addToList(userId, contentId, listType)
-                                }
-                            },
-                            modifier = Modifier.padding(vertical = 5.dp)
-                        )
+                        if(listType != ListHandler.ListType.FAVORITES) {
+                            OutlinedListButton(
+                                name = stringResource(id = getListNameResource(listType)),
+                                isSelected = isInList,
+                                onClick = {
+                                    if (isInList) {
+                                        viewModel.removeFromList(userId, contentId, listType)
+                                    } else {
+                                        viewModel.addToList(userId, contentId, listType)
+                                    }
+                                },
+                                modifier = Modifier.padding(vertical = 5.dp)
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.padding(vertical = 25.dp))
                     Text(
