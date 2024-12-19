@@ -86,7 +86,7 @@ fun HomeScreenUI(
         ) {
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(content?.backgroundImage)
+                    .data(content?.backgroundImage ?: content?.coverImage)
                     .size(coil.size.Size.ORIGINAL)
                     .build()
             )

@@ -100,7 +100,6 @@ class ContentViewModel(
     private suspend fun getContent(it: Int?) {
         it?.let {
             val databaseContent = getContentFromDatabase(it)
-            Log.d("contentViewModel", databaseContent.toString())
             val contentFromApi = databaseContent ?: getContentFromApi(it)
             content.value = contentFromApi
             if (databaseContent == null && contentFromApi != null) {
