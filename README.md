@@ -47,7 +47,7 @@ Complementariamente, se persiguen un conjunto de objetivos secundarios entre los
 * Exploración y aprendizaje: este proyecto ofrece una oportunidad para familiarizarnos con un entorno desconocido al no tener ninguna experiencia previa en el
   desarrollo de aplicaciones móviles nativas en Android.
 
-## <a name="Diseño"></a> Diseño
+## <a name="diseño"></a> Diseño
 
 ### <a name="pagina-de-inicio"></a> Página De Inicio
 
@@ -55,7 +55,12 @@ La página de inicio de la aplicación presenta un diseño minimalista marcado p
 Primeramente, deseamos comunicar al usuario la razón de ser de la aplicación y el valor de nuestro producto. Implícitamente, esperamos incitar al registro con
 el objetivo de alcanzar una base de usuarios extensa.
 
-![imagen](https://github.com/user-attachments/assets/c9832133-0626-46c0-bbc8-2467870636e9)
+<div align="center">
+   <br>
+   <img src="https://github.com/user-attachments/assets/c9832133-0626-46c0-bbc8-2467870636e9" alt="image" width="300" />
+   <img src="https://github.com/user-attachments/assets/4eacc53b-364d-406c-9914-aad4b0d5c9c9" alt="image" width="300" />
+   <br><br>
+</div>
 
 A continuación, se introducen diferentes secciones que brindan al usuario una serie de recomendaciones tematizadas de forma independiente. Las recomendaciones
 se disponen en forma de cuadrícula, mostrando la imágen de portada y el nombre por cada serie de animación. Al producirse un evento de pulsación sobre una de
@@ -65,22 +70,54 @@ las cartas visibles en la ventana, se navega automáticamente a la página de co
   distintas vinculadas al calendario de tranmisión en Japón. Cada temporada corresponde directamente a una estación del año, existiendo, por ello, temporada de
   primavera, verano, otoño e invierno. Las temporadas se suceden de forma repetida año tras año.
 
-  ![imagen](https://github.com/user-attachments/assets/597fc492-e3e7-4a9d-8cd8-053092277d11)
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/597fc492-e3e7-4a9d-8cd8-053092277d11" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/df7545fc-efac-409d-b761-aeca97be677e" alt="image" width="300" />
+     <br><br>
+  </div>
   
 * Upcoming: se incluyen series de animación pertenecientes a la temporada posterior a la que se encuentra en emisión actualmente. Por lo tanto, en su totalidad,
   se observarán series de animación cuya fecha de estreno no ha sido alcanzada.
-
-  ![imagen](https://github.com/user-attachments/assets/9875b496-480e-42b5-bcab-be8c1a41b6bf)
+  
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/9875b496-480e-42b5-bcab-be8c1a41b6bf" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/eaabdb84-fb06-40dd-bbec-873ee556f86d" alt="image" width="300" />
+     <br><br>
+  </div>
   
 * Top Anime: esta cuadrícula basa su contenido en las series de animación que ocupen los puestos superiores en el ranking de la página MyAnimeList. MyAnimeList
   es una página web ciertamente conocida por los consumidores habituales de este tipo de contenido que elabora una lista que integra aquellos más valorados por
   los usuarios que forman la plataforma mediante el uso de un sistema de puntuaciones.
 
-  ![imagen](https://github.com/user-attachments/assets/a7f93bc7-28ee-497c-a0ad-560a3f0f1fdf)
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/a7f93bc7-28ee-497c-a0ad-560a3f0f1fdff" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/570a46a5-7466-4d06-b0d5-7d631f881a9f" alt="image" width="300" />
+     <br><br>
+  </div>
 
+### <a name="busqueda"></a> Página De Búsqueda
 
+La interfaz de usuario de la página de busqueda muestra una cuadro de texto que conforma la herramienta de búsqueda de la aplicación. Cuando el usuario introduzca
+contenido textual y, por lo tanto, se realice una búsqueda, se visualizará una carta por cada contenido hallado que concuerde en nombre, parcial o completamente,
+con el texto introducido. Si por el contrario, el usuario no ha introducido contenido textual en la herramienta de búsqueda, se visualizará una lista de contenidos
+generados por defecto. La carta utilizada para representar cada serie de animación permite visualizar cierta información de relevancia entre la que se incluye:
 
+* Imágen De Portada
+* Nombre Del Contenido
+* Lista De Géneros
+* Formato (TV, OVA, etc.)
 
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/a93e2c99-92ad-49b1-b5d5-7aff43b059d3" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/9a94df71-6190-4b94-bfb2-e4d704d7c693" alt="image" width="300" />
+     <br><br>
+</div>
+
+### <a name="contenido"></a> Contenido
 
 
 
