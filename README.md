@@ -12,9 +12,14 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
    - [Página de inicio](#pagina-de-inicio)
    - [Búsqueda](#busqueda)
    - [Contenido](#contenido)
-5. [Arquitectura](#arquitectura)
-6. [Funcionalidades](#funcionalidades)
-7. [Conclusiones](#conclusiones)
+5. [Funcionalidades](#funcionalidades)
+   - [Carga de un contenido](#carga-contenido)
+   - [Carga de un grid de contenidos](#carga-grid-contenidos)
+   - [Busqueda de un contenido](#busqueda-contenido)
+6. [Servicios Externos](#servicios)
+7. [Arquitectura](#arquitectura)
+8. [Futuras Propuestas](#futuras-propuestas)
+9. [Conclusiones](#conclusiones)
 
 ## <a name="colaboradores"></a> Colaboradores
 
@@ -25,9 +30,9 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 ## <a name="introduccion"></a> Introducción
 
 Hoy en día, la organización y seguimiento de contenidos multimedia se ha convertido en una necesidad para los usuarios de estos medios, especialmente dentro
-de comunidades de nicho como el anime, donde la cantidad y variedad de títulos es abrumadora. Inspirándonos en aplicaciones ya consolidadas, como Anilist o
-MyAnimeList, se ha explorado el desarrollo de un una aplicación nativa para el sistema operativo Android que posibilite a sus usuarios controlar y gestionar
-su consumo de anime.
+de comunidades de nicho como el anime, donde la cantidad y variedad de títulos es abrumadora. Inspirándonos en aplicaciones ya consolidadas, como 
+<a href="https://anilist.co/">AniList</a> o <a href="https://myanimelist.net/">MyAnimeList</a>, se ha explorado el desarrollo de un una aplicación nativa
+para el sistema operativo Android que posibilite a sus usuarios controlar y gestionar su consumo de anime.
 
 ## <a name="objetivos"></a> Objetivos
 
@@ -48,6 +53,14 @@ Complementariamente, se persiguen un conjunto de objetivos secundarios entre los
   desarrollo de aplicaciones móviles nativas en Android.
 
 ## <a name="diseño"></a> Diseño
+
+Para la elaboración de un tema de aplicación, se ha utilizado la página web <a href="https://material-foundation.github.io/material-theme-builder/"> Material
+Theme Builder</a>, la cual permite únicamente, tras la selección de una paleta de colores y un estilo de fuentes, elaborar automáticamente el código en Kotlin
+necesario y suficiente para confeccionar el tema internamente a la aplicación. Incluye, obviamente, y como se verá en las imágenes adjuntas a continuación, el
+soporte para el modo oscuro además del modo claro predeterminado. La tipografía utilizada por defecto para el texto visible en el proyecto se llama Sen. Puede
+observarse un texto de ejemplo que usa esta tipografía accediendo al siguiente enlace.
+
+<a href="https://fonts.google.com/specimen/Sen"> Sen Font Preview </a>
 
 ### <a name="pagina-de-inicio"></a> Página De Inicio
 
@@ -87,9 +100,9 @@ las cartas visibles en la ventana, se navega automáticamente a la página de co
      <br><br>
   </div>
   
-* Top Anime: esta cuadrícula basa su contenido en las series de animación que ocupen los puestos superiores en el ranking de la página MyAnimeList. MyAnimeList
-  es una página web ciertamente conocida por los consumidores habituales de este tipo de contenido que elabora una lista que integra aquellos más valorados por
-  los usuarios que forman la plataforma mediante el uso de un sistema de puntuaciones.
+* Top Anime: esta cuadrícula basa su contenido en las series de animación que ocupen los puestos superiores en el ranking de la página MyAnimeList.
+  <a href="https://myanimelist.net/">MyAnimeList</a> es una página web ciertamente conocida por los consumidores habituales de este tipo de contenido que elabora
+  una lista que integra aquellos más valorados por los usuarios que forman la plataforma mediante el uso de un sistema de puntuaciones.
 
   <div align="center">
      <br>
@@ -119,16 +132,158 @@ generados por defecto. La carta utilizada para representar cada serie de animaci
 
 ### <a name="contenido"></a> Contenido
 
+La página de contenido muestra información relevante sobre un contenido concreto. Idealmente, existe una página de contenido para cada serie de animación que pueda
+ser observada en la aplicación. En ella, el usuario podrá operar, una vez registrado o iniciado sesión, sobre el contenido que esté observando en cada momento. Las
+operaciones consistirán, principalmente en añadir el contenido a una lista determinada de seguimiento. Se ha mantenido el estilo minimalista planteado en secciones
+anteriores.
 
+La parte superior de la página de contenido comienza monstrando una imagen o arte relacionado con el contenido en formato panorámico incluida con fines decorativos.
+Esta imagen, generalmente, no será la misma que la imagen de portada que se mostrará en la sección posterior. Ambas imagenes coincidirán cuando no exista imagen de
+fondo disponible en la fuente de origen de los datos del contenido.
 
+Seguirá, a continuación, una sección constituida con la información más relevante del contenido que se esté mostrando en la página. Se trata de la información más
+primordial y que, por tanto, el usuario esperará encontrar con anterioridad. Entre esta información se encuentra:
 
+* Nombre Del Contenido
+* Imagen De Portada
+* Tipo Del Contenido (TV, Movie, OVA, ONA, etc)
+* Número De Episodios
+* Estado De Emisión (Airing, Finished Aired, Yet To Air, etc)
+* Nota Del Contenido
 
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/254a642b-b7d8-49cf-9a03-7e6c3de2f1cc" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/a44014be-a354-4243-a02c-2319a79feb06" alt="image" width="300" />
+     <br><br>
+</div>
 
+Cabe destacar la proveniencia de la nota del contenido, obtenida de forma directa de los datos proporcionados por <a href="https://myanimelist.net/">MyAnimeList
+</a>. En un futuro se podría plantear una nueva funcionalidad consistente en dotar al usuario de la capacidad de establecer una valoración numérica para cada
+contenido y, con ello, alterar la nota usando un algoritmo de ponderación. Ésta y otras propuestas de mejora serán añadidas a pie de la memoria.
 
+Seguidamente a la sección de información principal, encontramos un nuevo apartado proporcionando al usuario información secundaria del contenido visualizado en la
+página. Nos referimos, en específico, a información aparentemente no tan importante como la brindada en la sección de información principal pero sí complementaria.
+Dicha información se compone como un par de parejas clave y valor o lista de valores, con las siguientes categorias:
 
+* Título Original (Nombre en Silabario Japonés)
+* Título En Romaji (Latinización Del Silabario Japonés)
+* Título En Inglés
+* Fuente Del Contenido (Web Manga, Light Novel, etc)
+* Fecha De Inicio De Emisión
+* Fecha De Finalización De Emisión
+* Duración Media Por Episodio
+* Rating (Clasificación De Edad)
+* Temporada De Emisión (Winter, Summer, Fall, Spring)
+* Año De Emisión
 
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/e573d8e6-5fbc-4e41-b87b-4b2d2d350acd" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/fdee9851-5a2a-433e-96a9-faf8e8963b36" alt="image" width="300" />
+     <br><br>
+</div>
 
+A pie de la sección de información secundaria encontramos dos listas de etiquetas que incluyen el total de estudios de animación involucrados en el desarrollo, guión,
+animación o producción del contenido, o los generos de éste, respectivamente. Este formato contribuye a la estética de la página contrastando la información previa en
+formato texto mediante el uso del color y el espacio.
 
+Finalizamos la página de contenido añadiendo una última sección donde se visualizan los personajes que aparecen en la serie de animación mostrada en la página en cada
+momento. Por cada personaje, se creará una carta que contenga dos atributos del mismo, concretamente, su nombre e imagen en formato circular. La sección es deslizable
+en sentido vertical, cargándo dinámicamente los personajes que aún no habían sido introducidos en la ventana.
 
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/1872164d-8436-4900-a5d3-aeb689282d45" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/e4165322-fef5-419c-accc-3d95395a430f" alt="image" width="300" />
+     <br><br>
+</div>
 
+Si el usuario está registrado y ha iniciado sesión, podrá visualizar un botón flotante circular en la parte inferior derecha de la pantalla. Éste botón posibilita las
+acciones sobre el contenido consistentes en su adición a una lista de seguimiento determinada. Tambiém se podrá modificar la lista en la que está presente la serie de
+animación si es el caso, pues el usuario la habría añadido previamente. Estas funcionalidades se llevarían a cabo en una ventana modal que presenta dos secciones. La
+primera de ellas, posibilitará al usuario añadir un contenido a la totalidad de las listas excluyendo la lista de favoritos. Para ello, se incluirá un icono en forma
+de corazón cuya pulsación desencadenará dicha funcionalidad.
 
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/7c27f732-a0fe-4ccd-a1f4-60f90045edf2" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/016be5d9-1812-4e56-9be5-7723b791af4f" alt="image" width="300" />
+     <br><br>
+</div>
+
+## <a name="funcionalidades"> Funcionalidades </a>
+
+A continuación se irán introduciendo diversas funcionalidades concernientes a cada una de las páginas de la aplicación nombradas en la sección de diseño. Para cada una
+de estas funcionalidades, se presentará de forma superficial su finalidad, se explicará el código realizado para su implementación y se mostrarán imagenes que permitan
+certificar el correcto funcionamiento si es necesario. 
+
+### <a name="carga-contenido"> Carga De Un Contenido </a>
+
+Para la carga de un contenido, se utilizan dos fuentes de información o servicios externos a la aplicación, los cuales serán introducidos y detallados a posteriori. En
+concreto, nos estamos refiriendo a la API Restful Jikan y al servicio Firebase Firestore. A modo general, cada vez que un usuario accede a la página de un contenido, se
+intenta localizar la información de dicho contenido en la base de datos de Firebase Firestore configurada en la aplicación. Si la información no se encuentra, entonces,
+se accede a dicha información realizando una solicitud a la API Jikan. Con ello, conseguimos reducir la dependencia con la API, asunto crucial al existir un límite en
+el número de peticiones realizables por segundo y minuto. En el momento en el que solicita un contenido a la API Jikan, el objeto interno a la aplicación que aloja los
+datos recogidos, se vuelca sobre la base de datos para futuros accesos.
+
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/69f4563e-cb4b-433b-a18e-58affc0bd082" alt="image" />
+     <br><br>
+</div>
+
+En la imagen se puede observar la función `getContent`, responsable de establecer en un objeto de flujo el modelo interno que contiene los datos del anime que el usuario
+ha seleccionado. En la variable `databaseContent` se almacenaría el objeto de datos con la información procedente de la bases de datos si este existiera. A continuación,
+la variable `contentFromApi` almacena el objeto de información procedente de la base de datos, y, en caso de que no exista, realiza la solicitud a la API Restful de Jikan.
+Se actualiza el objeto flujo que desencadena la recomposición de los componentes de la interfaz de usuario y, si el contenido no existía en la base de datos, se almacena
+utilizando la función `storeContent`.
+
+Se describe a continuación un aspecto verdaderamente relevante, incluso a nivel arquitectónico de la aplicación. Como se puede observar en el código, las llamadas a las
+fuentes de datos se realizan mediante el uso de objetos repositorios, tanto para Jikan como para la base de datos Firebase Firestore. Los objetos repositorios restringen
+el acceso a los datos a un único punto por cada fuente de datos independiente. Se profundizará en ello más adelante.
+
+La carga de los personajes se realiza de forma totalmente similar a la descrita en esta funcionalidad, por lo que no se desarrollará en profundidad en el informe. Estos se
+deben cargar de forma independiente al contenido pues la API Jikan proporciona los datos de los personajes en un endpoint independiente.
+
+### <a name="carga-grid-contenidos"> Carga De Un Grid De Contenidos </a>
+
+Para la carga de un grid de contenidos, se utiliza únicamente la API Restful de Jikan, no recurriendo a almacenar los contenidos obtenidos en la base de datos Firestore.
+Esta funcionalidad es requerida por la pantalla de inicio de la aplicación, que carga, tal como se describió en la sección de diseño, una lista de contenidos para varias
+temáticas (temporada actual, temporada futura y animes mejor valorados). El proceso de carga de los diferentes grids para cada temática sucede de manera automática según
+la aplicación es iniciada.
+
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/a3f597e9-e755-4d60-a42d-e3705a8ebf36" alt="image" />
+     <br><br>
+</div>
+
+En el código, se puede observar de forma sencilla como, al iniciar el viewModel de la pantalla inicial de la aplicación, se produce la llamada a las funciones encargadas
+de cargar los grids de contenidos para las tres secciones temáticas utilizando el repositorio de datos de la API de Jikan. Cuando las funciones internas al repositorio
+devueven los datos recogidos externamente, se actualizan objetos de flujo que desencadenan la recomposición de los componentes de la interfaz de usuario de cada una de
+las secciones temáticas. Todas las llamadas se realizan paralelamente mediante el uso de corrutinas, utilizando el despachador específico para operaciones de entrada y
+salida de datos.
+
+### <a name="busqueda-contenido"> Búsqueda De Un Contenido </a>
+
+La búsqueda de contenidos requiere, al igual que en el caso anterior, el uso de la API Jikan sin depender en ningun sentido de la base de datos Firebase Firestore. Esta
+funcionalidad forma parte intrínseca de la página de búsqueda pues es su funcionalidad principal. Se ejecuta tanto al inicio de la aplicación, obteniendo un conjunto de
+series de animación por defecto, como cada vez que el usuario introduce contenido textual en la barra de búsqueda que forma parte de la interfaz de usuario. Para que no
+se sature el hilo de comunicaciones con la fuente de datos externa, se establece un tiempo de rebote, o debounce time, durante el cual se retardará la ejecución de toda
+solicitud que pudiera ser provocada por un evento nuevo de escritura en la barra de búsqueda.
+
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/793cbaff-f8cc-4d9b-b72d-2c8346dc6da0" alt="image" />
+     <br><br>
+</div>
+
+En el código se aprecia como, al iniciar el viewModel de la pantalla de búsqueda, se produce una subscripción, utilizando el método `collect` a la variable `userInput`,
+de tal manera que, cada vez que cambie el valor de dicha variable porque el usuario introduzca un nuevo valor en el cuadro de texto, se produzca una llamada al método
+que obtiene los resultados de una búsqueda, llamado `getSearchResult`. Además, el método `debounce` establece el tiempo de rebote necesario para no sobrecargar la API
+externa. Observese el uso del objeto repositorio para la obtención de los datos.
+
+## <a name="servicios"> Servicios Externos </a>
+
+## <a name="arquitectura"> Arquitectura </a>
