@@ -12,6 +12,10 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
    - [Página de inicio](#pagina-de-inicio)
    - [Búsqueda](#busqueda)
    - [Contenido](#contenido)
+   - [Sign In](#signIn)
+   - [Log In](#login)
+   - [Listas de seguimiento](#lists)
+   - [Perfil](#profile)
 5. [Funcionalidades](#funcionalidades)
    - [Carga de un contenido](#carga-contenido)
    - [Carga de un grid de contenidos](#carga-grid-contenidos)
@@ -376,7 +380,7 @@ El editor de perfil permite al usuario editar su información:
 
 El usuario también tiene la opción de eliminar su cuenta, aparecerá una ventana de emergente para asegurar que el usuario efectivamente quiere borrar su  cuenta.
 
-div align="center">
+<div align="center">
      <br>
      (Imagen ventana emergente eliminación de cuenta)
      <br><br>
@@ -468,5 +472,193 @@ que obtiene los resultados de una búsqueda, llamado `getSearchResult`. Además,
 externa. Observese el uso del objeto repositorio para la obtención de los datos.
 
 ## <a name="servicios"> Servicios Externos </a>
+
+Nuestra aplicación se nutre de diferentes servicios externos, los cuales introduciremos a continuación, responsables de controlar aspectos de relevancia dentro del ciclo
+de uso y funcionamiento de ésta. Al tratarse de un software en el que el conjunto de datos visualizado en la pantalla es ciertamente variable se necesita disponer de una
+fuente de datos que posibilite la carga dinámica de uno o varios contenidos en el momento oportuno. Además, la información relativa al seguimiento de contenido del total
+de usuarios de la aplicación debe ser registrado y almacenado en una base de datos para su posterior utilización. De manera adicional, es necesario gestionar eficazmente
+el proceso de registro y autentificación de usuarios, tanto nuevos como existentes.
+
+### <a name="jikan"> Jikan API </a>
+
+Como fuente de datos que nos permita establecer información dinámica para cada uno de los contenidos utilizaremos la Restful API de <a href="https://jikan.moe/">Jikan<a>.
+Principalmente, haremos solicitudes sobre los endpoints que proporcionan información sobre un contenido o sobre un conjunto de contenidos específico, como los contenidos
+de la temporada actual, la próxima temporada o los más populares. Cuando se consulte la información de un contenido en específico, la API utiliza un identificador único
+vinculado a cada serie de animación para su diferenciación. Se ha utilizado la biblioteca de código abierto Retrofit, desarrollada por la comunidad de usuarios dedicada
+al desarrollo de aplicaciones para Android, la cual implementa el código necesario para realizar las solicitudes HTTP al servidor o servidores que aloja los servicios de
+Jikan. La capa de la arquitectura `Network`, sobre la cual se profundizará más adelante, contiene la interfaz utilizada por el servicio de Retrofit para implementar toda
+la infraestructura de conexión con la API.
+
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/00ea9af6-35c0-4fae-9ccd-448b3b8bdfd40" alt="image" />
+     <br><br>
+</div>
+
+### <a name="firestore"> Firebase Firestore </a>
+
+Se utilizará la base de datos de Firebase Firestore, principalmente, como fuente de datos complementaria a la descrita anteriormente. El mecanismo por el que se añaden los contenidos y los personajes a la base de datos ya ha sido descrito, superficialmente, con anterioridad en esta memoria por lo que se profundizará en el código implementado
+que posibilita la comunicación con la propia base de datos. Para ello tenemos que atender de nuevo a la capa de la arquitectura de red encargada de centralizar el total de
+las comunicaciones de la aplicación con el exterior. En ella, se encuentra una interfaz llamada `Database Repository` que todos los objetos que quieran actuar con el papel
+de base de datos deben implementar, permitiendo la modularidad. La implementación corresponde al objeto `Firebase Firestore Service` al cual se inyecto como dependencia un
+objeto proveniente del BOM de Firebase (Bill of Materials) que implementa el código necesario para realizar las comunicaciones con nuestra base de datos. Como información
+adicional, el BOM de Firebase es un concepto o una forma de añadir las dependencias de Firebase relativamente nueva que maneja de forma automática las versiones del total
+de servicios de Firebase que se utilicen, como Storage, Firestore, Authentication, para que no exista conflictos entre ellas.
+
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/aa50eff0-0113-4944-8a00-4fd3a6a8a111" alt="image" />
+     <br><br>
+</div>
+
+La primera imagen adjunta muestra la implementación de la interfaz `Database Repository` no al completo, por lo que se recomienda acceder al código fuente de la aplicación con
+el fin de visualizar todas las funcionalidades que se recogen. Como se observa, se trata de una implementación naturalmente genérica, lo cual nos permite por ejemplo según el
+método `createDocument`, crear un objeto o documento en una colección específica establecida en el parámetro `collectionPath`, con un modelo de datos genérico, puediendo ser,
+por ejemplo, un contenido o una lista de personajes dado por el parámetro `data`. Además, se puede especificar un parámetro llamado `documentId` el cual permite establecer un
+ID para el documento que se va a guardar en Firestore interno a la colección especificada. De esa manera, conseguimos que un contenido que en la API de Jikan tiene un ID, por
+ejemplo, igual a 52991, se aloje en la base de datos en un documento con un ID equivalente para poder ser extraido posteriormente de manera sencilla. Se recomiendo consultar
+el código fuente, tal como se ha comentado, de esta sección, pues, al ser una parte del proyecto que conllevo cierta dificultad, se trabajó en una documentación clara de cara
+a la utilización por todos los integrantes del proyecto.
+
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/164baed7-80d3-4269-a3cf-60b5e51122d2" alt="image" />
+     <br><br>
+</div>
+
+La segunda imagen muestra la implementación del objeto `Firebase Firestore Service`, de nuevo, no al completo. Se puede observar la desabstacción del método `createDocument`
+que permite crear y almacenar, como se ha comentado, la información de una serie de animación en la base de datos. Se puede apreciar como se usa el objeto `firestore` cuyos
+métodos permiten establecer las comunicaciones con la base de datos externa. El resultado de la operación para éste y todos los métodos que operan sobre la base de datos de
+Firebase Firestore se aloja en una interfaz cerrada llamada DatabaseResult, implementada por un objeto llamado Success que contiene el dato o los datos que se consideren si
+el resultado de la operación es positivo y, por el contrario, implementada por un objeto llamado Failure que contiene el error que se ha producido al realizarse la conexión
+con la base de datos si el resultado es negativo y se ha producido dicho error o excepción. Por ejemplo, si al crearse un documento, la operación sobre la base de datos se
+realiza sin inconvenientes, el objeto Success contendrá el ID del documento que se ha creado, tal cual se ve en la expresión `DatabaseResult.Success(documentRef.id)`. En un
+caso más relevante, la operación que lee un documento de la base de datos retornará si se produce de manera adecuada, un objeto Success que contiene la información modelada
+a un objeto interno de la aplicación concreto, como puede ser un contenido, un personaje, un usuario, dependiendo de la colección que se esté leyendo.
+
+A continuación, se va a exponer el conjunto de modelos utilizados para almacenar información en la base de datos de Firebase Firestore recogidos en la capa de modelos de la
+aplicación. En principio, existe un modelo independiente por cada colección creada en la base de datos, distinguiendo un contenido, un personaje o un usuario. Además, se ha
+añadido un conjunto de modelos adicionales para modelar respuestas de la API de Jikan que tengan o no paginación.
+
+
+
+#### Modelo Para Un Contenido
+
+```
+model Content:
+   id: Int = corresponde al id del contenido, otorgado por la API de Jikan y por ende, por la comunidad de MyAnimeList.
+   title: String = nombre del contenido en japonés latinizado (romaji)
+   englishTitle: String = nombre del contenido en inglés
+   japaneseTitle: String = nombre del contenido en silabario japonés
+   type: String = tipo del contenido (TV, Movie, OVA, ONA, etc)
+   source: String = origen del contenido (Manga, Novela Visual, Original, etc)
+   episodes: Int = número de episodios del contenido
+   status: String = estado de emisión del contenido (En emisión, No Emitido, Por Emitir)
+   duration: String = duración media de los episodios del contenido
+   rating: String = edad mínima para la visualización del contenido
+   score: Float = nota ofrecida por la comunidad de MyAnimeList al contenido.
+   synopsis: String = descripción general o sinopsis del contenido
+   season: String = temporada de emisión del contenido (primavera, verano, otoño o invierno)
+   year: Int = año de emisión del contenido
+   images: Class = conjunto de imágenes de portada del contenido en diferentes escalas y formatos !privado
+   coverImage: String = imagen de portada principal del contenido
+   trailer: Class = conjunto de imágenes de fondo del contenido en diferentes escalas y formatos !privado
+   backgroundImage: String = imagen de fondo principal del contenido
+   aired: Class = información sobre la emisión del contenido, incluye fechas de inicio, finalización, etc !privado
+   fromDate: String = fecha de inicio de emisión del contenido
+   toDate: String = fecha de finalización de emisión del contenido
+   studios: List<Class> = información del conjunto de estudios de animación productores del contenido, incluyendo identificador, nombre, etc !privado
+   contentStudios: List<String> = lista de nombres de los estudios de animación produductores del contenido
+   genres: List<Class> = información del conjunto de generos del contenido, incluyendo identificador, nombre, etc !privado
+   contentGenres: List<String> = lista de nombres de los generos del contenido
+```
+
+Cabe destacar que éste modelo, al igual que el siguiente, relativo a un personaje, puede ser manejado de forma equivalente por las dos fuentes de información que se usan en
+la aplicación. Por ejemplo, la información proveniente de la API Jikan resultante de solicitar un contenido en específico, se aloja en este modelo utilizado por el servicio
+Retrofit. Por ello, si se accede al código fuente, situado en la capa de modelos de la arquitectura, se observará el uso de los decoradores `@Serializable` y peculiaridades
+características de dicho servicio. Además, el modelo es utilizado para transformar los datos de un contenido provenientes de la base de datos Firebase Firestore a un objeto
+interno y entendible por la propia aplicación.
+
+#### Modelo Para Un Personaje
+
+```
+model Character:
+   characterData: Class = contiene toda la información concerniente a un personaje de una serie de animación determinada
+      - id: Int = identificador único para un personaje, otorgado por la API Jikan y por ende, por la comunidad MyAnimeList
+      - name: String = nombre del personaje
+      - images: Class = conjunto de imagenes del personaje en diferentes aspectos y formatos !privado
+      - image: String = imagen del personaje
+```
+
+#### Modelo Para Una Respuesta De Jikan Sin Paginación
+
+```
+model JikanResponseWithoutPagination<T>:
+   data: T = objeto que contiene todos los datos extraidos de la API al realizar la solicitud
+```
+
+Modelo utilizado para obtener respuestas de la API Jikan que no requieran manejo de paginación alguna. Entre ellas, se incluye solicitud de contenidos independientes por
+ID o solicitud de lista de personajes de un contenido determinado. Se trata de un modelo genérico que puede contener un dato de un tipo genérico según corresponda en la
+solicitud que se realice. Por ejemplo, dicho dato genérico podría ser un objeto content, recién explicado en el primer modelo, si la solicitud consistiese en obtener los
+datos de un contenido en específico.
+
+```
+model JikanResponseWithPagination<T>:
+   data: T = objeto que contiene todos los datos extraidos de la API al realizar la solicitud
+   pagination: Class = objeto que contiene los datos de paginación de la solicitud actual
+      - lastVisiblePage: Int = número de páginas totales que existen y son visibles para la consulta realizada
+      - hasNextPage: Boolean = booleano que nos señala si estamos o no en la última página de la consulta
+      - currentPage: Int = nos señala la página en la que nos encontramos del totas de páginas disponibles para la consulta
+      - items: Class = nos proporciona información sobre el conteo de objetos encontrados en la página retornada por la solicitud !privado
+```
+
+Modelo utilizado para obtener respuestas de la API Jikan que si requieren manejo de paginación. Entre ellas, se incluye obtener todas las series de una temporada, ya sea
+la temporada actual de emisión o la siguiente. Además, obtener la lista de animes mejor valorados de la comunidad MyAnimeList. Por último, este modelo también se utiliza
+para obtener los datos de una búsqueda realizada por el usuario utilizando la herramienta de búsqueda de la aplicación, presente en la página de búsqueda.
+
+También relacionado con Firebase tenemos `StorageRepository` que utiliza directamente FirebaseStorage y `AuthRepository` qe utiliza el servicio `AuthService`. La siguiente imagen muestra como en `StorageRepository` solo se emcuentra la funcionalidad de subir la foto de perfil del usuario al Storage de Firebase.
+
+<div align="center">
+     <br>
+     <img width="851" alt="image" src="https://github.com/user-attachments/assets/9c10e6c1-3a0a-47d8-af6d-e7f6a1070e54" />
+     <br><br>
+</div>
+
+La interfaz `AuthService` se crea para definir un contrato claro de las funciones de autenticación esenciales, como signUp, signIn, signOut, deleteAccount, updateEmail y updatePassword. Esto permite que diferentes implementaciones puedan ser intercambiadas sin cambiar el código que las utiliza. Así, se logra una mayor flexibilidad y mantenibilidad en el código.
+
+AuthResult se utiliza para representar el resultado de una operación específica de autenticación, indicando si fue exitosa o si falló, y en caso de fallo, proporcionando detalles sobre el error. Esto permite manejar los resultados de las operaciones de manera uniforme y facilita el tratamiento de errores.
+
+Por otro lado, AuthState se utiliza para representar el estado actual de una operación de autenticación en curso. Incluye estados como Idle (sin operación en curso), Loading (operación en progreso), Success (operación exitosa), Error (error ocurrido) y ValidationError (error de validación). Esto es útil para actualizar la interfaz de usuario basándose en el estado actual de la operación, proporcionando una mejor experiencia de usuario.
+
+La clase FirebaseAuthService implementa la interfaz AuthService utilizando Firebase. Esta clase define cómo se ejecutan realmente las operaciones de autenticación, utilizando métodos de Firebase como createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, delete, verifyBeforeUpdateEmail y updatePassword. Utilizar Firebase permite aprovechar sus capacidades de autenticación seguras y escalables.
+
+<div align="center">
+     <br>
+     <img width="665" alt="image" src="https://github.com/user-attachments/assets/0bbd1cf4-f566-40ce-8f6f-302203751335" />
+     <br><br>
+</div>
+
+
+#### Modelo para um usuario
+
+A comtinuación se muestra el modelo para los usuarios de la aplicacíón. 
+
+```
+model User:
+   userData: Class = contiene toda la información concerniente a un usuario de la aplicación AniTrack
+      - id: String = identificador único para un usuario, otorgado por Firebase Firestore
+      - username: String = nombre de usuario 
+      - email: String = correo electrónico del usuario
+      - description: String = descripción del usuario 
+      - profilePicture: String = URL de la imagen de perfil del usuario
+      - watching: List<String> = lista de IDs de animes que el usuario está viendo
+      - completed: List<String> = lista de IDs de animes que el usuario ha completado
+      - planToWatch: List<String> = lista de IDs de animes que el usuario planea ver
+      - favorites: List<String> = lista de IDs de animes favoritos del usuario
+      - contentProgress: Map<String, Int> = mapa que relaciona IDs de contenido con su progreso respectivo
+      - createdAt: String? = fecha de creación del usuario en la aplicación
+```
+
+
 
 ## <a name="arquitectura"> Arquitectura </a>
