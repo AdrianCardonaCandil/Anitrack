@@ -7,19 +7,19 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 
 1. [Colaboradores](#colaboradores)
 2. [Introducción](#introduccion)
-3. [Diseño](#diseño)
-   - [Página de inicio](#página-de-inicio)
+3. [Objetivos](#objetivos)
+4. [Diseño](#diseño)
+   - [Página de inicio](#pagina-de-inicio)
    - [Búsqueda](#busqueda)
    - [Contenido](#contenido)
-   - [Sign Up](#sign-up)
-   - [Log In](#log-in)
-   - [Listas de seguimiento](#listas-de-seguimiento)
-     - [Watching](#watching)
-     - [Completed](#completed)
-     - [Plan to Watch](#plan-to-watch)
-     - [Loved](#loved)
-   - [Perfil](#perfil)
-     - [Editar Perfil](#editar-perfil)
+5. [Funcionalidades](#funcionalidades)
+   - [Carga de un contenido](#carga-contenido)
+   - [Carga de un grid de contenidos](#carga-grid-contenidos)
+   - [Busqueda de un contenido](#busqueda-contenido)
+6. [Servicios Externos](#servicios)
+7. [Arquitectura](#arquitectura)
+8. [Futuras Propuestas](#futuras-propuestas)
+9. [Conclusiones](#conclusiones)
 
 ## <a name="colaboradores"></a> Colaboradores
 
@@ -29,216 +29,261 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 
 ## <a name="introduccion"></a> Introducción
 
-La aplicación es una plataforma diseñada para los entusiastas del anime, que permite a los usuarios gestionar y explorar su contenido favorito de manera intuitiva. A través de esta herramienta, los usuarios pueden buscar títulos específicos, acceder a información detallada sobre cada anime y organizar sus preferencias en listas personalizadas. Estas listas incluyen opciones como "Watching", "Completed", "Plan to Watch" y "Loved", permitiendo a los usuarios llevar un seguimiento eficiente de su actividad.
+Hoy en día, la organización y seguimiento de contenidos multimedia se ha convertido en una necesidad para los usuarios de estos medios, especialmente dentro
+de comunidades de nicho como el anime, donde la cantidad y variedad de títulos es abrumadora. Inspirándonos en aplicaciones ya consolidadas, como 
+<a href="https://anilist.co/">AniList</a> o <a href="https://myanimelist.net/">MyAnimeList</a>, se ha explorado el desarrollo de un una aplicación nativa
+para el sistema operativo Android que posibilite a sus usuarios controlar y gestionar su consumo de anime.
 
-Además de la funcionalidad de búsqueda y gestión de listas, la aplicación presenta una interfaz atractiva y fácil de usar, que incluye secciones dedicadas a recomendaciones de contenido, así como datos relevantes como el tipo de anime, número de episodios, géneros y clasificaciones. Con estas características, la aplicación busca mejorar la experiencia del usuario, fomentando la interacción entre aficionados y facilitando el descubrimiento de nuevas series en el vasto universo del anime. 
+## <a name="objetivos"></a> Objetivos
 
-## <a name="diseño"></a>  Diseño
+Nuestro objetivo principal consiste en ofrecer una experiencia intuitiva y sencilla que permita a los usuarios registrar, mediante listas de seguimiento, el
+anime en categorías como watching (viendo), plan to watch (se planea ver), watched (completado) o loved (favoritos). Además de esta funcionalidad principal,
+la aplicación pretende ofrecer descripción detalladas sobre las características de cada anime ayudando a los usuarios a decrubrir nuevas series que coincidan
+con sus gustos e intereses.
 
-### <a name="página-de-inicio"></a> Página de inicio
+Complementariamente, se persiguen un conjunto de objetivos secundarios entre los que podemos encontrar:
 
-En la pantalla principal observamos un pequeño banner que comunica la razón de ser de la propia aplicación justificando e incitando
-el registro por parte de nuevos usuario. Cuando el usuario haya formalizado el proceso de registro o de inicio de sesión en la
-aplicación, dicho banner debería desaparecer de la pantalla.
+* Diseño de la interfaz claro y atractivo: pretendemos crear una interfaz visualmente agradable y fácil de usar respetando las guías de estilado del desarrollo
+  de aplicaciones móbiles y adecuando nuestro diseño a los estándares de Material Design.
+* Calidad del código y arquitectura: se persigue adoptar y utilizar patrones de diseño modernos y buenas prácticas en la estructura del código garantizando un
+  nivel elevado de escalabilidad.
+* Integración con servicios externos: se integran conexiones con APIs externas proveedoras de información sobre contenido audivisual japonés. Además, usaremos
+  servicios de bases de datos no relacionales para almacenar información relevante y reducir la dependencia con las fuentes de datos ajenas.
+* Exploración y aprendizaje: este proyecto ofrece una oportunidad para familiarizarnos con un entorno desconocido al no tener ninguna experiencia previa en el
+  desarrollo de aplicaciones móviles nativas en Android.
 
-Se ofrece un campo de texto que permitirá al usuario realizar búsquedas de contenido principalmente por nombre del mismo. Basta con
-que el usuario introduzca en el cuadro de texto el nombre del contenido (anime) que desea encontrar y el sistema realizará la búsqueda
-por él. Como resultado, la página de inicio adaptará su composición para mostrar las diferentes cartas resultantes de cada uno de
-los contenidos encontrados en la búsqueda. 
+## <a name="diseño"></a> Diseño
 
-Se ha destacar que, en el fondo, **[la página de inicio](#página-de-inicio) y [la página de búsqueda](#busqueda) son la misma página
-con una diferente composición dependiente del uso de la funcionalidad de búsqueda por parte del usuario**.
+Para la elaboración de un tema de aplicación, se ha utilizado la página web <a href="https://material-foundation.github.io/material-theme-builder/"> Material
+Theme Builder</a>, la cual permite únicamente, tras la selección de una paleta de colores y un estilo de fuentes, elaborar automáticamente el código en Kotlin
+necesario y suficiente para confeccionar el tema internamente a la aplicación. Incluye, obviamente, y como se verá en las imágenes adjuntas a continuación, el
+soporte para el modo oscuro además del modo claro predeterminado. La tipografía utilizada por defecto para el texto visible en el proyecto se llama Sen. Puede
+observarse un texto de ejemplo que usa esta tipografía accediendo al siguiente enlace.
 
-![image](https://github.com/user-attachments/assets/e282209c-d1db-45a7-85ba-e77c00e5e433)
+<a href="https://fonts.google.com/specimen/Sen"> Sen Font Preview </a>
 
-En la parte infierior de la página de inicio se visualizarán diferentes secciones que brindarán al usuario una serie de recomendaciones
-según el cometido de cada una. Para cada uno de los contenidos que aparezcan en las secciones, se visualizarán su nombre y su imagen de
-portada. Ademán, si el usuario pulsa sobre uno de ellos, observará la página principal de dicho [contenido](#contenido).
+### <a name="pagina-de-inicio"></a> Página De Inicio
 
-- New Season: Se mostrarán algunos contenidos cuya fecha de estreno corresponda a la temporada actual de emisión. Se destaca que, para
-  cada año (2020, 2021, 2022, etc), existen cuatro temporadas de emisión de contenido (Primavera, Verano, Otoño e Invierno). Por lo
-  tanto, y como ilustración, los contenidos que serían mostrados actualmente pertenecerían a la temporada de Otoño de 2024.
+La página de inicio de la aplicación presenta un diseño minimalista marcado por la presencia de un banner o cartel informativo concebido con varios objetivos.
+Primeramente, deseamos comunicar al usuario la razón de ser de la aplicación y el valor de nuestro producto. Implícitamente, esperamos incitar al registro con
+el objetivo de alcanzar una base de usuarios extensa.
 
-- Top Anime: Se mostrarán al usuario contenidos que ocupen las primeras posiciones en el ranking de notas (score) según, en principio,
-  el criterio obtenido con los datos de la api utilizada (Jikan) cuya base utiliza los datos de la comunidad My AnimeList. Si se
-  implementan funcionalidades para que el usuario pueda establecer notas en los contenidos, estas notas tendrán su peso en el ranking
-  de posiciones y por ende, en los contenidos mostrados en esta sección.
+<div align="center">
+   <br>
+   <img src="https://github.com/user-attachments/assets/c9832133-0626-46c0-bbc8-2467870636e9" alt="image" width="300" />
+   <img src="https://github.com/user-attachments/assets/4eacc53b-364d-406c-9914-aad4b0d5c9c9" alt="image" width="300" />
+   <br><br>
+</div>
 
-- Upcoming: Se mostrarán algunos contenidos cuya fecha de estreno corresponda a la siguiente temporada de emisión de contenido. Por
-  ejemplo, actualmente, se trataría de la temporada de invierno de 2025.
+A continuación, se introducen diferentes secciones que brindan al usuario una serie de recomendaciones tematizadas de forma independiente. Las recomendaciones
+se disponen en forma de cuadrícula, mostrando la imágen de portada y el nombre por cada serie de animación. Al producirse un evento de pulsación sobre una de
+las cartas visibles en la ventana, se navega automáticamente a la página de contenido presentando los datos que caracterizan a la serie implicada en la acción.
 
-  ![image](https://github.com/user-attachments/assets/31e2c396-ceab-4d83-a633-dbd8be26315e)
+* New Season: se incluyen series de animación pertenecientes a la temporada actual de emisión. A modo informativo, el anime es clasificado en cuatro temporadas
+  distintas vinculadas al calendario de tranmisión en Japón. Cada temporada corresponde directamente a una estación del año, existiendo, por ello, temporada de
+  primavera, verano, otoño e invierno. Las temporadas se suceden de forma repetida año tras año.
 
-### <a name="busqueda"></a> Búsqueda
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/597fc492-e3e7-4a9d-8cd8-053092277d11" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/df7545fc-efac-409d-b761-aeca97be677e" alt="image" width="300" />
+     <br><br>
+  </div>
+  
+* Upcoming: se incluyen series de animación pertenecientes a la temporada posterior a la que se encuentra en emisión actualmente. Por lo tanto, en su totalidad,
+  se observarán series de animación cuya fecha de estreno no ha sido alcanzada.
+  
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/9875b496-480e-42b5-bcab-be8c1a41b6bf" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/eaabdb84-fb06-40dd-bbec-873ee556f86d" alt="image" width="300" />
+     <br><br>
+  </div>
+  
+* Top Anime: esta cuadrícula basa su contenido en las series de animación que ocupen los puestos superiores en el ranking de la página MyAnimeList.
+  <a href="https://myanimelist.net/">MyAnimeList</a> es una página web ciertamente conocida por los consumidores habituales de este tipo de contenido que elabora
+  una lista que integra aquellos más valorados por los usuarios que forman la plataforma mediante el uso de un sistema de puntuaciones.
 
-La interfaz de usuario de la sección de búsqueda esta formada principalmente por parte de los mismos componentes que [la página de inicio](#página-de-inicio).
-Así, tanto el banner superior que fomenta el registro de usuarios como la barra de búsqueda se visualizarán también en esta sección.
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/a7f93bc7-28ee-497c-a0ad-560a3f0f1fdff" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/570a46a5-7466-4d06-b0d5-7d631f881a9f" alt="image" width="300" />
+     <br><br>
+  </div>
 
-Como se ha indicado con anterioridad, cuando el usuario utilice el cuadro de texto que conforma la herramienta de búsqueda, introduciendo
-contenido textual y, por lo tanto, se realice una búsqueda, aparecerán diferentes cartas de contenido por cada uno de los resultados que
-concuerden con la búsqueda que el usuario ha realizado. Cada una de estas cartas de contenido contiene la sigueinte imformación:
+### <a name="busqueda"></a> Página De Búsqueda
 
-- Imágen De Portada (Cover)
-- Nombre Del Contenido
-- Año De Emisión
-- Número De Episodios
-- Géneros
+La interfaz de usuario de la página de busqueda muestra una cuadro de texto que conforma la herramienta de búsqueda de la aplicación. Cuando el usuario introduzca
+contenido textual y, por lo tanto, se realice una búsqueda, se visualizará una carta por cada contenido hallado que concuerde en nombre, parcial o completamente,
+con el texto introducido. Si por el contrario, el usuario no ha introducido contenido textual en la herramienta de búsqueda, se visualizará una lista de contenidos
+generados por defecto. La carta utilizada para representar cada serie de animación permite visualizar cierta información de relevancia entre la que se incluye:
 
-Anteriormente a la visualización de cada una de estas cartas de contenido se podrá observar un pequeño icono acompañado de un texto que
-simbolizará el número total de resultados encontrados.
+* Imágen De Portada
+* Nombre Del Contenido
+* Lista De Géneros
+* Formato (TV, OVA, etc.)
 
-![image](https://github.com/user-attachments/assets/97fd6c27-ac56-49c2-8406-93dfcda48126)
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/a93e2c99-92ad-49b1-b5d5-7aff43b059d3" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/9a94df71-6190-4b94-bfb2-e4d704d7c693" alt="image" width="300" />
+     <br><br>
+</div>
 
 ### <a name="contenido"></a> Contenido
 
-La página de contenido muestra información relevante sobre un contenido concreto. Idealmente, existe una página de contenido para cada uno de los contenidos que
-puedan ser observados en la aplicación. En ella, el usuario podrá operar, una vez registrado o iniciado sesión, sobre el contenido que esté visualizando en cada
-momento. Dichas operaciones consistirán, principalmente, en añadir el contenido a una lista determinada de seguimiento. Si se implementan funciones para la
-asignación de notas a los contenidos por parte de los usuarios, existirá una opción adicional para realizar una tarea en esta sección.
+La página de contenido muestra información relevante sobre un contenido concreto. Idealmente, existe una página de contenido para cada serie de animación que pueda
+ser observada en la aplicación. En ella, el usuario podrá operar, una vez registrado o iniciado sesión, sobre el contenido que esté observando en cada momento. Las
+operaciones consistirán, principalmente en añadir el contenido a una lista determinada de seguimiento. Se ha mantenido el estilo minimalista planteado en secciones
+anteriores.
 
-La parte superior de la secciòn comienza con la visualización de una imagen de fondo perteneciente al contenido (background_image). Esta imagen puede, y generalmente
-no será la misma que la imagen de portada que se mostrará en la sección posterior.
+La parte superior de la página de contenido comienza monstrando una imagen o arte relacionado con el contenido en formato panorámico incluida con fines decorativos.
+Esta imagen, generalmente, no será la misma que la imagen de portada que se mostrará en la sección posterior. Ambas imagenes coincidirán cuando no exista imagen de
+fondo disponible en la fuente de origen de los datos del contenido.
 
-Dicha sección principal se constituirá con la información más relevante del contenido que se esté mostrando en la página. Se trata de la información más primordial y
-que, por lo tanto, el usuario esperará encontrar con anterioridad. Entre esta información se encuentra:
+Seguirá, a continuación, una sección constituida con la información más relevante del contenido que se esté mostrando en la página. Se trata de la información más
+primordial y que, por tanto, el usuario esperará encontrar con anterioridad. Entre esta información se encuentra:
 
-- Nombre Del Contenido
-- Tipo Del Contenido (Serie de Televisión, Películo, OVA, ONA, etc)
-- Número De Episodios
-- Estado De Emisión (En Emisión, Finalizado, Por Emitir, etc)
-- Nota Del Contenido (Principalmente emitida por los usuarios de My AnimeList, posteriormente susceptible a cambios internos por parte de los usuarios de nuestra
-  plataforma)
+* Nombre Del Contenido
+* Imagen De Portada
+* Tipo Del Contenido (TV, Movie, OVA, ONA, etc)
+* Número De Episodios
+* Estado De Emisión (Airing, Finished Aired, Yet To Air, etc)
+* Nota Del Contenido
 
-  ![image](https://github.com/user-attachments/assets/5d9417e1-521f-4567-b5bc-e392b8dba71b)
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/254a642b-b7d8-49cf-9a03-7e6c3de2f1cc" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/a44014be-a354-4243-a02c-2319a79feb06" alt="image" width="300" />
+     <br><br>
+</div>
 
-En la misma sección, ubicado en la parte derecha se encuentra un pequeño icono a modo de botón que posibilita las operaciones sobre el contenido que se han mencinado
-anteriormente. Dichas operaciones (añadir el contenido a una lista de seguimiento) se realizarán en una ventana flotante con el siguiente aspecto:
+Cabe destacar la proveniencia de la nota del contenido, obtenida de forma directa de los datos proporcionados por <a href="https://myanimelist.net/">MyAnimeList
+</a>. En un futuro se podría plantear una nueva funcionalidad consistente en dotar al usuario de la capacidad de establecer una valoración numérica para cada
+contenido y, con ello, alterar la nota usando un algoritmo de ponderación. Ésta y otras propuestas de mejora serán añadidas a pie de la memoria.
 
-![image](https://github.com/user-attachments/assets/204a90aa-b71d-43ca-9e7a-4c04b9554db0)
+Seguidamente a la sección de información principal, encontramos un nuevo apartado proporcionando al usuario información secundaria del contenido visualizado en la
+página. Nos referimos, en específico, a información aparentemente no tan importante como la brindada en la sección de información principal pero sí complementaria.
+Dicha información se compone como un par de parejas clave y valor o lista de valores, con las siguientes categorias:
 
-Como se puede observar, la ventana emergente tiene dos secciones. En la primera (Add To List), se podrá añadir el contenido a una de las listas de seguimiento
-correspondientes a: 
+* Título Original (Nombre en Silabario Japonés)
+* Título En Romaji (Latinización Del Silabario Japonés)
+* Título En Inglés
+* Fuente Del Contenido (Web Manga, Light Novel, etc)
+* Fecha De Inicio De Emisión
+* Fecha De Finalización De Emisión
+* Duración Media Por Episodio
+* Rating (Clasificación De Edad)
+* Temporada De Emisión (Winter, Summer, Fall, Spring)
+* Año De Emisión
 
-- Watching
-- Completed
-- Plan To Watch
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/e573d8e6-5fbc-4e41-b87b-4b2d2d350acd" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/fdee9851-5a2a-433e-96a9-faf8e8963b36" alt="image" width="300" />
+     <br><br>
+</div>
 
-En la segunda de las secciones (Add To Loved), se podrá añadir el contenido a la lista de animes favoritos (loved) por el usuario. Para ello, se ha habilitado un
-icono pulsable con forma de corazón que tornará en color rojo una vez que el contenido ha sido añadido a la lista de favoritos.
+A pie de la sección de información secundaria encontramos dos listas de etiquetas que incluyen el total de estudios de animación involucrados en el desarrollo, guión,
+animación o producción del contenido, o los generos de éste, respectivamente. Este formato contribuye a la estética de la página contrastando la información previa en
+formato texto mediante el uso del color y el espacio.
 
-Seguidamente a la sección descrita, tenemos un componente donde se mostrará información secundaria del contenido visualizado en la página. Con ello nos referimos
-a información aparentemente no tan importante como la brindada en la sección de información principal y que complementa a esta. Dicha información se compone como
-un par de parejas clave - (valor / lista de valores) con las siguientes categorias:
+Finalizamos la página de contenido añadiendo una última sección donde se visualizan los personajes que aparecen en la serie de animación mostrada en la página en cada
+momento. Por cada personaje, se creará una carta que contenga dos atributos del mismo, concretamente, su nombre e imagen en formato circular. La sección es deslizable
+en sentido vertical, cargándo dinámicamente los personajes que aún no habían sido introducidos en la ventana.
 
-- Título Original (Nombre en Alfabeto Japones)
-- Título En Romaji
-- Título En Ingles
-- Fuente Del Contenido (Manga, Novela Ligera, etc)
-- Fecha De Inicio De Emisión
-- Fecha De Finalización De Emisión
-- Duración Media Por Episodio
-- Rating (Clasificación De Edad)
-- Temporada
-- Año
-- Estudios De Animación Encargados
-- Géneros (Visualizados Como Una Lista De Etiquetas)
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/1872164d-8436-4900-a5d3-aeb689282d45" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/e4165322-fef5-419c-accc-3d95395a430f" alt="image" width="300" />
+     <br><br>
+</div>
 
-  ![image](https://github.com/user-attachments/assets/31a1a85f-39fd-42de-8e33-cddcfabe5d91)
+Si el usuario está registrado y ha iniciado sesión, podrá visualizar un botón flotante circular en la parte inferior derecha de la pantalla. Éste botón posibilita las
+acciones sobre el contenido consistentes en su adición a una lista de seguimiento determinada. Tambiém se podrá modificar la lista en la que está presente la serie de
+animación si es el caso, pues el usuario la habría añadido previamente. Estas funcionalidades se llevarían a cabo en una ventana modal que presenta dos secciones. La
+primera de ellas, posibilitará al usuario añadir un contenido a la totalidad de las listas excluyendo la lista de favoritos. Para ello, se incluirá un icono en forma
+de corazón cuya pulsación desencadenará dicha funcionalidad.
 
-Para finalizar, podemos observar una sección donde se visualizan los personajes que aparecen en el contenido que se esta mostando en la página. La sección consiste
-en una lista de los mismos en la que cada uno de los personajes constituirá la interfaz de usuario con una imagen y el nombre del mismo. La imagen se representará
-en formato circular. La apariencia de la sección se muestra a continuación:
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/7c27f732-a0fe-4ccd-a1f4-60f90045edf2" alt="image" width="300" />
+     <img src="https://github.com/user-attachments/assets/016be5d9-1812-4e56-9be5-7723b791af4f" alt="image" width="300" />
+     <br><br>
+</div>
 
-![image](https://github.com/user-attachments/assets/35ce2c2b-690e-422d-9d52-cf0915d5c033)
+## <a name="funcionalidades"> Funcionalidades </a>
 
-Cabe destacar que la flecha en sentido descendiente que se observa en la parte derecha inferior de las secciones de información complementaria y la sección de personajes
-tiene la función de, tras ejecutar un click en ella, mostrar géneros o personajes que no se vean a simple vista en una representación simplificada de la interfaz. Existe
-un límite de número de géneros y personajes máximo a determinar que se mostrarán en la interfaz hasta que estas secciones se expandan mostrando los restantes a través de
-estas flechas.
+A continuación se irán introduciendo diversas funcionalidades concernientes a cada una de las páginas de la aplicación nombradas en la sección de diseño. Para cada una
+de estas funcionalidades, se presentará de forma superficial su finalidad, se explicará el código realizado para su implementación y se mostrarán imagenes que permitan
+certificar el correcto funcionamiento si es necesario. 
 
-### <a name="sign-up"></a> Sign Up
+### <a name="carga-contenido"> Carga De Un Contenido </a>
 
-Para registrarse se debe introducir:
-- **Nombre de usuario**: el nombre de usuario debe ser único
-- **Correo**: el correo no debe existir ya en la base de datos
-- **Contraseña**:la contraseña debe tener una minúscula, una mayúscula, un número y mínimo 8 carácteres.
-- **Repetir contraseña**: para asegurar que el usuario ha introducido la contraseña que el usuario quiere utilizar se dee repetir la contraseña y comprobar que coinciden.
+Para la carga de un contenido, se utilizan dos fuentes de información o servicios externos a la aplicación, los cuales serán introducidos y detallados a posteriori. En
+concreto, nos estamos refiriendo a la API Restful Jikan y al servicio Firebase Firestore. A modo general, cada vez que un usuario accede a la página de un contenido, se
+intenta localizar la información de dicho contenido en la base de datos de Firebase Firestore configurada en la aplicación. Si la información no se encuentra, entonces,
+se accede a dicha información realizando una solicitud a la API Jikan. Con ello, conseguimos reducir la dependencia con la API, asunto crucial al existir un límite en
+el número de peticiones realizables por segundo y minuto. En el momento en el que solicita un contenido a la API Jikan, el objeto interno a la aplicación que aloja los
+datos recogidos, se vuelca sobre la base de datos para futuros accesos.
 
-En la página de registro también ofrece al usuario redirigirlo a la página de inicio de sesión en caso de que ya tenga una cuenta.
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/69f4563e-cb4b-433b-a18e-58affc0bd082" alt="image" />
+     <br><br>
+</div>
 
-![image](https://github.com/user-attachments/assets/63efe264-35e3-40d1-86a6-9616d2a0ee95)
+En la imagen se puede observar la función `getContent`, responsable de establecer en un objeto de flujo el modelo interno que contiene los datos del anime que el usuario
+ha seleccionado. En la variable `databaseContent` se almacenaría el objeto de datos con la información procedente de la bases de datos si este existiera. A continuación,
+la variable `contentFromApi` almacena el objeto de información procedente de la base de datos, y, en caso de que no exista, realiza la solicitud a la API Restful de Jikan.
+Se actualiza el objeto flujo que desencadena la recomposición de los componentes de la interfaz de usuario y, si el contenido no existía en la base de datos, se almacena
+utilizando la función `storeContent`.
 
-### <a name="log-in"></a> Log In
+Se describe a continuación un aspecto verdaderamente relevante, incluso a nivel arquitectónico de la aplicación. Como se puede observar en el código, las llamadas a las
+fuentes de datos se realizan mediante el uso de objetos repositorios, tanto para Jikan como para la base de datos Firebase Firestore. Los objetos repositorios restringen
+el acceso a los datos a un único punto por cada fuente de datos independiente. Se profundizará en ello más adelante.
 
-Para iniciar sesión se debe introducir:
-- **Nombre de usuario**: el nombre de usuario debe existir en la base de datos
-- **Contraseña**: la contraseña debe coincidir con la contraseña del usuario con ese nombre.
+La carga de los personajes se realiza de forma totalmente similar a la descrita en esta funcionalidad, por lo que no se desarrollará en profundidad en el informe. Estos se
+deben cargar de forma independiente al contenido pues la API Jikan proporciona los datos de los personajes en un endpoint independiente.
 
-En la página de inicio de sesión también ofrece al usuario redirigirlo a la página de registro en caso de que no tenga una cuenta.
+### <a name="carga-grid-contenidos"> Carga De Un Grid De Contenidos </a>
 
-![image](https://github.com/user-attachments/assets/51f97bba-e5b6-4cbd-a42c-1bb25c42d2f3)
+Para la carga de un grid de contenidos, se utiliza únicamente la API Restful de Jikan, no recurriendo a almacenar los contenidos obtenidos en la base de datos Firestore.
+Esta funcionalidad es requerida por la pantalla de inicio de la aplicación, que carga, tal como se describió en la sección de diseño, una lista de contenidos para varias
+temáticas (temporada actual, temporada futura y animes mejor valorados). El proceso de carga de los diferentes grids para cada temática sucede de manera automática según
+la aplicación es iniciada.
 
-### <a name="listas-de-seguimiento"></a> Listas de seguimiento
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/a3f597e9-e755-4d60-a42d-e3705a8ebf36" alt="image" />
+     <br><br>
+</div>
 
-Las listas de seguimiento son listas en las que el usuario puede añadir animes según lo siguiente:
-- **Watching**: animes que el usuario esta viendo. Tiene su propio contador de episodios.
-- **Completed**: animes completados por el usuario.
-- **Plan to Watch**: animes que el usuario planea ver. Esta lista facilita encontrar animes que en algún momento el usuario haya querido ver.
-- **Loved**: animes que al usuario le ha encantado o gustado mucho.Es decir, sus animes favoritos.
+En el código, se puede observar de forma sencilla como, al iniciar el viewModel de la pantalla inicial de la aplicación, se produce la llamada a las funciones encargadas
+de cargar los grids de contenidos para las tres secciones temáticas utilizando el repositorio de datos de la API de Jikan. Cuando las funciones internas al repositorio
+devueven los datos recogidos externamente, se actualizan objetos de flujo que desencadenan la recomposición de los componentes de la interfaz de usuario de cada una de
+las secciones temáticas. Todas las llamadas se realizan paralelamente mediante el uso de corrutinas, utilizando el despachador específico para operaciones de entrada y
+salida de datos.
 
-#### <a name="watching"></a> Watching
+### <a name="busqueda-contenido"> Búsqueda De Un Contenido </a>
 
-En esta lista el usuario podria llevar un seguimiento de los capitulos que ha visto. Además de ver información básica del anime como su nombre, tipo, géneros y score.
+La búsqueda de contenidos requiere, al igual que en el caso anterior, el uso de la API Jikan sin depender en ningun sentido de la base de datos Firebase Firestore. Esta
+funcionalidad forma parte intrínseca de la página de búsqueda pues es su funcionalidad principal. Se ejecuta tanto al inicio de la aplicación, obteniendo un conjunto de
+series de animación por defecto, como cada vez que el usuario introduce contenido textual en la barra de búsqueda que forma parte de la interfaz de usuario. Para que no
+se sature el hilo de comunicaciones con la fuente de datos externa, se establece un tiempo de rebote, o debounce time, durante el cual se retardará la ejecución de toda
+solicitud que pudiera ser provocada por un evento nuevo de escritura en la barra de búsqueda.
 
-![image](https://github.com/user-attachments/assets/11f11ea7-7083-4ccf-92ac-a1aa74299431)
+<div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/793cbaff-f8cc-4d9b-b72d-2c8346dc6da0" alt="image" />
+     <br><br>
+</div>
 
-Una vez que se hayan visto todos los episodios se le pregunta al usuario mediante una ventana emergente si quiere traspasar ese anime a la lista de completados.
+En el código se aprecia como, al iniciar el viewModel de la pantalla de búsqueda, se produce una subscripción, utilizando el método `collect` a la variable `userInput`,
+de tal manera que, cada vez que cambie el valor de dicha variable porque el usuario introduzca un nuevo valor en el cuadro de texto, se produzca una llamada al método
+que obtiene los resultados de una búsqueda, llamado `getSearchResult`. Además, el método `debounce` establece el tiempo de rebote necesario para no sobrecargar la API
+externa. Observese el uso del objeto repositorio para la obtención de los datos.
 
-![image](https://github.com/user-attachments/assets/bc9e82f8-582a-484e-8a26-4d864365e43e)
+## <a name="servicios"> Servicios Externos </a>
 
-#### <a name="completed"></a> Completed
-
-En esta lista el usuario podrá ver información básica de sus animes completados como su nombre, tipo, géneros y score.
-
-![image](https://github.com/user-attachments/assets/b12c0d31-3775-4445-862e-f61e1c42d8db)
-
-#### <a name="plan-to-watch"></a> Plan to watch
-
-En esta lista podrá ver información básica de los animes que planea ver como su nombre, tipo, géneros y score.
-
-![image](https://github.com/user-attachments/assets/172fc3c3-c4bf-4386-9478-05b8e9411e00)
-
-#### <a name="loved"></a> Loved
-
-En esta lista podrá ver información básica de sus animes favoritos como su nombre, tipo, géneros y score.
-
-![image](https://github.com/user-attachments/assets/db3c0f99-dbb3-4504-ac47-13d223a30525)
-
-### <a name="perfil"></a> Perfil
-
-En la página de perfil se encuentra la siguiente información:
-- **Información del usuario**
-  - Nombre de usuario
-  - Descripción usuario
-  - Fecha de creación de cuenta
-- **Botón de compartir perfil**: se muestra un qr que el usuario podrá utilizar para compartir su perfil con otros.
-- **Botón de editar perfil**: redirige al usuario al editor de perfil
-- **Lista de favoritos(Loved)**: otros usuarios y el propio usuario pueden ver los animes favoritos del usuario del perfil.
-  
-![image](https://github.com/user-attachments/assets/9ccbff10-d6bd-4f8b-bce7-a9da0a5f06a6)
-
-#### <a name="editar-perfil"></a> Editar Perfil
-El editor de perfil permite al usuario editar su información:
--   El usuario puede cambiar el username a otro que sea único.
--   El usuario puede añadir una descripción, esto es un campo opcional.
--   El usuario puede cambiar el correo si este no existe en la base de datos y es diferente al que ya tenía.
--   El usuario puede cambiar su contraseña siempre y cuando tenga 1 mayúscula, 1 minúscula, 1 número y 8 carácteres.
--   El usuario puede añadir una foto de perfil, en el caso de que no haya elegido una foto previamente el usuario tendra la foto por defecto.
-
-El usuario también tiene la opción de eliminar su cuenta, aparecerá una ventana de emergente para asegurar que el usuario efectivamente quiere borrar su cuenta.
-
-![image](https://github.com/user-attachments/assets/20802548-c65c-45be-a49f-e6200043487c)
-![image](https://github.com/user-attachments/assets/6cc74a51-add9-4e71-8645-a9b0a54465b2)
-
-
-
+## <a name="arquitectura"> Arquitectura </a>
