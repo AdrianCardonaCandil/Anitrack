@@ -200,7 +200,7 @@ en sentido vertical, cargándo dinámicamente los personajes que aún no habían
 </div>
 
 Si el usuario está registrado y ha iniciado sesión, podrá visualizar un botón flotante circular en la parte inferior derecha de la pantalla. Éste botón posibilita las
-acciones sobre el contenido consistentes en su adición a una lista de seguimiento determinada. Tambiém se podrá modificar la lista en la que está presente la serie de
+acciones sobre el contenido consistentes en su adición a una lista de seguimiento determinada. También se podrá modificar la lista en la que está presente la serie de
 animación si es el caso, pues el usuario la habría añadido previamente. Estas funcionalidades se llevarían a cabo en una ventana modal que presenta dos secciones. La
 primera de ellas, posibilitará al usuario añadir un contenido a la totalidad de las listas excluyendo la lista de favoritos. Para ello, se incluirá un icono en forma
 de corazón cuya pulsación desencadenará dicha funcionalidad.
@@ -211,6 +211,189 @@ de corazón cuya pulsación desencadenará dicha funcionalidad.
      <img src="https://github.com/user-attachments/assets/016be5d9-1812-4e56-9be5-7723b791af4f" alt="image" width="300" />
      <br><br>
 </div>
+
+
+### <a name="sign-up"></a> Sign Up
+
+Esta pantalla aparecerá, tanto en el apartado de listas como en perfil, si el usuario no ha iniciado sesión en la aplicación. Esta pantalla permite al usuario registrarse.
+
+Para registrarse se debe introducir:
+- **Nombre de usuario**: el nombre de usuario debe ser único y mínimo  2 carácteres.
+- **Correo**: el correo no debe existir ya en la base de datos y debe ser un correo válido ( texto@texto.texto).
+- **Contraseña**: la contraseña debe tener una minúscula, una mayúscula, un número y mínimo 8 carácteres.
+- **Repetir contraseña**: para asegurar que el usuario ha introducido la contraseña que el usuario quiere utilizar se debe repetir la contraseña y comprobar que coinciden.
+
+En la página de registro también ofrece al usuario redirigirlo a la página de inicio de sesión en caso de que ya tenga una cuenta. El botón solo se activa cuando todos los campos pasan la validación que no este relacionada con unicidad. si no pasa esa validación básica el campo se mantiene en rojo y aparecen uno de los siguientes mensajes de error que son autoexplicativos:
+
+<div align="center">
+     <br>
+     (Imagen Validacion 1)
+     (Imagen Validacion 2)
+     (Imagen Validacion 3)
+     (Imagen Validacion 4)
+     (Imagen Validacion 5)
+     (Imagen Validacion 6)
+     <br><br>
+</div>
+
+los campos si son correctos se vuelven verdes.
+
+<div align="center">
+     <br>
+     (Imagen sin campos rrellenados del sign in modo blanco)
+      ( imgen con algun campo con error)
+     (Imagen con todos los campos rellenados  del sign en modo negro)
+     <br><br>
+</div>
+
+
+### <a name="log-in"></a> Log In
+
+Esta página aparece cuando se clica la opción de ir a la página de inicio desde la página de registro.
+
+Para iniciar sesión se debe introducir:
+- **Nombre de usuario**: el nombre de usuario debe existir en la base de datos
+- **Contraseña**: la contraseña debe coincidir con la contraseña del usuario con ese nombre.
+
+Dependiendo de si la contraseña no es correcta aparece el mensaje de credenciales incorrectos o si el usurio no existe se muestra un mensaje de que no se encuentra.
+
+<div align="center">
+     <br>
+     (Imagen Validacion 1)
+     (Imagen Validacion 2)
+     <br><br>
+</div>
+
+Como en la página de registro su un campo esta mal sale el rojo y si cumple la validaxion sale en verde. En la página de inicio de sesión también ofrece al usuario redirigirlo a la página de registro en caso de que no tenga una cuenta.
+
+
+<div align="center">
+     <br>
+     (Imagen sin campos rrellenados in modo blanco)
+      ( imgen con algun campo con error)
+     (Imagen con todos los campos rellenados en modo negro)
+     <br><br>
+</div>
+
+### <a name="listas-de-seguimiento"></a> Listas de seguimiento
+
+Las listas de seguimiento son listas, que solo pueden ser accedidas si el usuario ha iniciado sesión, en las que el usuario puede añadir animes según lo siguiente:
+- **Watching**: animes que el usuario esta viendo. Tiene su propio contador de episodios.
+- **Completed**: animes completados por el usuario.
+- **Plan to Watch**: animes que el usuario planea ver. Esta lista facilita encontrar animes que en algún momento el usuario haya querido ver.
+- **Loved**: animes que al usuario le ha encantado o gustado mucho.Es decir, sus animes favoritos.
+
+#### <a name="watching"></a> Watching
+
+En esta lista el usuario podria llevar un seguimiento de los capitulos que ha visto. Además de ver información básica del anime como su nombre, tipo, géneros y score.
+
+<div align="center">
+     <br>
+     (Imagen in modo blanco)
+     (Imagen en modo negro)
+     <br><br>
+</div>
+
+Una vez que se hayan visto todos los episodios se le pregunta al usuario mediante una ventana emergente si quiere traspasar ese anime a la lista de completados. Si acepta se traspasa automáticamente a la lista de completados, de lo comtrario se resta un capitulo del contador y se mantiene en la lista de watching.
+
+<div align="center">
+     <br>
+     (Imagen ventana emergente)
+     <br><br>
+</div>
+
+
+#### <a name="completed"></a> Completed
+
+En esta lista el usuario podrá ver información básica de sus animes completados como su nombre,  tipo y géneros.
+
+<div align="center">
+     <br>
+     (Imagen in modo blanco)
+     (Imagen en modo negro)
+     <br><br>
+</div>
+
+#### <a name="plan-to-watch"></a> Plan to watch
+
+En esta lista podrá ver información básica de los animes que planea ver como su nombre, tipo y géneros.
+
+<div align="center">
+     <br>
+     (Imagen in modo blanco)
+     (Imagen en modo negro)
+     <br><br>
+</div>
+
+#### <a name="loved"></a> Loved
+
+En esta lista podrá ver información básica de sus animes favoritos como su nombre, tipo y géneros.
+
+<div align="center">
+     <br>
+     (Imagen in modo blanco)
+     (Imagen en modo negro)
+     <br><br>
+</div>
+
+En toda y cada una de estas listas si se clica en uno de los contenidos sera redirigido a la página de contenido que fue clicado.
+
+### <a name="perfil"></a> Perfil
+
+En la página de perfil, solo puede ser accedid por un usuario que ha iniciado sesión y se encuentra la siguiente información:
+- **Información del usuario**
+  - Nombre de usuario
+  - Descripción usuario
+  - Fecha de creación de cuenta
+  - foto de perfil, por defecto hay una foto de perfil.
+- **Botón de compartir perfil**: se muestra un QR que el usuario podrá utilizar para compartir su perfil con otros.
+- **Botón de editar perfil**: redirige al usuario al editor de perfil
+- **Lista de favoritos(Loved)**: otros usuarios y el propio usuario pueden ver los animes favoritos del usuario del perfil.
+- **Botón cerrar sesión**: cierra la sesión del usuario y lo redirige a la página de registro.
+  
+<div align="center">
+     <br>
+     (Imagen in modo blanco)
+     (Imagen en modo negro)
+     <br><br>
+</div>
+
+#### <a name="editar-perfil"></a> Editar Perfil
+El editor de perfil permite al usuario editar su información:
+-   El usuario puede cambiar el username a otro que sea único y diferente al que ya tenía y tenga mínimo 2 carácteres.
+-   El usuario puede añadir una descripción, esto es un campo opcional.
+-   El usuario puede cambiar el correo si este no existe en la base de datos, es válido  y es diferente al que ya tenía.
+-   El usuario puede cambiar su contraseña siempre y cuando tenga 1 mayúscula, 1 minúscula, 1 número y 8 carácteres y coincida con el campo de repetir comtraseña.
+-   El usuario puede añadir una foto de perfil, se le mostrará la propia galería del móvil,  en el caso de que no haya elegido una foto previamente el usuario tendra la foto por defecto.
+
+<div align="center">
+     <br>
+     (Imagen in modo blanco)
+     (Imagen en modo negro)
+     <br><br>
+</div>
+
+
+El usuario también tiene la opción de eliminar su cuenta, aparecerá una ventana de emergente para asegurar que el usuario efectivamente quiere borrar su  cuenta.
+
+div align="center">
+     <br>
+     (Imagen ventana emergente eliminación de cuenta)
+     <br><br>
+</div>
+
+#### Compartir perfil
+
+En esta ventana se muestra un QR donde otro usuario con la aplicación también instalada en el móvil puede escanearla con la cámara de su móvil y es redirido al perfil del otro usuario del que escaneo el QR. Este perfil no muestra el botón de editar perfil si no es el suyo. 
+
+<div align="center">
+     <br>
+     (Imagen in modo blanco)
+     (Imagen en modo negro)
+   ( imagen perfil compartido)
+     <br><br>
+</div>
+
 
 ## <a name="funcionalidades"> Funcionalidades </a>
 
