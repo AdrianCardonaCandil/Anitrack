@@ -408,9 +408,26 @@ model Character:
 
 ```
 model JikanResponseWithoutPagination<T>:
-   data: T
+   data: T = objeto que contiene todos los datos extraidos de la API al realizar la solicitud
 ```
 
-Modelo utilizado para obtener respuestas de la API Jikan que no requieran manejo de paginación alguna.
+Modelo utilizado para obtener respuestas de la API Jikan que no requieran manejo de paginación alguna. Entre ellas, se incluye solicitud de contenidos independientes por
+ID o solicitud de lista de personajes de un contenido determinado. Se trata de un modelo genérico que puede contener un dato de un tipo genérico según corresponda en la
+solicitud que se realice. Por ejemplo, dicho dato genérico podría ser un objeto content, recién explicado en el primer modelo, si la solicitud consistiese en obtener los
+datos de un contenido en específico.
+
+```
+model JikanResponseWithPagination<T>:
+   data: T = objeto que contiene todos los datos extraidos de la API al realizar la solicitud
+   pagination: Class = objeto que contiene los datos de paginación de la solicitud actual
+      - lastVisiblePage: Int = número de páginas totales que existen y son visibles para la consulta realizada
+      - hasNextPage: Boolean = booleano que nos señala si estamos o no en la última página de la consulta
+      - currentPage: Int = nos señala la página en la que nos encontramos del totas de páginas disponibles para la consulta
+      - items: Class = nos proporciona información sobre el conteo de objetos encontrados en la página retornada por la solicitud !privado
+```
+
+Modelo utilizado para obtener respuestas de la API Jikan que si requieren manejo de paginación. Entre ellas, se incluye obtener todas las series de una temporada, ya sea
+la temporada actual de emisión o la siguiente. Además, obtener la lista de animes mejor valorados de la comunidad MyAnimeList. Por último, este modelo también se utiliza
+para obtener los datos de una búsqueda realizada por el usuario utilizando la herramienta de búsqueda de la aplicación, presente en la página de búsqueda.
 
 ## <a name="arquitectura"> Arquitectura </a>
