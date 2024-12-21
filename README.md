@@ -20,6 +20,9 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
    - [Carga de un contenido](#carga-contenido)
    - [Carga de un grid de contenidos](#carga-grid-contenidos)
    - [Busqueda de un contenido](#busqueda-contenido)
+   - [Administrar listas de seguimiento](#fun-lists1)
+   - [Cargar listas del usuario](#fun-lists2)
+   - [Cargar perfil de usuario](#fun-perfil)
 6. [Servicios Externos](#servicios)
 7. [Arquitectura](#arquitectura)
 8. [Futuras Propuestas](#futuras-propuestas)
@@ -470,6 +473,71 @@ En el código se aprecia como, al iniciar el viewModel de la pantalla de búsque
 de tal manera que, cada vez que cambie el valor de dicha variable porque el usuario introduzca un nuevo valor en el cuadro de texto, se produzca una llamada al método
 que obtiene los resultados de una búsqueda, llamado `getSearchResult`. Además, el método `debounce` establece el tiempo de rebote necesario para no sobrecargar la API
 externa. Observese el uso del objeto repositorio para la obtención de los datos.
+
+### <a name = "fun-lists1"> </a> Administrar listas
+
+En la clase ListHandler, se manejan las operaciones relacionadas con la administración de las listas de contenido del usuario, como agregar y eliminar contenido de las listas "viendo actualmente", "completado", "planea ver" y "favoritos". La función updateUserDocument se encarga de actualizar el documento del usuario en la base de datos. Recibe el userId, el tipo de lista (ListType) y la nueva lista (newList) a actualizar. Dependiendo del ListType, selecciona el campo correspondiente (watching, completed, planToWatch, favorites) y actualiza el documento del usuario en la base de datos.
+
+<div align="center">
+     <br>
+     <img width="622" alt="image" src="https://github.com/user-attachments/assets/91d1f5ca-68fe-46bb-979b-1277c574e8de" />
+     <br><br>
+</div>
+
+La función addToList agrega un contenido a una lista específica del usuario. Primero, lee el documento del usuario desde la base de datos. Si la lectura es exitosa, actualiza las listas del usuario removiendo el contenido de otras listas si es necesario. Luego, agrega el contenido a la lista objetivo (targetList) y actualiza el documento del usuario en la base de datos. La función removeFromList elimina un contenido de una lista específica del usuario. Similar a addToList, primero lee el documento del usuario desde la base de datos. Si la lectura es exitosa, remueve el contenido de la lista objetivo y actualiza el documento del usuario en la base de datos.
+
+<div align="center">
+     <br>
+     <img width="937" alt="image" src="https://github.com/user-attachments/assets/ba25ed87-bb48-4130-baaf-272c85775158" />
+     <br><br>
+</div>
+
+La función removeContentFromOtherLists ayuda a mantener las listas del usuario consistentes, removiendo un contenido de todas las listas excepto la lista de favoritos. Esto se utiliza para asegurarse de que un contenido no esté presente en múltiples listas simultáneamente, excepto en la lista de favoritos. La enumeración ListType define los diferentes tipos de listas que se pueden manejar: WATCHING (viendo actualmente), COMPLETED (completado), PLAN_TO_WATCH (planea ver) y FAVORITES (favoritos). Estas funciones aseguran que las listas de contenido del usuario se actualicen correctamente en la base de datos y se mantengan consistentes, proporcionando una experiencia de usuario coherente y eficiente.
+
+<div align="center">
+     <br>
+     <img width="656" alt="image" src="https://github.com/user-attachments/assets/d7fcd768-2dbc-4bc4-9a2d-aa534996716e" />
+     <br><br>
+</div>
+
+
+### <a name = "fun-lists2"> </a> Cargar listas de seguimiento
+
+En la clase ListsViewModel, la función loadUserContents se utiliza para cargar y mostrar las listas de contenido del usuario.
+
+Primero, esta función recibe dos parámetros: tabIndex y userId. Luego, lanza una coroutine en el viewModelScope utilizando Dispatchers.IO para ejecutar operaciones de entrada/salida en un hilo de fondo. La función comienza emitiendo una lista vacía en _userContentList para limpiar cualquier contenido previo.
+
+A continuación, se lee el documento del usuario desde el repositorio de la base de datos utilizando databaseRepository.readDocument. Si la lectura es exitosa (DatabaseResult.Success), se obtiene el objeto User y se actualiza _contentProgress con el progreso del contenido del usuario. Dependiendo del valor de tabIndex, se seleccionan diferentes listas de IDs de contenido del usuario:
+
+0 para "viendo actualmente" (watching)
+
+1 para "completado" (completed)
+
+2 para "planear ver" (planToWatch)
+
+3 para "favoritos" (favorites)
+
+Con estos IDs de contenido, se leen los documentos de contenido desde la base de datos utilizando databaseRepository.readDocuments. Si la lectura de los documentos es exitosa, se emiten los datos en _userContentList. Si no hay IDs de contenido o la lectura falla, se emite una lista vacía.
+
+Este proceso asegura que los datos de las listas de contenido del usuario se gestionen de manera eficiente y reactiva, proporcionando una experiencia de usuario fluida y actualizada en tiempo real.
+
+<div align="center">
+     <br>
+     <img width="814" alt="image" src="https://github.com/user-attachments/assets/e215aa3b-9c28-4359-a284-94aa4eb953d2" />
+     <br><br>
+</div>
+
+### <a name = "fun-perfil"> </a> Ver perfil de usuario
+
+En la clase ProfileViewModel, la función loadUserProfileAndFavorites se utiliza para cargar y mostrar el perfil del usuario. Esta función recibe el userId como parámetro y lanza una coroutina en el viewModelScope utilizando Dispatchers.IO para ejecutar operaciones de entrada/salida en un hilo de fondo. Primero, lee el documento del usuario desde el repositorio de la base de datos utilizando databaseRepository.readDocument. Si la lectura es exitosa (DatabaseResult.Success), se obtiene el objeto User y se extraen los IDs de contenidos favoritos del usuario. Si hay IDs de contenido favoritos, se leen los documentos de contenido correspondientes desde la base de datos utilizando databaseRepository.readDocuments. Luego, en el contexto del hilo principal (Dispatchers.Main), se actualizan las propiedades _userProfile y _userContentList con los resultados obtenidos. Si la lectura del documento del usuario falla, se actualiza _userProfile con el resultado fallido en el hilo principal. Este proceso asegura que el perfil del usuario y su lista de contenidos favoritos se carguen y muestren correctamente en la interfaz de usuario, proporcionando una experiencia de usuario consistente y reactiva.
+
+<div align="center">
+     <br>
+     <img width="656" alt="image" src="https://github.com/user-attachments/assets/68dea2bb-2c9e-4f9d-b938-fd73bd140193" />
+     <br><br>
+</div>
+
+
 
 ## <a name="servicios"> Servicios Externos </a>
 
