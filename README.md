@@ -26,7 +26,7 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 6. [Servicios Externos](#servicios)
    - [Jikan API](#jikan)
    - [Firebase Firestore](#firestore)
-   - [Firebase Storage](#storeage)
+   - [Firebase Storage](#storage)
 7. [Arquitectura](#arquitectura)
    - [Capa De La Interfaz De Usuario](#interfaz)
    - [Capa De Datos](#datos)
