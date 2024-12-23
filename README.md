@@ -470,3 +470,92 @@ manera, podemos diferencias:
   favorecer la comprensión.
 
   ### Capa De La Interfaz De Usuario
+
+  La capa de la interfaz de usuario contiene una carpeta para cada pantalla o sección de la aplicación independiente. Internamente, cada carpeta contiene el código de los
+  componentes renderizables de la interfaz de usuario que forman el diseño de la respectiva pantalla y, además el controlador de la lógica de la pantalla o viewModel. Por
+  ejemplo, para la pantalla de búsqueda, existe la carpeta llamada `search`. En dicha carpeta se encuentran archivos de código que contienen los elementos componibles que
+  forman el diseño de la interfaz de usuario. Concrétamente, el archivo `SearchScreen.kt` es el archivo principal del cual nacen componentes secundarios, como la barra de
+  búsqueda, ubicada en el archivo `SearchBar.kt`. Además, el archivo `SearchViewModel.kt` contiene el código que implementa el viewModel, encargado de controlar la lógica
+  de la pantalla. El resto de las pantallas de la aplicación sigue un esquema parecido.
+
+  La pantalla `global` contiene componentes renderizables como la barra de navegación inferior, la barra superior o header de la aplicación, etc., que se comparten en las
+  pantallas de la aplicación indistintamente. Además, se concentran funciones suplementarias como `ImagePlaceholder` y animaciones de gradientes como `ShimmerEffect` para
+  la carga de imágenes asíncrona animada. En el futuro, si se refactoriza la aplicación y se añaden funcionalidades, nuevas animaciones o código complementario podría ser
+  alojado en esta carpeta, quizá jerarquizada.
+
+  El archivo `AnitrackApp.kt`, ya comentado anteriormente, contiene el componente de navegación de la aplicación donde se vinculan las rutas y compoenentes para todas las
+  secciones de la aplicación. Además, inicializa los componentes de control de lógica de cada pantalla o viewModel y, siguiendo el patrón de inyección de dependencias, se
+  inyectan según corresponda en los diferentes componentes.
+
+  Por último, se incluye la carpeta correspondiente al tema de la aplicación, que incluye toda la lógica en cuanto a colores, tipografías y formas que sobreescriben toda
+  la configuración del tema MatherialTheme para su uso en los componentes renderizables de la aplicación.
+
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/f84d0f6d-d8c7-49d1-9ec4-b806fd453653" alt="image" />
+     <br><br>
+   </div>
+
+  ### Capa De Datos
+
+  La capa de datos contiene los repositorios encargados de recopilar y exponer los datos al resto de las capas de la aplicación que necesiten de ellos. Conceptualmente,
+  existe un repositorio de datos por cada fuente de datos existente en la aplicación. Además, se ha añadido un repositorio para las funciones de autentificación que se
+  relacionan con el servicio de Firebase Authentication. Por ello, podemos distinguir entre:
+
+  * AuthRepository: Contiene, como se ha comentado, las funciones que permiten establecer operaciones sobre el servicio de Firebase Authentication. Entre estas acciones
+    se incluyen el registro de usuarios, la autentificación, el cierre de sesión, la eliminación de la cuenta de un usuario, etc.
+
+  * DatabaseRepository: obtiene la información almacenada en la base de datos de Firebase Firestore y la expone al resto de la aplicación. Para ello utiliza el servicio
+    ubicado en la capa de red, encargado de establecer las comunicaciones con dicha base de datos, a fin de no establecer directamente las comunicaciones de red. Por lo
+    tanto, se hace palpable como las capas interactuan entre sí. Contiene métodos, por lo tanto, que posibilitan leer una colección, un documento concreto, almacenar un
+    nuevo documento, eliminar un documento, etc.
+
+  * JikanRepository: obtiene la información desde la API Restful de Jikan y la expone al resto de la aplicación. Al igual que el repositorio encargado de exponer datos,
+    utiliza la capa de red encargada de establecer las solicitudes de red a través del servicio de Jikan, implementado usando Retrofit. Contiene métodos para obtener la
+    información de un contenido por identificador, obtener una lista de contenidos (temporada actual, siguiente temporada), obtener los personajes de un contenido, etc.
+
+  * StorageRepository: repositorio encargado de almacenar una imagen de perfil de un usuario concreto en el servicio de Firebase Storage, ideal para almacenar contenido
+    estático, por encima de Firebase Firestore. No expone información alguna a la aplicación pero opera sobre los servicios externos por lo que se ha implementado en la
+    capa descrita.
+
+  Además, el archivo llamado `AppContainer.kt` es digno de mención por su elevada implicación en la aplicación. La principal responsabilidad es iniciar los repositorios
+  de datos que serán usados por los controladores de lógica o viewModels de las respectivas pantallas para poder obtener información desde los servicios externos. Todas
+  las dependencias que necesiten los repositorios de datos son inicializadas de forma adicional en este archivo. Por ejemplo, el repositorio que expone datos de la API
+  Jikan depende del servicio de conexión con la API, situado en la capa de red, y, implícitamente, depende del servicio de Retrofit. Ambos servicios se han inicializado
+  en dicho archivo.
+
+  Por último, el archivo `FirebaseContainer.kt` centraliza los servicios relacionados con Firebase a modo de controlar desde un único punto, la inyección de dependencias
+  a servicios que necesiten de estos servicios.
+
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/d538c3df-1d7d-4503-a414-bcc71b1c243c" alt="image" />
+     <br><br>
+  </div>
+
+  ### Capa De Modelos
+
+  El contenido que incluye la capa de modelos es fácilmente intuitible. Contiene, principalmente, un archivo para cada uno de los modelos vinculados a un objeto interno
+  existente en la aplicación. Por lo tanto, podemos, si accedemos a la carpeta `model` situada en el paquete principal de la aplicación, podremos visualizar un total de
+  cinco archivos, de los cuales:
+
+  * `Character.kt`: contiene el archivo donde se define el objeto que modela un personaje internamente a la aplicación. La especificación de dicho objeto se ha descrito en
+    la sección de servicios.
+  * `Content.kt`: contiene el archivo donde se define el objeto que modela un contenido internamente a la aplicación. La especificación de dicho objeto se ha descrito en la
+    sección de servicios.
+  * `User.kt`: contiene el archivo donde se define el objeto que modela un usuario internamente a la aplicación. La especificación de dicho objeto se ha descrito en la
+    sección de servicios.
+  * `JikanResponseWithNavigation`: objeto que modela una respuesta de la API Restful de Jikan que incluye contenido de paginación. La especificación de dicho objeto se ha
+    descrito en la sección de servicios.
+  * `JikanResponseWithoutNavigation`: objeto que modela una respuesta de la API Restful de Jikan que no incluye contenido de paginación. La especificación de dicho objeto se
+    ha descrito en la sección de servicios.
+
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/8ebea744-cacc-4584-9b1d-8f0cb365ce16" alt="image" />
+     <br><br>
+  </div>
+
+  ### Capa De Red
+
+  
