@@ -431,3 +431,42 @@ la temporada actual de emisión o la siguiente. Además, obtener la lista de ani
 para obtener los datos de una búsqueda realizada por el usuario utilizando la herramienta de búsqueda de la aplicación, presente en la página de búsqueda.
 
 ## <a name="arquitectura"> Arquitectura </a>
+
+Tal como especifican los codelabs del curso de desarrollo de aplicaciones para Android usando Jetpack Compose, la arquitectura de una aplicación proporciona lineamientos
+que nos pueden ayudar a desacoplar las responsabilidades de la aplicación entre las clases y componentes que la forman. Además, una arquitectura de aplicación que cuente
+con un buen diseño facilita enormemente la escabilidad permitiendo añadir nuevas funcionalidades de forma sencilla. La arquitectura también tiene la capacidad de mejorar
+el trabajo en equipo simplificando la colaboración.
+
+Nuestra arquitectura, siguiendo varios principios fundamentados en el desarrollo e ingeniería del software y recomendados por la propia documentación, tal como el control
+de la interfaz de usuario a partir de un modelo, el principio de separación de responsabilidades ya comentado, etc, se encuentra dividida en un conjunto de capas. De esta
+manera, podemos diferencias:
+
+* Capa De La Interfaz De Usuario: se trata de la capa que muestra los diferentes componentes gráficos, como textos, imágenes, controles de navegación, etc., en la pantalla
+  del dispositivo. Se trata de una capa agnóstica a los datos e información a mostrar. Además de renderizar los componentes gráficos en la pantalla debe contener la lógica
+  que asegura la reactividad de la interfaz frente a eventos que pudieran acontecer como pulsaciones del usuario en la pantalla u otras acciones. Los componentes viewModel
+  contienen, controlan y exponen los datos a mostrar para el estado actual de la aplicación y gestionan la lógica de la aplicación en respuesta a dichos eventos.
+  
+* Capa De Datos: es la capa responsable de exponer los datos a la capa de la interfaz de usuario siguiendo el patrón unidireccional de datos. Los datos procederán de una o
+  varias fuentes de datos, como una solicitud de red, una base de datos local, un archivo en el dispositivo, etc. Al tener la capa de datos separada de la capa de la UI se
+  pueden realizar cambios en una parte del código sin afectar a la otra.
+  
+* Capa De Modelos: contiene el diseño de los modelos de datos utilizados internamente por los componentes de las diferentes capas de la aplicación que requieran de su uso.
+  Se hace fundamental disponer de estructuras de diseño que modelen como va a ser un determinado objeto relevante para la lógica de la aplicación. Por ejemplo, un dato que
+  se ha extraido desde una fuente de datos, como pudiera ser un contenido, verá modificado su aspecto original provocando su adaptación a las necesidades de la aplicación.
+  Existen modelos para cada uno de los objetos tratados con anterioridad en la sección de servicios pues, existe una estrecha vinculación entre dichos componentes. Resulta
+  obvio ver como los modelos transforman los datos provenientes de estas.
+  
+* Capa De Red: la capa de red aloja el código encargado de establecer toda aquella conexión con el exterior de la aplicación. El exterior incluye los servicios alojados en
+  internet, desde las APIs utilizadas hasta las bases de datos, gestores de autentificación y gestión de usuarios, etc. Se garantiza, por tanto, una separación clara entre
+  los detalles de red de la aplicación y el resto de las capas de la arquitectura.
+  
+  
+* Capa De Navegación: la capa de navegación almacena únicamente un objeto con las diferentes rutas que utiliza el gestor de navegación de Jetpack Compose, también llamado
+  componente navigation. Los actos de navegación ocurren explícitamente dentro del componente NavHost ubicado en el archivo `AnitrackApp.kt` ubicado en la carpeta raíz de
+  la capa de la interfaz de usuario. A nota informativa, dicho archivo es responsable de iniciar los componentes de control de la lógica de la aplicación, o viewModels de
+  todas las pantallas de la aplicación.
+
+  A continuación produndizaremos individualmente en cada una de las capas detallando brevemente como están estructuradas cada una de ellas y, añadiendo alguna imagen para
+  favorecer la comprensión.
+
+  ### Capa De La Interfaz De Usuario
