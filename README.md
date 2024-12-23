@@ -19,9 +19,13 @@ Repositorio para el trabajo de la asignatura Programación de Aplicaciones Móvi
 6. [Servicios Externos](#servicios)
    - [Jikan API](#jikan)
    - [Firebase Firestore](#firestore)
-8. [Arquitectura](#arquitectura)
-9. [Futuras Propuestas](#futuras-propuestas)
-10. [Conclusiones](#conclusiones)
+7. [Arquitectura](#arquitectura)
+   - [Capa De La Interfaz De Usuario](#interfaz)
+   - [Capa De Datos](#datos)
+   - [Capa De Modelos](#modelos)
+   - [Capa De Red](#red)
+   - [Capa De Navegación](#navegacion)
+8. [Conclusiones](#conclusiones)
 
 ## <a name="colaboradores"></a> Colaboradores
 
@@ -469,7 +473,7 @@ manera, podemos diferencias:
   A continuación produndizaremos individualmente en cada una de las capas detallando brevemente como están estructuradas cada una de ellas y, añadiendo alguna imagen para
   favorecer la comprensión.
 
-  ### Capa De La Interfaz De Usuario
+  ### <a name="interfaz">Capa De La Interfaz De Usuario</a>
 
   La capa de la interfaz de usuario contiene una carpeta para cada pantalla o sección de la aplicación independiente. Internamente, cada carpeta contiene el código de los
   componentes renderizables de la interfaz de usuario que forman el diseño de la respectiva pantalla y, además el controlador de la lógica de la pantalla o viewModel. Por
@@ -496,7 +500,7 @@ manera, podemos diferencias:
      <br><br>
    </div>
 
-  ### Capa De Datos
+  ### <a name="datos">Capa De Datos</a>
 
   La capa de datos contiene los repositorios encargados de recopilar y exponer los datos al resto de las capas de la aplicación que necesiten de ellos. Conceptualmente,
   existe un repositorio de datos por cada fuente de datos existente en la aplicación. Además, se ha añadido un repositorio para las funciones de autentificación que se
@@ -533,7 +537,7 @@ manera, podemos diferencias:
      <br><br>
   </div>
 
-  ### Capa De Modelos
+  ### <a name="modelos">Capa De Modelos</a>
 
   El contenido que incluye la capa de modelos es fácilmente intuitible. Contiene, principalmente, un archivo para cada uno de los modelos vinculados a un objeto interno
   existente en la aplicación. Por lo tanto, podemos, si accedemos a la carpeta `model` situada en el paquete principal de la aplicación, podremos visualizar un total de
@@ -541,12 +545,16 @@ manera, podemos diferencias:
 
   * `Character.kt`: contiene el archivo donde se define el objeto que modela un personaje internamente a la aplicación. La especificación de dicho objeto se ha descrito en
     la sección de servicios.
+    
   * `Content.kt`: contiene el archivo donde se define el objeto que modela un contenido internamente a la aplicación. La especificación de dicho objeto se ha descrito en la
     sección de servicios.
+    
   * `User.kt`: contiene el archivo donde se define el objeto que modela un usuario internamente a la aplicación. La especificación de dicho objeto se ha descrito en la
     sección de servicios.
+    
   * `JikanResponseWithNavigation`: objeto que modela una respuesta de la API Restful de Jikan que incluye contenido de paginación. La especificación de dicho objeto se ha
     descrito en la sección de servicios.
+    
   * `JikanResponseWithoutNavigation`: objeto que modela una respuesta de la API Restful de Jikan que no incluye contenido de paginación. La especificación de dicho objeto se
     ha descrito en la sección de servicios.
 
@@ -556,6 +564,40 @@ manera, podemos diferencias:
      <br><br>
   </div>
 
-  ### Capa De Red
+  ### <a name="red">Capa De Red</a>
 
-  
+  En la carpeta de red encontramos, como se ha comentado, las implementaciones necesarias para que la capa de datos pueda acceder a las fuentes externas. Esto permite mantener
+  la lógica de la aplicación desacoplada de los detalles específicos de red. Todo ello, converge a los siguientes archivos:
+
+  * `AuthService.kt`: utilizamos Firebase Authentication para manejar la autentificación y gestión de usuarios. Implementamos funciones necesarias para permitir el registro de
+    nuevos usuarios, la autentificación por parte de usuarios ya existentes, la posibilidad de borrar cuentas de usuarios, actualizar el correo electrónico o la contraseñoa de
+    un usuario, etc.
+
+  * `DatabaseService.kt`: en este archivo, se proporciona el acceso a la base de datos de Firestore para obtener y almacenar la información correspondiente a los modelos de la
+    aplicación de forma dinámica. Para ello, se implementan métodos para leer colecciones de documentos, leer un documento independiente, crear un documento en una colección,
+    filtrar una colección para extraer un conjunto de documentos a partir de un conjunto de filtros, etc.
+
+  * `JikanApiService.kt`: en este archivo se define la interfaz, junto a los decoradores necesarios, que utiliza la librería de Retrofit para poder establecer las solicitudes a
+    la API Restful de Jikan. Se incluyen los métodos demandados por el repositorio de datos que utiliza este servicio, entre los que se incluyen la obtención de un contenido en
+    específico según su identificador, la obtención de una lista de contenidos (lista de series de animación de la temporada actual, lista de contenidos de la próxima temporada,
+    búsqueda de contenidos por nombre para la herramienta de búsqueda, etc.
+
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/a1fb9565-590f-4bc6-8635-5a0f55e88e40" alt="image" />
+     <br><br>
+  </div>
+
+  ### <a name="navegacion">Capa De Navegación</a>
+
+  Como introdujimos al inicio de esta sección, esta capa de la arquitectura únicamente contiene las rutas utilizadas por el componente de navegación para definir los componentes
+  a los que realizar la acción de navegación cuando se produce un evento que solicita dicha operación. Por ello, se incluye un archivo llamado `AnitrackRoutes.kt` conteniendo la
+  definición de una clase enumerada que contiene esas rutas.
+
+  <div align="center">
+     <br>
+     <img src="https://github.com/user-attachments/assets/6bf75fc5-ae16-4ef5-8046-e5496e203647" alt="image" />
+     <br><br>
+  </div>
+
+## <a name="conclusiones"> Conclusiones </a>
